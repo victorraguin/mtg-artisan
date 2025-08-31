@@ -29,10 +29,10 @@ export function useProducts(filters: any = {}) {
 
         if (error) throw error;
         return data || [];
-      }, 2, 8000);
+      }, 3, 10000);
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 2,
+    retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
@@ -56,10 +56,10 @@ export function useProduct(id: string) {
 
         if (error) throw error;
         return data;
-      }, 2, 8000);
+      }, 3, 10000);
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
-    retry: 2,
+    retry: 3,
   });
 }

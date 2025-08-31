@@ -29,10 +29,10 @@ export function useServices(filters: any = {}) {
 
         if (error) throw error;
         return data || [];
-      }, 2, 8000);
+      }, 3, 10000);
     },
     staleTime: 5 * 60 * 1000,
-    retry: 2,
+    retry: 3,
   });
 }
 
@@ -55,10 +55,10 @@ export function useService(id: string) {
 
         if (error) throw error;
         return data;
-      }, 2, 8000);
+      }, 3, 10000);
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
-    retry: 2,
+    retry: 3,
   });
 }

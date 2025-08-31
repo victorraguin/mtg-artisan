@@ -100,7 +100,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           .from('cart_items')
           .select('*')
           .eq('cart_id', user.id),
-        2,
+        3,
         8000
       );
 
@@ -124,8 +124,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               .select('title, images, shop_id, shops(name)')
               .eq('id', item.item_id)
               .single(),
-            2,
-            5000
+            3,
+            8000
           );
 
           if (productData) {
@@ -141,8 +141,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               .select('title, shop_id, shops(name)')
               .eq('id', item.item_id)
               .single(),
-            2,
-            5000
+            3,
+            8000
           );
 
           if (serviceData) {
@@ -198,7 +198,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           })
           .select()
           .single(),
-        2,
+        3,
         8000
       );
 
@@ -229,7 +229,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           .from('cart_items')
           .update({ qty })
           .eq('id', itemId),
-        2,
+        3,
         8000
       );
 
@@ -249,7 +249,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           .from('cart_items')
           .delete()
           .eq('id', itemId),
-        2,
+        3,
         8000
       );
 
@@ -272,7 +272,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           .from('cart_items')
           .delete()
           .eq('cart_id', user.id),
-        2,
+        3,
         8000
       );
 

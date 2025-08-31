@@ -38,8 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         const { data: { session }, error } = await withRetry(
           () => supabase.auth.getSession(),
-          2,
-          5000
+          3,
+          8000
         );
         
         if (error) {
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .select("*")
           .eq("id", userId)
           .single(),
-        2,
+        3,
         8000
       );
       
@@ -125,7 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const { data, error } = await withRetry(
         () => supabase.auth.signInWithPassword({ email, password }),
-        2,
+        3,
         8000
       );
       
@@ -152,7 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const { data, error } = await withRetry(
         () => supabase.auth.signUp({ email, password }),
-        2,
+        3,
         8000
       );
       
@@ -165,7 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             display_name: displayName || "",
             role: "buyer",
           }),
-          2,
+          3,
           8000
         );
         
@@ -189,8 +189,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const { error } = await withRetry(
         () => supabase.auth.signOut(),
-        2,
-        5000
+        3,
+        8000
       );
       
       if (error) {
@@ -216,7 +216,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .from("profiles")
           .update(updates)
           .eq("id", user.id),
-        2,
+        3,
         8000
       );
       

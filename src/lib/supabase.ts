@@ -30,7 +30,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 // Fonction utilitaire pour wrapper les requêtes avec timeout et retry
 export const withRetry = async <T>(
   operation: () => Promise<T>,
-  maxRetries: number = 3,
+  maxRetries: number = 4,
   timeoutMs: number = 10000
 ): Promise<T> => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -52,7 +52,7 @@ export const withRetry = async <T>(
       }
       
       // Attendre avant de réessayer (backoff exponentiel)
-      await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      await new Promise(resolve => setTimeout(resolve, Math.min(Math.pow(2, attempt) * 500, 3000)));
     }
   }
   
@@ -73,7 +73,7 @@ if (typeof window !== "undefined") {
     if (error) throw error;
     console.log("✅ Connexion Supabase OK");
     return data;
-  }, 2, 5000).catch(error => {
+  }, 3, 5000).catch(error => {
     console.error("❌ Problème de connexion Supabase:", error.message);
   });
 }
