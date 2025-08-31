@@ -30,7 +30,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [sessionInitialized, setSessionInitialized] = useState(false);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -56,8 +55,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           await fetchProfile(session.user.id);
         }
-        
-        setSessionInitialized(true);
       } catch (error) {
         console.error("❌ Erreur d'initialisation auth:", error);
       } finally {
@@ -145,6 +142,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signUp = async (
+    email: string,
+    password: string,
+    displayName?: string
+  ) => {
+    try {
+      console.log("📝 Tentative d'inscription pour:", email);
+      
+      const { data, error } = await withRetry(
+        () => supabase.auth.signUp({ email, password }),
+        2,
+        8000
+      );
+      
+      if (!error && data.user) {
+        console.log("✅ Inscription réussie, création du profil...");
+        
+        const { error: profileError } = await withRetry(
+          () => supabase.from("profiles").insert({
+            id: data.user.id,
+            display_name: displayName || "",
+            role: "buyer",
+          }),
+          2,
+          8000
+        );
+        
+        if (profileError) {
+          console.error("❌ Erreur création profil:", profileError);
+        } else {
+          console.log("✅ Profil créé");
+        }
+      }
+      
+      return { error };
+    } catch (error) {
+      console.error("❌ Erreur inattendue lors de l'inscription:", error);
+      return { error };
+    }
+  };
+
   const signOut = async () => {
     try {
       console.log("🚪 Déconnexion...");
@@ -194,46 +232,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("❌ Erreur inattendue mise à jour profil:", error);
       return { error };
     }
-  };
-    return { error };
-  };
-
-  const signUp = async (
-    email: string,
-    password: string,
-    displayName?: string
-  ) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    if (!error && data.user) {
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: data.user.id,
-        display_name: displayName || "",
-        role: "buyer",
-      });
-      if (profileError) {
-        console.error("Error creating profile:", profileError);
-      }
-    }
-    return { error };
-  };
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  const updateProfile = async (updates: Partial<Profile>) => {
-    if (!user) return { error: "Not authenticated" };
-    const { error } = await supabase
-      .from("profiles")
-      .update(updates)
-      .eq("id", user.id);
-    if (!error) {
-      setProfile((prev) => (prev ? { ...prev, ...updates } : null));
-    }
-    return { error };
   };
 
   return (
