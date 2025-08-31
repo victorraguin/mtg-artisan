@@ -56,14 +56,14 @@ export function Home() {
             Premium MTG Art Marketplace
           </h1>
           
-          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in px-4" style={{ animationDelay: '0.2s' }}>
             Commission custom card alters, tokens, and professional services from talented artists worldwide
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center animate-fade-in px-4" style={{ animationDelay: '0.4s' }}>
             <Link
               to="/search"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
             >
               <Search className="mr-2 h-5 w-5" />
               Explore Marketplace
@@ -71,29 +71,29 @@ export function Home() {
             </Link>
             <Link
               to="/auth/signup"
-              className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
             >
               Become a Creator
             </Link>
           </div>
           
           {/* Stats preview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-16 md:mt-20 animate-fade-in px-4" style={{ animationDelay: '0.6s' }}>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">10k+</div>
-              <div className="text-muted-foreground text-sm">Custom Pieces</div>
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">10k+</div>
+              <div className="text-muted-foreground text-xs md:text-sm">Custom Pieces</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">500+</div>
-              <div className="text-muted-foreground text-sm">Active Artists</div>
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">500+</div>
+              <div className="text-muted-foreground text-xs md:text-sm">Active Artists</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">50+</div>
-              <div className="text-muted-foreground text-sm">Countries</div>
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">50+</div>
+              <div className="text-muted-foreground text-xs md:text-sm">Countries</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">99%</div>
-              <div className="text-muted-foreground text-sm">Satisfaction</div>
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">99%</div>
+              <div className="text-muted-foreground text-xs md:text-sm">Satisfaction</div>
             </div>
           </div>
         </div>
@@ -102,15 +102,15 @@ export function Home() {
       {/* Featured Categories */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-foreground px-4">
             Popular Categories
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             From custom artwork to professional services
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
           {featuredCategories.map((category) => (
             <Link
               key={category.name}
@@ -124,11 +124,11 @@ export function Home() {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent group-hover:from-black/40 transition-all duration-500" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="text-xl font-semibold text-white mb-1">
+                <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4">
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">
                     {category.name}
                   </h3>
-                  <p className="text-white/80 text-sm">
+                  <p className="text-white/80 text-xs md:text-sm">
                     {category.description}
                   </p>
                 </div>
@@ -139,23 +139,23 @@ export function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-muted/30 py-24">
+      <section className="bg-muted/30 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground font-display">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-foreground font-display">
               Why Choose MTG Artisans?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
               The trusted marketplace for quality MTG artwork and services
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <div>
               <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 mx-auto">
                 <Award className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4 text-center">Verified Artists</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 text-center">Verified Artists</h3>
               <p className="text-muted-foreground text-center leading-relaxed">
                 All artists are verified professionals ensuring quality work for your cards.
               </p>
@@ -164,7 +164,7 @@ export function Home() {
               <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 mx-auto">
                 <Users className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4 text-center">Global Network</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 text-center">Global Network</h3>
               <p className="text-muted-foreground text-center leading-relaxed">
                 Connect with talented artists worldwide, each bringing unique skills and expertise.
               </p>
@@ -173,7 +173,7 @@ export function Home() {
               <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 mx-auto">
                 <TrendingUp className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4 text-center">Secure Transactions</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 text-center">Secure Transactions</h3>
               <p className="text-muted-foreground text-center leading-relaxed">
                 Secure payments with buyer protection and satisfaction guarantees.
               </p>
@@ -183,20 +183,20 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="bg-gradient-to-r from-primary to-blue-600 rounded-3xl p-16 text-center relative overflow-hidden">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl md:rounded-3xl p-8 md:p-16 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSI0Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
           
           <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white font-display">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white font-display">
             Ready to Find Your Perfect Artist?
           </h2>
-          <p className="text-xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-white/90 mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed">
             Join thousands of players who've commissioned amazing custom artwork
           </p>
           <Link
             to="/search"
-            className="inline-flex items-center bg-white text-primary px-10 py-5 rounded-xl font-semibold hover:bg-white/90 transition-all duration-300 group shadow-2xl hover:shadow-3xl transform hover:scale-105"
+            className="inline-flex items-center bg-white text-primary px-6 md:px-10 py-3 md:py-5 rounded-xl font-semibold hover:bg-white/90 transition-all duration-300 group shadow-2xl hover:shadow-3xl transform hover:scale-105 text-sm md:text-base"
           >
             <Palette className="mr-2 h-5 w-5" />
             Start Exploring

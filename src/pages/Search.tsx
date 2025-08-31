@@ -171,9 +171,9 @@ export function Search() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header with Search and View Toggle */}
         <div className="mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-xl md:text-2xl font-bold text-white">
                 {filters.query ? `Search results for "${filters.query}"` : 'Browse Marketplace'}
               </h1>
               <p className="text-gray-400">
@@ -181,10 +181,10 @@ export function Search() {
               </p>
             </div>
             
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 self-start lg:self-auto">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-colors ${
+                className={`p-2 md:p-3 rounded-lg transition-colors ${
                   viewMode === 'grid' ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400 hover:text-white'
                 }`}
               >
@@ -192,7 +192,7 @@ export function Search() {
               </button>
               <button
                 onClick={() => setViewMode('categories')}
-                className={`p-2 rounded-lg transition-colors ${
+                className={`p-2 md:p-3 rounded-lg transition-colors ${
                   viewMode === 'categories' ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400 hover:text-white'
                 }`}
               >
@@ -204,7 +204,7 @@ export function Search() {
           {/* Mobile Filter Toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="w-full sm:w-auto bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 flex items-center justify-center text-white mb-4"
+            className="w-full lg:w-auto bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 flex items-center justify-center text-white mb-4"
           >
             <Filter className="h-5 w-5 mr-2" />
             Filters
@@ -214,9 +214,9 @@ export function Search() {
 
         {/* Filters Panel */}
         {showFilters && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-6">
+          <div className="bg-gray-800 rounded-lg p-4 md:p-6 border border-gray-700 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Filters</h3>
+              <h3 className="text-base md:text-lg font-semibold text-white">Filters</h3>
               <button
                 onClick={clearFilters}
                 className="text-sm text-purple-400 hover:text-purple-300"
@@ -225,7 +225,7 @@ export function Search() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
               {/* Item Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -266,20 +266,20 @@ export function Search() {
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Price Range
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex gap-2">
                   <input
                     type="number"
                     placeholder="Min"
                     value={filters.minPrice}
                     onChange={(e) => updateFilter('minPrice', e.target.value)}
-                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
+                    className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-2 md:px-3 py-2 text-white focus:border-purple-500 focus:outline-none text-sm"
                   />
                   <input
                     type="number"
                     placeholder="Max"
                     value={filters.maxPrice}
                     onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
+                    className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-2 md:px-3 py-2 text-white focus:border-purple-500 focus:outline-none text-sm"
                   />
                 </div>
               </div>
@@ -309,7 +309,7 @@ export function Search() {
             <LoadingSpinner />
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {items.map((item) => (
               item.item_type === 'product' ? (
                 <ProductCard key={item.id} product={item} />
@@ -330,11 +330,11 @@ export function Search() {
             {Object.entries(groupedItems).map(([categoryName, categoryItems]: [string, any]) => (
               <div key={categoryName}>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-white">{categoryName}</h2>
+                  <h2 className="text-lg md:text-xl font-semibold text-white">{categoryName}</h2>
                   <span className="text-gray-400 text-sm">{categoryItems.length} items</span>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                   {categoryItems.map((item: any) => (
                     item.item_type === 'product' ? (
                       <ProductCard key={item.id} product={item} />

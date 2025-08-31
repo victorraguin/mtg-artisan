@@ -35,7 +35,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link to={`/product/${product.id}`} className="group">
-      <div className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
+      <div className="bg-card rounded-xl md:rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
         {/* Image */}
         <div className="aspect-square bg-muted relative overflow-hidden">
           {product.images?.[0] ? (
@@ -50,19 +50,19 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
           {product.type === 'digital' && (
-            <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-medium">
+            <div className="absolute top-2 md:top-3 left-2 md:left-3 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-medium">
               Digital
             </div>
           )}
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <h3 className="text-lg font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+        <div className="p-4 md:p-6">
+          <h3 className="text-base md:text-lg font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {product.title}
           </h3>
           
-          <div className="flex items-center text-sm text-muted-foreground mb-4">
+          <div className="flex items-center text-xs md:text-sm text-muted-foreground mb-3 md:mb-4">
             <span className="font-medium text-primary">{product.shop?.name}</span>
             {product.shop?.country && (
               <>
@@ -75,7 +75,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xl font-bold text-card-foreground">
+              <div className="text-lg md:text-xl font-bold text-card-foreground">
                 ${product.price}
               </div>
               {product.lead_time_days && (
@@ -88,19 +88,19 @@ export function ProductCard({ product }: ProductCardProps) {
             
             <button
               onClick={handleAddToCart}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-xl transition-all duration-300 hover:scale-110 shadow-lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground p-2 md:p-3 rounded-lg md:rounded-xl transition-all duration-300 hover:scale-110 shadow-lg"
             >
-              <ShoppingCart className="h-5 w-5" />
+              <ShoppingCart className="h-4 md:h-5 w-4 md:w-5" />
             </button>
           </div>
 
           {/* Tags */}
           {product.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-3">
+            <div className="flex flex-wrap gap-1 mt-2 md:mt-3">
               {product.tags.slice(0, 3).map((tag: string) => (
                 <span
                   key={tag}
-                  className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-full"
+                  className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-full truncate max-w-20 md:max-w-none"
                 >
                   {tag}
                 </span>

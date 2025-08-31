@@ -47,7 +47,7 @@ export function SignIn() {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen relative flex items-center justify-center py-8 md:py-12 px-4 sm:px-6 lg:px-8">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -58,19 +58,19 @@ export function SignIn() {
         <div className="absolute inset-0 bg-black/80"></div>
       </div>
       
-      <div className="max-w-md w-full space-y-8">
+      <div className="max-w-md w-full space-y-6 md:space-y-8">
         <div className="text-center">
           <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
-            <Sparkles className="h-10 w-10 text-purple-400" />
-            <span className="text-2xl font-bold text-white font-display">MTG Artisans</span>
+            <Sparkles className="h-8 md:h-10 w-8 md:w-10 text-purple-400" />
+            <span className="text-xl md:text-2xl font-bold text-white font-display">MTG Artisans</span>
           </Link>
-          <h2 className="text-3xl font-bold text-white font-display">Welcome back, Planeswalker</h2>
-          <p className="mt-2 text-gray-400">
+          <h2 className="text-2xl md:text-3xl font-bold text-white font-display">Welcome back, Planeswalker</h2>
+          <p className="mt-2 text-gray-400 text-sm md:text-base">
             Enter your guild credentials to access the multiverse
           </p>
         </div>
 
-        <form className="mt-8 space-y-6 relative z-10" onSubmit={handleSubmit}>
+        <form className="mt-6 md:mt-8 space-y-4 md:space-y-6 relative z-10" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
               Email address
@@ -82,7 +82,7 @@ export function SignIn() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 md:py-3 text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 text-sm md:text-base"
               placeholder="you@example.com"
             />
           </div>
@@ -99,7 +99,7 @@ export function SignIn() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 pr-10 text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 md:py-3 pr-10 text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 text-sm md:text-base"
                 placeholder="Enter your password"
               />
               <button
@@ -115,7 +115,7 @@ export function SignIn() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
+            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white py-3 md:py-4 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center text-sm md:text-base"
           >
             {loading ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
@@ -135,16 +135,16 @@ export function SignIn() {
           </div>
 
           {showTestAccounts && (
-            <div className="bg-gray-800 rounded-lg p-4 space-y-2">
+            <div className="bg-gray-800 rounded-lg p-3 md:p-4 space-y-2">
               <p className="text-sm text-gray-300 mb-3">Test accounts:</p>
               {testAccounts.map((account, index) => (
                 <button
                   key={index}
                   type="button"
                   onClick={() => fillTestAccount(account.email, account.password)}
-                  className="w-full text-left p-2 rounded bg-gray-700 hover:bg-gray-600 transition-colors"
+                  className="w-full text-left p-2 md:p-3 rounded bg-gray-700 hover:bg-gray-600 transition-colors"
                 >
-                  <div className="text-sm text-white">{account.email}</div>
+                  <div className="text-xs md:text-sm text-white truncate">{account.email}</div>
                   <div className="text-xs text-gray-400">{account.role}</div>
                 </button>
               ))}
