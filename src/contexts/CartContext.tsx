@@ -165,7 +165,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const { data, error } = await supabase
-        () => supabase
           .from('cart_items')
           .insert({
             cart_id: user.id,
