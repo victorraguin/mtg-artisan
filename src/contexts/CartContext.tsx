@@ -94,15 +94,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("🛒 Récupération du panier...");
       
-      // Récupérer les articles du panier avec les détails en une seule requête
       const { data: cartItemsData, error: cartError } = await withRetry(
         () => supabase
-          .from('cart_items')
-          .select(`
-            *,
-            product:products(title, images, shop_id, shops(name)),
-            service:services(title, shop_id, shops(name))
-          `)
+          .from('cart_items_enriched')
+          .select('*')
           .eq('cart_id', user.id),
         2,
         6000
@@ -112,47 +107,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       console.log("📦 Articles du panier récupérés:", cartItemsData?.length || 0);
 
-      // Transformer les données en CartItems
-      const cartItems: CartItem[] = [];
-      
-      for (const item of cartItemsData || []) {
-        let title = 'Article inconnu';
-        let image_url = '';
-        let shop_name = 'Boutique inconnue';
-        let shop_id = '';
-
-        if (item.item_type === 'product' && item.product) {
-          title = item.product.title || 'Produit';
-          image_url = item.product.images?.[0] || '';
-          shop_name = item.product.shops?.name || 'Boutique';
-          shop_id = item.product.shop_id || '';
-        } else if (item.item_type === 'service' && item.service) {
-          title = item.service.title || 'Service';
-          image_url = '';
-          shop_name = item.service.shops?.name || 'Boutique';
-          shop_id = item.service.shop_id || '';
-        }
-
-        cartItems.push({
-          id: item.id,
-          item_type: item.item_type,
-          item_id: item.item_id,
-          qty: item.qty,
-          unit_price: item.unit_price,
-          currency: item.currency,
-          metadata: item.metadata,
-          title,
-          image_url,
-          shop_name,
-          shop_id,
-        });
-      }
+      // Transform data directly from the view
+      const cartItems: CartItem[] = (cartItemsData || []).map(item => ({
+        id: item.id,
+        item_type: item.item_type,
+        item_id: item.item_id,
+        qty: item.qty,
+        unit_price: item.unit_price,
+        currency: item.currency,
+        metadata: item.metadata,
+        title: item.title || 'Article inconnu',
+        image_url: item.image_url || '',
+        shop_name: item.shop_name || 'Boutique inconnue',
+        shop_id: item.shop_id || '',
+      }));
 
       dispatch({ type: 'SET_ITEMS', payload: cartItems });
       console.log("✅ Panier chargé avec succès");
     } catch (error) {
       console.error('❌ Erreur panier:', error);
-      // Ne pas afficher d'erreur si c'est juste un timeout - l'utilisateur peut réessayer
       dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
