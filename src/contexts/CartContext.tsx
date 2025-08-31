@@ -94,16 +94,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("🛒 Récupération du panier...");
       
-      const { data: cartItemsData, error: cartError } = await withRetry(
-        () => supabase
-          .from('cart_items_enriched')
-          .select('*')
-          .eq('cart_id', user.id),
-        2,
-        6000
-      );
+      // Requête simple sans retry pour éviter les boucles
+      const { data: cartItemsData, error: cartError } = await supabase
+        .from('cart_items_enriched')
+        .select('*')
+        .eq('cart_id', user.id);
 
-      if (cartError) throw cartError;
+      if (cartError) {
+        console.warn("⚠️ Erreur panier:", cartError.message);
+        dispatch({ type: 'SET_ITEMS', payload: [] });
+        return;
+      }
       
       console.log("📦 Articles du panier récupérés:", cartItemsData?.length || 0);
 
@@ -125,8 +126,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: 'SET_ITEMS', payload: cartItems });
       console.log("✅ Panier chargé avec succès");
     } catch (error) {
-      console.error('❌ Erreur panier:', error);
-      dispatch({ type: 'SET_LOADING', payload: false });
+      console.warn('⚠️ Erreur panier:', error);
+      dispatch({ type: 'SET_ITEMS', payload: [] });
     }
   };
 

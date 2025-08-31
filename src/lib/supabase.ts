@@ -63,17 +63,21 @@ export const withRetry = async <T>(
 if (typeof window !== "undefined") {
   console.log("🔍 Initialisation Supabase...");
   
-  // Test simple au démarrage
-  withRetry(async () => {
-    const { data, error } = await supabase
+  // Test de connexion simple sans bloquer l'app
+  setTimeout(() => {
+    supabase
       .from("profiles")
       .select("id")
-      .limit(1);
-    
-    if (error) throw error;
-    console.log("✅ Connexion Supabase OK");
-    return data;
-  }, 3, 5000).catch(error => {
-    console.error("❌ Problème de connexion Supabase:", error.message);
-  });
+      .limit(1)
+      .then(({ error }) => {
+        if (error) {
+          console.warn("⚠️ Connexion Supabase:", error.message);
+        } else {
+          console.log("✅ Connexion Supabase OK");
+        }
+      })
+      .catch(error => {
+        console.warn("⚠️ Test connexion échoué:", error.message);
+      });
+  }, 1000);
 }

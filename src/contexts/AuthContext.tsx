@@ -95,26 +95,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("👤 Récupération du profil pour:", userId);
       
-      const { data, error } = await withRetry(
-        () => supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", userId)
-          .single(),
-        3,
-        8000
-      );
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
       
       if (error) {
-        console.error("❌ Erreur profil:", error);
-        throw error;
+        console.warn("⚠️ Profil non trouvé:", error.message);
+        // Créer un profil par défaut si il n'existe pas
+        if (error.code === 'PGRST116') {
+          console.log("📝 Création d'un profil par défaut...");
+          const { data: newProfile, error: createError } = await supabase
+            .from("profiles")
+            .insert({
+              id: userId,
+              display_name: "",
+              role: "buyer",
+            })
+            .select()
+            .single();
+          
+          if (!createError) {
+            setProfile(newProfile);
+            return;
+          }
+        }
+        setProfile(null);
+        return;
       }
       
       console.log("✅ Profil récupéré:", { displayName: data?.display_name, role: data?.role });
       setProfile(data);
     } catch (error) {
-      console.error("❌ Erreur lors de la récupération du profil:", error);
-      // Ne pas bloquer l'app si le profil n'existe pas
+      console.warn("⚠️ Erreur profil:", error);
       setProfile(null);
     }
   };
