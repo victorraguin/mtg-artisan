@@ -5,18 +5,16 @@ export function useCategories(type?: "product" | "service") {
   return useQuery({
     queryKey: ["categories", type],
     queryFn: async () => {
-      return withRetry(async () => {
-        let query = supabase.from("categories").select("*");
+      let query = supabase.from("categories").select("*");
 
-        if (type) {
-          query = query.eq("type", type);
-        }
+      if (type) {
+        query = query.eq("type", type);
+      }
 
-        const { data, error } = await query.order("name");
+      const { data, error } = await query.order("name");
 
-        if (error) throw error;
-        return data || [];
-      }, 3, 10000);
+      if (error) throw error;
+      return data || [];
     },
     staleTime: 10 * 60 * 1000, // 10 minutes pour les catégories
     retry: 3,

@@ -133,11 +133,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("🔐 Tentative de connexion pour:", email);
       
-      const { data, error } = await withRetry(
-        () => supabase.auth.signInWithPassword({ email, password }),
-        3,
-        8000
-      );
+      const { data, error } = await supabase.auth.signInWithPassword({ 
+        email, 
+        password 
+      });
       
       if (error) {
         console.error("❌ Erreur de connexion:", error);
@@ -160,24 +159,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("📝 Tentative d'inscription pour:", email);
       
-      const { data, error } = await withRetry(
-        () => supabase.auth.signUp({ email, password }),
-        3,
-        8000
-      );
+      const { data, error } = await supabase.auth.signUp({ 
+        email, 
+        password 
+      });
       
       if (!error && data.user) {
         console.log("✅ Inscription réussie, création du profil...");
         
-        const { error: profileError } = await withRetry(
-          () => supabase.from("profiles").insert({
+        const { error: profileError } = await supabase
+          .from("profiles")
+          .insert({
             id: data.user.id,
             display_name: displayName || "",
             role: "buyer",
-          }),
-          3,
-          8000
-        );
+          });
         
         if (profileError) {
           console.error("❌ Erreur création profil:", profileError);
@@ -197,11 +193,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("🚪 Déconnexion...");
       
-      const { error } = await withRetry(
-        () => supabase.auth.signOut(),
-        3,
-        8000
-      );
+      const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("❌ Erreur de déconnexion:", error);
@@ -221,14 +213,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("📝 Mise à jour du profil...");
       
-      const { error } = await withRetry(
-        () => supabase
-          .from("profiles")
-          .update(updates)
-          .eq("id", user.id),
-        3,
-        8000
-      );
+      const { error } = await supabase
+        .from("profiles")
+        .update(updates)
+        .eq("id", user.id);
       
       if (!error) {
         console.log("✅ Profil mis à jour");

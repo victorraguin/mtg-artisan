@@ -27,38 +27,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Fonction utilitaire pour wrapper les requêtes avec timeout et retry
-export const withRetry = async <T>(
-  operation: () => Promise<T>,
-  maxRetries: number = 4,
-  timeoutMs: number = 10000
-): Promise<T> => {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      // Créer une promesse avec timeout
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error(`Timeout après ${timeoutMs}ms (tentative ${attempt})`)), timeoutMs)
-      );
-
-      // Exécuter l'opération avec timeout
-      const result = await Promise.race([operation(), timeoutPromise]);
-      return result;
-    } catch (error: any) {
-      console.warn(`Tentative ${attempt}/${maxRetries} échouée:`, error.message);
-      
-      // Si c'est la dernière tentative, on lance l'erreur
-      if (attempt === maxRetries) {
-        throw new Error(`Échec après ${maxRetries} tentatives: ${error.message}`);
-      }
-      
-      // Attendre avant de réessayer (backoff exponentiel)
-      await new Promise(resolve => setTimeout(resolve, Math.min(Math.pow(2, attempt) * 500, 3000)));
-    }
-  }
-  
-  throw new Error('Échec inattendu');
-};
-
 // Test de connexion au démarrage
 if (typeof window !== "undefined") {
   console.log("🔍 Initialisation Supabase...");
@@ -79,5 +47,5 @@ if (typeof window !== "undefined") {
       .catch(error => {
         console.warn("⚠️ Test connexion échoué:", error.message);
       });
-  }, 1000);
+  }, 2000);
 }
