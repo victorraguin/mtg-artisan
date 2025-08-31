@@ -1,10 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { ShoppingCart, Clock, MapPin, Star, ArrowLeft, Share } from 'lucide-react';
-import { useCart } from '../contexts/CartContext';
-import { LoadingSpinner } from '../components/UI/LoadingSpinner';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+import {
+  ShoppingCart,
+  Clock,
+  MapPin,
+  Star,
+  ArrowLeft,
+  Share,
+  Package,
+  User,
+} from "lucide-react";
+import { useCart } from "../contexts/CartContext";
+import { LoadingSpinner } from "../components/UI/LoadingSpinner";
+import { Button } from "../components/UI/Button";
+import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import toast from "react-hot-toast";
 
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -23,20 +34,22 @@ export function ProductDetail() {
   const fetchProduct = async () => {
     try {
       const { data, error } = await supabase
-        .from('products')
-        .select(`
+        .from("products")
+        .select(
+          `
           *,
           shop:shops(*),
           category:categories(name)
-        `)
-        .eq('id', id)
+        `
+        )
+        .eq("id", id)
         .single();
 
       if (error) throw error;
       setProduct(data);
     } catch (error) {
-      console.error('Error fetching product:', error);
-      toast.error('Product not found');
+      console.error("Erreur lors de la récupération du produit:", error);
+      toast.error("Produit non trouvé");
     } finally {
       setLoading(false);
     }
@@ -47,79 +60,104 @@ export function ProductDetail() {
 
     try {
       await addToCart({
-        item_type: 'product',
+        item_type: "product",
         item_id: product.id,
         qty: quantity,
         unit_price: product.price,
         currency: product.currency,
         metadata: {},
         title: product.title,
-        image_url: product.images?.[0] || '',
-        shop_name: product.shop?.name || '',
-        shop_id: product.shop_id
+        image_url: product.images?.[0] || "",
+        shop_name: product.shop?.name || "",
+        shop_id: product.shop_id,
       });
+      toast.success("Produit ajouté au panier !");
     } catch (error) {
-      toast.error('Failed to add to cart');
+      toast.error("Échec de l'ajout au panier");
     }
   };
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8 flex justify-center">
-        <LoadingSpinner />
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 flex justify-center">
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold text-white mb-4">Product Not Found</h1>
-        <Link to="/search" className="text-purple-400 hover:text-purple-300">
-          ← Back to Search
-        </Link>
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 text-center">
+        <div className="glass rounded-3xl p-12 border border-border/30">
+          <div className="glass w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-primary/20">
+            <Package className="h-12 w-12 text-primary" />
+          </div>
+          <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
+            Produit Non Trouvé
+          </h1>
+          <p className="text-muted-foreground/70 text-lg mb-8">
+            Le produit que vous recherchez n'existe pas ou a été supprimé
+          </p>
+          <Link to="/search">
+            <Button variant="gradient" size="lg" icon={ArrowLeft}>
+              Retour à la Recherche
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+    <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
       {/* Breadcrumb */}
-      <div className="flex items-center text-xs md:text-sm text-gray-400 mb-4 md:mb-6 overflow-x-auto">
-        <Link to="/" className="hover:text-white">Home</Link>
+      <div className="flex items-center text-sm text-muted-foreground/70 mb-8 overflow-x-auto">
+        <Link
+          to="/"
+          className="hover:text-primary transition-colors duration-300"
+        >
+          Accueil
+        </Link>
         <span className="mx-2">/</span>
-        <Link to="/search" className="hover:text-white">Search</Link>
+        <Link
+          to="/search"
+          className="hover:text-primary transition-colors duration-300"
+        >
+          Recherche
+        </Link>
         <span className="mx-2">/</span>
-        <span className="text-white truncate">{product.title}</span>
+        <span className="text-foreground truncate">{product.title}</span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Image Gallery */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Main Image */}
-          <div className="aspect-square bg-gray-800 rounded-lg md:rounded-xl overflow-hidden border border-gray-700">
-            {product.images?.[selectedImage] ? (
+          <div className="aspect-square bg-muted/50 rounded-3xl overflow-hidden border border-border/30">
+            {product.images && product.images[selectedImage] ? (
               <img
                 src={product.images[selectedImage]}
                 alt={product.title}
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-500">
-                No Image Available
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground/60">
+                <Package className="h-24 w-24" />
               </div>
             )}
           </div>
 
-          {/* Thumbnail Strip */}
-          {product.images?.length > 1 && (
-            <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+          {/* Thumbnail Images */}
+          {product.images && product.images.length > 1 && (
+            <div className="flex space-x-3 overflow-x-auto">
               {product.images.map((image: string, index: number) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
-                  className={`aspect-square bg-gray-800 rounded-md md:rounded-lg overflow-hidden border-2 transition-colors ${
-                    selectedImage === index ? 'border-purple-500' : 'border-gray-700'
+                  className={`flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${
+                    selectedImage === index
+                      ? "border-primary"
+                      : "border-border/30 hover:border-primary/50"
                   }`}
                 >
                   <img
@@ -134,141 +172,164 @@ export function ProductDetail() {
         </div>
 
         {/* Product Info */}
-        <div className="space-y-6">
+        <div className="space-y-8">
+          {/* Header */}
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">{product.title}</h1>
-            
-            {/* Shop Info */}
-            <Link
-              to={`/creator/${product.shop?.slug}`}
-              className="flex items-center space-x-3 mb-4 md:mb-6 group"
-            >
-              {product.shop?.logo_url ? (
-                <img
-                  src={product.shop.logo_url}
-                  alt={product.shop.name}
-                  className="w-10 md:w-12 h-10 md:h-12 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-10 md:w-12 h-10 md:h-12 rounded-full bg-gray-700 flex items-center justify-center">
-                  <span className="text-base md:text-lg font-medium text-gray-400">
-                    {product.shop?.name?.[0]}
-                  </span>
-                </div>
+            <div className="flex items-center space-x-3 mb-4">
+              {product.category?.name && (
+                <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full border border-primary/20">
+                  {product.category.name}
+                </span>
               )}
-              <div>
-                <div className="text-base md:text-lg font-medium text-purple-400 group-hover:text-purple-300">
-                  {product.shop?.name}
-                </div>
-                <div className="flex items-center text-xs md:text-sm text-gray-400">
-                  {product.shop?.country && (
-                    <>
-                      <MapPin className="h-3 w-3 mr-1" />
-                      {product.shop.country}
-                    </>
-                  )}
-                  {product.shop?.rating_avg && (
-                    <>
-                      <span className="mx-2">•</span>
-                      <Star className="h-3 w-3 mr-1 text-yellow-500" />
-                      {product.shop.rating_avg}
-                    </>
-                  )}
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* Price & Stock */}
-          <div className="bg-gray-900 rounded-lg p-4 md:p-6 border border-gray-700">
-            <div className="text-2xl md:text-3xl font-bold text-white mb-2">
-              ${product.price} {product.currency}
+              {product.is_digital && (
+                <span className="px-3 py-1 bg-blue-500/10 text-blue-400 text-sm rounded-full border border-blue-500/20">
+                  Numérique
+                </span>
+              )}
             </div>
-            
-            {product.stock !== null && (
-              <div className="text-sm text-gray-400 mb-4">
-                {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-              </div>
-            )}
 
-            {product.lead_time_days && (
-              <div className="flex items-center text-sm text-gray-400 mb-4">
-                <Clock className="h-4 w-4 mr-2" />
-                Ships in {product.lead_time_days} days
-              </div>
-            )}
+            <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
+              {product.title}
+            </h1>
 
-            {/* Quantity & Add to Cart */}
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Quantity
-                </label>
-                <select
-                  value={quantity}
-                  onChange={(e) => setQuantity(parseInt(e.target.value))}
-                  className="w-full md:w-auto bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
-                >
-                  {Array.from({ length: Math.min(product.stock || 10, 10) }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                onClick={handleAddToCart}
-                disabled={product.stock === 0}
-                className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white py-3 md:py-4 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center text-sm md:text-base"
-              >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-              </button>
-            </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <h2 className="text-lg md:text-xl font-semibold text-white mb-3">Description</h2>
-            <p className="text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base">
+            <p className="text-muted-foreground/70 text-lg leading-relaxed">
               {product.description}
             </p>
           </div>
 
-          {/* Tags */}
-          {product.tags?.length > 0 && (
-            <div>
-              <h3 className="text-base md:text-lg font-semibold text-white mb-3">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.tags.map((tag: string) => (
-                  <span
-                    key={tag}
-                    className="bg-gray-700 text-gray-300 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
+          {/* Shop Info */}
+          {product.shop && (
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  {product.shop.logo_url ? (
+                    <img
+                      src={product.shop.logo_url}
+                      alt={product.shop.name}
+                      className="w-16 h-16 rounded-2xl object-cover border border-border/30"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center border border-border/30">
+                      <User className="h-8 w-8 text-muted-foreground/60" />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <h3 className="text-xl font-light text-foreground mb-1">
+                      {product.shop.name}
+                    </h3>
+                    {product.shop.country && (
+                      <div className="flex items-center text-muted-foreground/70">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        {product.shop.country}
+                      </div>
+                    )}
+                  </div>
+                  <Link to={`/creator/${product.shop.slug}`}>
+                    <Button variant="outline" size="sm">
+                      Voir la Boutique
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
-          {/* Attributes */}
-          {product.attributes && Object.keys(product.attributes).length > 0 && (
-            <div>
-              <h3 className="text-base md:text-lg font-semibold text-white mb-3">Details</h3>
-              <div className="space-y-2">
-                {Object.entries(product.attributes).map(([key, value]: [string, any]) => (
-                  <div key={key} className="flex justify-between text-sm md:text-base">
-                    <span className="text-gray-400 capitalize flex-shrink-0 mr-4">
-                      {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-                    </span>
-                    <span className="text-white text-right">{String(value)}</span>
+          {/* Price & Actions */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <div className="text-3xl font-light text-foreground">
+                    ${product.price}
                   </div>
-                ))}
+                  {product.currency !== "USD" && (
+                    <div className="text-sm text-muted-foreground/70">
+                      Devise: {product.currency}
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-right">
+                  <div className="flex items-center space-x-1 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-5 w-5 ${
+                          i < (product.rating || 0)
+                            ? "text-primary fill-current"
+                            : "text-muted-foreground/30"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <div className="text-sm text-muted-foreground/70">
+                    {product.rating || 0}/5 ({product.review_count || 0} avis)
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+
+              {/* Quantity & Add to Cart */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <label className="text-sm font-medium text-foreground">
+                    Quantité:
+                  </label>
+                  <div className="flex items-center space-x-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      icon={ArrowLeft}
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-10 h-10 p-0"
+                    />
+                    <span className="text-foreground font-medium min-w-[3rem] text-center">
+                      {quantity}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      icon={ArrowLeft}
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-10 h-10 p-0 rotate-180"
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  variant="gradient"
+                  size="lg"
+                  icon={ShoppingCart}
+                  onClick={handleAddToCart}
+                  className="w-full"
+                >
+                  Ajouter au Panier - ${(product.price * quantity).toFixed(2)}
+                </Button>
+              </div>
+
+              {/* Additional Info */}
+              <div className="mt-6 pt-6 border-t border-border/30 space-y-3">
+                {product.lead_time && (
+                  <div className="flex items-center text-sm text-muted-foreground/70">
+                    <Clock className="h-4 w-4 mr-2" />
+                    Délai de livraison: {product.lead_time} jours
+                  </div>
+                )}
+
+                {product.tags && product.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {product.tags.map((tag: string, index: number) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 bg-muted/50 text-muted-foreground/70 text-xs rounded-lg border border-border/30"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

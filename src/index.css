@@ -4,78 +4,182 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-  }
- 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
+    /* Design sobre et minimaliste - 3 couleurs max */
+    --background: 0 0% 4%; /* Noir profond */
+    --foreground: 0 0% 98%; /* Blanc cassé */
+    --card: 0 0% 6%; /* Noir légèrement plus clair */
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 45 100% 51%; /* Doré subtil */
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 8%; /* Noir intermédiaire */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 8%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 12%; /* Bordure subtile */
+    --input: 0 0% 12%;
+    --ring: 45 100% 51%;
+    --radius: 0.75rem;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
-}
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
+  /* Typography améliorée */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-light tracking-tight;
+  }
 
-::-webkit-scrollbar-track {
-  @apply bg-muted;
-}
+  /* Scrollbar personnalisée */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
-}
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground;
-}
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
 
-/* Smooth animations */
-* {
-  transition: all 0.2s ease-in-out;
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+
+  /* Animations fluides */
+  * {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Focus states améliorés */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-background;
+  }
+
+  /* Sélection de texte */
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+
+  /* Glassmorphism pour les overlays */
+  .glass {
+    @apply bg-background/80 backdrop-blur-xl border border-border/50;
+  }
+
+  /* Gradient subtil pour les accents */
+  .gradient-border {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--primary) / 0.5)
+    );
+    padding: 1px;
+  }
+
+  .gradient-border > * {
+    @apply bg-background;
+  }
+
+  /* Animations personnalisées */
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.1),
+      transparent
+    );
+    background-size: 200px 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Hover effects pour les images */
+  .image-hover {
+    @apply transition-transform duration-700 ease-out;
+  }
+
+  .image-hover:hover {
+    @apply scale-105;
+  }
+
+  /* Effets de profondeur */
+  .depth-1 {
+    box-shadow: 0 1px 3px 0 hsl(var(--primary) / 0.1),
+      0 1px 2px 0 hsl(var(--primary) / 0.06);
+  }
+
+  .depth-2 {
+    box-shadow: 0 4px 6px -1px hsl(var(--primary) / 0.1),
+      0 2px 4px -1px hsl(var(--primary) / 0.06);
+  }
+
+  .depth-3 {
+    box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.1),
+      0 4px 6px -2px hsl(var(--primary) / 0.05);
+  }
+
+  /* Text gradients */
+  .text-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--primary) / 0.8)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Border animations */
+  .border-animate {
+    position: relative;
+  }
+
+  .border-animate::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--primary) / 0.5)
+    );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .border-animate:hover::before {
+    opacity: 1;
+  }
 }

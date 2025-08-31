@@ -1,37 +1,52 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Search, Palette, Wrench, Star, ArrowRight, Sparkles, TrendingUp, Users, Award } from 'lucide-react';
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  Search,
+  Palette,
+  Wrench,
+  Star,
+  ArrowRight,
+  Sparkles,
+  TrendingUp,
+  Users,
+  Award,
+  ArrowUpRight,
+} from "lucide-react";
 
 export function Home() {
   const featuredCategories = [
     {
-      name: 'Card Alters', 
-      description: 'Transform your favorite cards into unique artwork',
-      image: 'https://draftsim.com/wp-content/uploads/2023/10/To-the-Slaughter-Illustration-by-Christine-Choi-1024x636.jpg', 
-      link: '/search?category=Card+Alters'
+      name: "Card Alters",
+      description: "Transformez vos cartes préférées en œuvres d'art uniques",
+      image:
+        "https://draftsim.com/wp-content/uploads/2023/10/To-the-Slaughter-Illustration-by-Christine-Choi-1024x636.jpg",
+      link: "/search?category=Card+Alters",
     },
     {
-      name: 'Custom Tokens',
-      description: 'Professional tokens and game pieces',
-      image: 'https://draftsim.com/wp-content/uploads/2022/06/Banishing-Light-%E2%80%93-Will-Murai-1024x748.jpg',
-      link: '/search?category=Custom+Tokens'
+      name: "Custom Tokens",
+      description: "Jetons et pièces de jeu professionnels",
+      image:
+        "https://draftsim.com/wp-content/uploads/2022/06/Banishing-Light-%E2%80%93-Will-Murai-1024x748.jpg",
+      link: "/search?category=Custom+Tokens",
     },
     {
-      name: 'Deckbuilding',
-      description: 'Improve your gameplay with expert guidance',
-      image: 'https://draftsim.com/wp-content/uploads/2022/06/Promise-of-Tomorrow-%E2%80%93-Seb-McKinnon-2-1024x749.jpg',
-      link: '/search?type=service&category=Deckbuilding'
+      name: "Deckbuilding",
+      description: "Améliorez votre gameplay avec des conseils d'experts",
+      image:
+        "https://draftsim.com/wp-content/uploads/2022/06/Promise-of-Tomorrow-%E2%80%93-Seb-McKinnon-2-1024x749.jpg",
+      link: "/search?type=service&category=Deckbuilding",
     },
     {
-      name: 'Playmats',
-      description: 'Custom playmats, deck boxes, and accessories',
-      image: 'https://draftsim.com/wp-content/uploads/2022/06/Gods-Demigods-Constellation-%E2%80%93-Jason-A.-Engle-1-1024x606.jpg',
-      link: '/search?category=Playmats'
-    }
+      name: "Playmats",
+      description: "Tapis de jeu, boîtes de deck et accessoires personnalisés",
+      image:
+        "https://draftsim.com/wp-content/uploads/2022/06/Gods-Demigods-Constellation-%E2%80%93-Jason-A.-Engle-1-1024x606.jpg",
+      link: "/search?category=Playmats",
+    },
   ];
 
   return (
-    <div className="space-y-24">
+    <div className="space-y-32">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated background */}
@@ -41,96 +56,127 @@ export function Home() {
             alt="Magic cards background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/85"></div>
+          <div className="absolute inset-0 bg-background/95"></div>
         </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 text-center z-10">
           <div className="animate-fade-in">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-8 animate-glow">
+            <div className="inline-flex items-center px-6 py-3 rounded-2xl glass text-primary text-sm font-light mb-12 border border-primary/30">
               <Sparkles className="w-4 h-4 mr-2" />
-              The Premier MTG Artisan Marketplace
+              La Marketplace de Référence MTG Artisan
             </div>
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent leading-tight animate-fade-in">
-            Premium MTG Art Marketplace
+
+          <h1 className="text-5xl md:text-7xl font-light mb-8 text-foreground leading-tight animate-fade-in tracking-tight">
+            Marketplace d'Art
+            <br />
+            <span className="text-primary">MTG Premium</span>
           </h1>
-          
-          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in px-4" style={{ animationDelay: '0.2s' }}>
-            Commission custom card alters, tokens, and professional services from talented artists worldwide
+
+          <p
+            className="text-lg md:text-xl lg:text-2xl text-muted-foreground/80 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in px-4"
+            style={{ animationDelay: "0.2s" }}
+          >
+            Commandez des alters de cartes personnalisés, des jetons et des
+            services professionnels auprès d'artistes talentueux du monde entier
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center animate-fade-in px-4" style={{ animationDelay: '0.4s' }}>
+
+          <div
+            className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center animate-fade-in px-4"
+            style={{ animationDelay: "0.4s" }}
+          >
             <Link
               to="/search"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
+              className="gradient-border rounded-2xl overflow-hidden group"
             >
-              <Search className="mr-2 h-5 w-5" />
-              Explore Marketplace
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+              <span className="block px-8 md:px-10 py-4 md:py-5 text-sm md:text-base font-medium text-foreground hover:text-primary transition-colors duration-300 bg-card">
+                <Search className="inline mr-2 h-5 w-5" />
+                Explorer la Marketplace
+                <ArrowRight className="inline ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+              </span>
             </Link>
             <Link
               to="/auth/signup"
-              className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
+              className="px-8 md:px-10 py-4 md:py-5 rounded-2xl font-medium transition-all duration-300 text-sm md:text-base glass border border-border/30 hover:border-primary/30 hover:text-primary"
             >
-              Become a Creator
+              Devenir Créateur
             </Link>
           </div>
-          
+
           {/* Stats preview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-16 md:mt-20 animate-fade-in px-4" style={{ animationDelay: '0.6s' }}>
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mt-20 md:mt-24 animate-fade-in px-4"
+            style={{ animationDelay: "0.6s" }}
+          >
             <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">10k+</div>
-              <div className="text-muted-foreground text-xs md:text-sm">Custom Pieces</div>
+              <div className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-2">
+                10k+
+              </div>
+              <div className="text-muted-foreground/60 text-sm">
+                Pièces Personnalisées
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">500+</div>
-              <div className="text-muted-foreground text-xs md:text-sm">Active Artists</div>
+              <div className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-2">
+                500+
+              </div>
+              <div className="text-muted-foreground/60 text-sm">
+                Artistes Actifs
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">50+</div>
-              <div className="text-muted-foreground text-xs md:text-sm">Countries</div>
+              <div className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-2">
+                50+
+              </div>
+              <div className="text-muted-foreground/60 text-sm">Pays</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1 md:mb-2">99%</div>
-              <div className="text-muted-foreground text-xs md:text-sm">Satisfaction</div>
+              <div className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-2">
+                99%
+              </div>
+              <div className="text-muted-foreground/60 text-sm">
+                Satisfaction
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Categories */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-foreground px-4">
-            Popular Categories
+      <section className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-foreground px-4 tracking-tight">
+            Catégories Populaires
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-            From custom artwork to professional services
+          <p className="text-lg md:text-xl text-muted-foreground/70 max-w-2xl mx-auto px-4">
+            De l'art personnalisé aux services professionnels
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {featuredCategories.map((category) => (
             <Link
               key={category.name}
               to={category.link}
-              className="group bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+              className="group bg-card rounded-3xl overflow-hidden border border-border/30 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10"
             >
               <div className="aspect-square bg-muted relative overflow-hidden">
                 <img
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent group-hover:from-black/40 transition-all duration-500" />
-                <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4">
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-hover:from-black/60 transition-all duration-500" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <h3 className="text-lg md:text-xl font-light text-white mb-2">
                     {category.name}
                   </h3>
-                  <p className="text-white/80 text-xs md:text-sm">
+                  <p className="text-white/80 text-sm leading-relaxed">
                     {category.description}
                   </p>
+                </div>
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <ArrowUpRight className="w-6 h-6 text-white" />
                 </div>
               </div>
             </Link>
@@ -139,43 +185,53 @@ export function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-muted/30 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-foreground font-display">
-              Why Choose MTG Artisans?
+      <section className="py-20 md:py-28">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-foreground tracking-tight">
+              Pourquoi Choisir MTG Artisans ?
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-              The trusted marketplace for quality MTG artwork and services
+            <p className="text-lg md:text-xl text-muted-foreground/70 max-w-3xl mx-auto">
+              La marketplace de confiance pour l'art et les services MTG de
+              qualité
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-            <div>
-              <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                <Award className="w-8 h-8 text-primary" />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
+            <div className="text-center">
+              <div className="glass w-20 h-20 rounded-3xl flex items-center justify-center mb-8 mx-auto border border-primary/20">
+                <Award className="w-10 h-10 text-primary" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 text-center">Verified Artists</h3>
-              <p className="text-muted-foreground text-center leading-relaxed">
-                All artists are verified professionals ensuring quality work for your cards.
+              <h3 className="text-xl md:text-2xl font-light text-foreground mb-4">
+                Artistes Vérifiés
+              </h3>
+              <p className="text-muted-foreground/70 text-center leading-relaxed">
+                Tous les artistes sont des professionnels vérifiés garantissant
+                un travail de qualité pour vos cartes.
               </p>
             </div>
-            <div>
-              <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                <Users className="w-8 h-8 text-primary" />
+            <div className="text-center">
+              <div className="glass w-20 h-20 rounded-3xl flex items-center justify-center mb-8 mx-auto border border-primary/20">
+                <Users className="w-10 h-10 text-primary" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 text-center">Global Network</h3>
-              <p className="text-muted-foreground text-center leading-relaxed">
-                Connect with talented artists worldwide, each bringing unique skills and expertise.
+              <h3 className="text-xl md:text-2xl font-light text-foreground mb-4">
+                Réseau Mondial
+              </h3>
+              <p className="text-muted-foreground/70 text-center leading-relaxed">
+                Connectez-vous avec des artistes talentueux du monde entier,
+                chacun apportant des compétences et une expertise uniques.
               </p>
             </div>
-            <div>
-              <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                <TrendingUp className="w-8 h-8 text-primary" />
+            <div className="text-center">
+              <div className="glass w-20 h-20 rounded-3xl flex items-center justify-center mb-8 mx-auto border border-primary/20">
+                <TrendingUp className="w-10 h-10 text-primary" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 text-center">Secure Transactions</h3>
-              <p className="text-muted-foreground text-center leading-relaxed">
-                Secure payments with buyer protection and satisfaction guarantees.
+              <h3 className="text-xl md:text-2xl font-light text-foreground mb-4">
+                Transactions Sécurisées
+              </h3>
+              <p className="text-muted-foreground/70 text-center leading-relaxed">
+                Paiements sécurisés avec protection de l'acheteur et garanties
+                de satisfaction.
               </p>
             </div>
           </div>
@@ -183,25 +239,28 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl md:rounded-3xl p-8 md:p-16 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSI0Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
-          
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 py-20 md:py-28">
+        <div className="glass rounded-3xl p-12 md:p-20 text-center relative overflow-hidden border border-primary/20">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
+
           <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white font-display">
-            Ready to Find Your Perfect Artist?
-          </h2>
-          <p className="text-lg md:text-xl text-white/90 mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed">
-            Join thousands of players who've commissioned amazing custom artwork
-          </p>
-          <Link
-            to="/search"
-            className="inline-flex items-center bg-white text-primary px-6 md:px-10 py-3 md:py-5 rounded-xl font-semibold hover:bg-white/90 transition-all duration-300 group shadow-2xl hover:shadow-3xl transform hover:scale-105 text-sm md:text-base"
-          >
-            <Palette className="mr-2 h-5 w-5" />
-            Start Exploring
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
-          </Link>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-foreground tracking-tight">
+              Prêt à Trouver Votre Artiste Parfait ?
+            </h2>
+            <p className="text-lg md:text-xl text-muted-foreground/80 mb-10 max-w-3xl mx-auto leading-relaxed">
+              Rejoignez des milliers de joueurs qui ont commandé des œuvres
+              d'art personnalisées incroyables
+            </p>
+            <Link
+              to="/search"
+              className="gradient-border rounded-2xl overflow-hidden group inline-flex items-center"
+            >
+              <span className="block px-10 md:px-12 py-4 md:py-5 text-sm md:text-base font-medium text-foreground hover:text-primary transition-colors duration-300 bg-card">
+                <Palette className="inline mr-2 h-5 w-5" />
+                Commencer à Explorer
+                <ArrowRight className="inline ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+              </span>
+            </Link>
           </div>
         </div>
       </section>

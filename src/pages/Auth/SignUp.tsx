@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { Eye, EyeOff, Sparkles } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { Eye, EyeOff, Sparkles, Palette, Package } from "lucide-react";
+import toast from "react-hot-toast";
+import { Button } from "../../components/UI/Button";
+import { Input } from "../../components/UI/Input";
 
 export function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [role, setRole] = useState<'buyer' | 'creator'>('buyer');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [role, setRole] = useState<"buyer" | "creator">("buyer");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
@@ -21,18 +23,18 @@ export function SignUp() {
     try {
       const { error } = await signUp(email, password, displayName);
       if (error) throw error;
-      
-      toast.success('Account created successfully!');
-      navigate('/');
+
+      toast.success("Compte créé avec succès !");
+      navigate("/");
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create account');
+      toast.error(error.message || "Échec de la création du compte");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen relative flex items-center justify-center py-12 px-6 lg:px-8">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -40,140 +42,159 @@ export function SignUp() {
           alt="MTG Fantasy Background"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/80"></div>
+        <div className="absolute inset-0 bg-background/95"></div>
       </div>
-      
-      <div className="max-w-md w-full space-y-8">
+
+      <div className="max-w-md w-full space-y-8 md:space-y-10 relative z-10">
         <div className="text-center">
-          <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
-            <Sparkles className="h-10 w-10 text-purple-400" />
-            <span className="text-2xl font-bold text-white">MTG Artisans</span>
+          <Link
+            to="/"
+            className="flex items-center justify-center space-x-3 mb-8 group"
+          >
+            <div className="relative">
+              <Sparkles className="h-10 w-10 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
+              <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </div>
+            <span className="text-2xl font-light tracking-wider text-foreground group-hover:text-primary transition-colors duration-300">
+              MTG ARTISANS
+            </span>
           </Link>
-          <h2 className="text-3xl font-bold text-white">Join our community</h2>
-          <p className="mt-2 text-gray-400">
-            Create an account to start buying or selling
+          <h2 className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-3">
+            Rejoignez notre communauté
+          </h2>
+          <p className="text-muted-foreground/80 text-lg">
+            Créez un compte pour commencer à acheter ou vendre
           </p>
         </div>
 
-        <form className="mt-8 space-y-6 relative z-10" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-              Email address
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-              placeholder="you@example.com"
-            />
-          </div>
+        <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit}>
+          <Input
+            label="Adresse email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="vous@exemple.com"
+            id="email"
+          />
+
+          <Input
+            label="Nom d'affichage"
+            type="text"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            placeholder="Votre nom"
+            id="displayName"
+          />
 
           <div>
-            <label htmlFor="displayName" className="block text-sm font-medium text-gray-300 mb-2">
-              Display Name
-            </label>
-            <input
-              id="displayName"
-              name="displayName"
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-              placeholder="Your name"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-              Password
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-foreground mb-3"
+            >
+              Mot de passe
             </label>
             <div className="relative">
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
+              <Input
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 pr-10 text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-                placeholder="Create a strong password"
+                placeholder="Créez un mot de passe fort"
+                id="password"
+                className="pr-12"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground/60 hover:text-primary transition-colors duration-300"
               >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
               </button>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-3">
-              Choose your path:
+            <label className="block text-sm font-medium text-foreground mb-4">
+              Choisissez votre voie :
             </label>
             <div className="grid grid-cols-2 gap-4">
-              <label className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                role === 'buyer' 
-                  ? 'border-purple-500 bg-purple-500/10' 
-                  : 'border-gray-600 hover:border-gray-500'
-              }`}>
+              <label
+                className={`border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
+                  role === "buyer"
+                    ? "border-primary bg-primary/10"
+                    : "border-border/50 hover:border-primary/30 bg-card/50"
+                }`}
+              >
                 <input
                   type="radio"
                   name="role"
                   value="buyer"
-                  checked={role === 'buyer'}
-                  onChange={(e) => setRole(e.target.value as 'buyer')}
+                  checked={role === "buyer"}
+                  onChange={(e) => setRole(e.target.value as "buyer")}
                   className="sr-only"
                 />
                 <div className="text-center">
-                  <div className="text-lg font-medium text-white">Collector</div>
-                  <div className="text-sm text-gray-400">Commission legendary art</div>
+                  <Package className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <div className="text-lg font-medium text-foreground">
+                    Collectionneur
+                  </div>
+                  <div className="text-sm text-muted-foreground/70">
+                    Commandez de l'art légendaire
+                  </div>
                 </div>
               </label>
-              
-              <label className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                role === 'creator' 
-                  ? 'border-purple-500 bg-purple-500/10' 
-                  : 'border-gray-600 hover:border-gray-500'
-              }`}>
+
+              <label
+                className={`border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
+                  role === "creator"
+                    ? "border-primary bg-primary/10"
+                    : "border-border/50 hover:border-primary/30 bg-card/50"
+                }`}
+              >
                 <input
                   type="radio"
                   name="role"
                   value="creator"
-                  checked={role === 'creator'}
-                  onChange={(e) => setRole(e.target.value as 'creator')}
+                  checked={role === "creator"}
+                  onChange={(e) => setRole(e.target.value as "creator")}
                   className="sr-only"
                 />
                 <div className="text-center">
-                  <div className="text-lg font-medium text-white">Artisan</div>
-                  <div className="text-sm text-gray-400">Craft magical services</div>
+                  <Palette className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <div className="text-lg font-medium text-foreground">
+                    Artisan
+                  </div>
+                  <div className="text-sm text-muted-foreground/70">
+                    Créez des services magiques
+                  </div>
                 </div>
               </label>
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
+            variant="gradient"
+            size="lg"
+            loading={loading}
+            className="w-full"
           >
-            {loading ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-            ) : (
-              'Create Account'
-            )}
-          </button>
+            Créer le compte
+          </Button>
 
           <div className="text-center">
-            <p className="text-gray-400">
-              Already have an account?{' '}
-              <Link to="/auth/signin" className="text-purple-400 hover:text-purple-300 font-medium">
-                Sign in
+            <p className="text-muted-foreground/70">
+              Vous avez déjà un compte ?{" "}
+              <Link
+                to="/auth/signin"
+                className="text-primary hover:text-primary/80 font-medium transition-colors duration-300"
+              >
+                Se connecter
               </Link>
             </p>
           </div>

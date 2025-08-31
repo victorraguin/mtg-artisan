@@ -1,19 +1,23 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { LoadingSpinner } from "../UI/LoadingSpinner";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'buyer' | 'creator' | 'admin';
+  requiredRole?: "buyer" | "creator" | "admin";
 }
 
-export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  children,
+  requiredRole,
+}: ProtectedRouteProps) {
   const { user, profile, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
