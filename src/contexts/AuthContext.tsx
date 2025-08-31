@@ -36,11 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         console.log("🔍 Initialisation de l'authentification...");
         
-        const { data: { session }, error } = await withRetry(
-          () => supabase.auth.getSession(),
-          3,
-          8000
-        );
+        const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error("❌ Erreur lors de la récupération de la session:", error);
