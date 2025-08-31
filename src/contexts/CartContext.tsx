@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, withRetry } from '../lib/supabase';
 import { useAuth } from './AuthContext';
 import toast from 'react-hot-toast';
 
@@ -92,13 +92,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
-      // First, fetch cart items without joins
-      const { data: cartItemsData, error: cartError } = await supabase
-        .from('cart_items')
-        .select('*')
-        .eq('cart_id', user.id);
+      console.log("🛒 Récupération du panier...");
+      
+      // Récupérer les articles du panier avec retry
+      const { data: cartItemsData, error: cartError } = await withRetry(
+        () => supabase
+          .from('cart_items')
+          .select('*')
+          .eq('cart_id', user.id),
+        2,
+        8000
+      );
 
       if (cartError) throw cartError;
+      
+      console.log("📦 Articles du panier récupérés:", cartItemsData?.length || 0);
 
       // Now fetch details for each item based on its type
       const cartItems: CartItem[] = [];
@@ -110,11 +118,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         let shop_id = '';
 
         if (item.item_type === 'product') {
-          const { data: productData } = await supabase
-            .from('products')
-            .select('title, images, shop_id, shops(name)')
-            .eq('id', item.item_id)
-            .single();
+          const { data: productData } = await withRetry(
+            () => supabase
+              .from('products')
+              .select('title, images, shop_id, shops(name)')
+              .eq('id', item.item_id)
+              .single(),
+            2,
+            5000
+          );
 
           if (productData) {
             title = productData.title;
@@ -123,11 +135,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             shop_id = productData.shop_id;
           }
         } else if (item.item_type === 'service') {
-          const { data: serviceData } = await supabase
-            .from('services')
-            .select('title, shop_id, shops(name)')
-            .eq('id', item.item_id)
-            .single();
+          const { data: serviceData } = await withRetry(
+            () => supabase
+              .from('services')
+              .select('title, shop_id, shops(name)')
+              .eq('id', item.item_id)
+              .single(),
+            2,
+            5000
+          );
 
           if (serviceData) {
             title = serviceData.title;
@@ -153,9 +169,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       dispatch({ type: 'SET_ITEMS', payload: cartItems });
+      console.log("✅ Panier chargé avec succès");
     } catch (error) {
       console.error('Error fetching cart:', error);
       toast.error('Failed to load cart');
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
@@ -166,19 +184,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const { data, error } = await supabase
-        .from('cart_items')
-        .insert({
-          cart_id: user.id,
-          item_type: item.item_type,
-          item_id: item.item_id,
-          qty: item.qty,
-          unit_price: item.unit_price,
-          currency: item.currency,
-          metadata: item.metadata,
-        })
-        .select()
-        .single();
+      const { data, error } = await withRetry(
+        () => supabase
+          .from('cart_items')
+          .insert({
+            cart_id: user.id,
+            item_type: item.item_type,
+            item_id: item.item_id,
+            qty: item.qty,
+            unit_price: item.unit_price,
+            currency: item.currency,
+            metadata: item.metadata,
+          })
+          .select()
+          .single(),
+        2,
+        8000
+      );
 
       if (error) throw error;
 
@@ -202,10 +224,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const { error } = await supabase
-        .from('cart_items')
-        .update({ qty })
-        .eq('id', itemId);
+      const { error } = await withRetry(
+        () => supabase
+          .from('cart_items')
+          .update({ qty })
+          .eq('id', itemId),
+        2,
+        8000
+      );
 
       if (error) throw error;
 
@@ -218,10 +244,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const removeFromCart = async (itemId: string) => {
     try {
-      const { error } = await supabase
-        .from('cart_items')
-        .delete()
-        .eq('id', itemId);
+      const { error } = await withRetry(
+        () => supabase
+          .from('cart_items')
+          .delete()
+          .eq('id', itemId),
+        2,
+        8000
+      );
 
       if (error) throw error;
 
@@ -237,10 +267,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!user) return;
 
     try {
-      const { error } = await supabase
-        .from('cart_items')
-        .delete()
-        .eq('cart_id', user.id);
+      const { error } = await withRetry(
+        () => supabase
+          .from('cart_items')
+          .delete()
+          .eq('cart_id', user.id),
+        2,
+        8000
+      );
 
       if (error) throw error;
 

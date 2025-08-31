@@ -1,47 +1,38 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../lib/supabase";
-
-// Fonction utilitaire pour ajouter un timeout aux requêtes Supabase
-const withTimeout = async (
-  promise: Promise<any>,
-  timeoutMs: number = 15000
-) => {
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Timeout - Requête bloquée")), timeoutMs)
-  );
-  return Promise.race([promise, timeoutPromise]);
-};
+import { supabase, withRetry } from "../lib/supabase";
 
 export function useServices(filters: any = {}) {
   return useQuery({
     queryKey: ["services", filters],
     queryFn: async () => {
-      let query = supabase
-        .from("services")
-        .select(
+      return withRetry(async () => {
+        let query = supabase
+          .from("services")
+          .select(
+            `
+            *,
+            shop:shops(name, slug, logo_url, country),
+            category:categories(name)
           `
-          *,
-          shop:shops(name, slug, logo_url, country),
-          category:categories(name)
-        `
-        )
-        .eq("status", "active");
+          )
+          .eq("status", "active");
 
-      if (filters.shopId) {
-        query = query.eq("shop_id", filters.shopId);
-      }
+        if (filters.shopId) {
+          query = query.eq("shop_id", filters.shopId);
+        }
 
-      if (filters.categoryId) {
-        query = query.eq("category_id", filters.categoryId);
-      }
+        if (filters.categoryId) {
+          query = query.eq("category_id", filters.categoryId);
+        }
 
-      const { data, error } = await withTimeout(
-        query.order("created_at", { ascending: false })
-      );
+        const { data, error } = await query.order("created_at", { ascending: false });
 
-      if (error) throw error;
-      return data || [];
+        if (error) throw error;
+        return data || [];
+      }, 2, 8000);
     },
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
   });
 }
 
@@ -49,8 +40,8 @@ export function useService(id: string) {
   return useQuery({
     queryKey: ["service", id],
     queryFn: async () => {
-      const { data, error } = await withTimeout(
-        supabase
+      return withRetry(async () => {
+        const { data, error } = await supabase
           .from("services")
           .select(
             `
@@ -60,12 +51,14 @@ export function useService(id: string) {
           `
           )
           .eq("id", id)
-          .single()
-      );
+          .single();
 
-      if (error) throw error;
-      return data;
+        if (error) throw error;
+        return data;
+      }, 2, 8000);
     },
     enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
   });
 }

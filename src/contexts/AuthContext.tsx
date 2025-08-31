@@ -2,12 +2,11 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import { User } from "@supabase/supabase-js";
 import type { Database } from "../lib/database.types";
-import { supabase } from "../lib/supabase";
+import { supabase, withRetry } from "../lib/supabase";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -31,38 +30,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const isFetchingProfile = useRef(false);
+  const [sessionInitialized, setSessionInitialized] = useState(false);
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await fetchProfileSafe(session.user.id);
-      } else {
+      try {
+        console.log("🔍 Initialisation de l'authentification...");
+        
+        const { data: { session }, error } = await withRetry(
+          () => supabase.auth.getSession(),
+          2,
+          5000
+        );
+        
+        if (error) {
+          console.error("❌ Erreur lors de la récupération de la session:", error);
+          setLoading(false);
+          return;
+        }
+        
+        console.log("📋 Session récupérée:", { hasSession: !!session, userId: session?.user?.id });
+        
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        }
+        
+        setSessionInitialized(true);
+      } catch (error) {
+        console.error("❌ Erreur d'initialisation auth:", error);
+      } finally {
         setLoading(false);
       }
     };
 
     initializeAuth();
 
+    // Écouter les changements d'état d'authentification
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Ne réagir qu'aux événements pertinents
-      if (
-        event === "SIGNED_IN" ||
-        event === "TOKEN_REFRESHED" ||
-        event === "INITIAL_SESSION"
-      ) {
+      console.log("🔄 Changement d'état auth:", { event, hasSession: !!session });
+      
+      if (event === "SIGNED_IN") {
         setUser(session?.user ?? null);
         if (session?.user) {
-          await fetchProfileSafe(session.user.id);
-        } else {
-          setProfile(null);
-          setLoading(false);
+          await fetchProfile(session.user.id);
+        }
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+        setProfile(null);
+      } else if (event === "TOKEN_REFRESHED" && session?.user) {
+        // Rafraîchir le profil seulement si nécessaire
+        if (!profile || profile.id !== session.user.id) {
+          await fetchProfile(session.user.id);
         }
       }
     });
@@ -72,30 +94,107 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const fetchProfileSafe = async (userId: string) => {
-    if (isFetchingProfile.current) return;
-    isFetchingProfile.current = true;
+  const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-      if (error) throw error;
+      console.log("👤 Récupération du profil pour:", userId);
+      
+      const { data, error } = await withRetry(
+        () => supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .single(),
+        2,
+        8000
+      );
+      
+      if (error) {
+        console.error("❌ Erreur profil:", error);
+        throw error;
+      }
+      
+      console.log("✅ Profil récupéré:", { displayName: data?.display_name, role: data?.role });
       setProfile(data);
     } catch (error) {
-      console.error("fetchProfile error:", error);
-    } finally {
-      isFetchingProfile.current = false;
-      setLoading(false);
+      console.error("❌ Erreur lors de la récupération du profil:", error);
+      // Ne pas bloquer l'app si le profil n'existe pas
+      setProfile(null);
     }
   };
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      console.log("🔐 Tentative de connexion pour:", email);
+      
+      const { data, error } = await withRetry(
+        () => supabase.auth.signInWithPassword({ email, password }),
+        2,
+        8000
+      );
+      
+      if (error) {
+        console.error("❌ Erreur de connexion:", error);
+      } else {
+        console.log("✅ Connexion réussie");
+      }
+      
+      return { error };
+    } catch (error) {
+      console.error("❌ Erreur inattendue lors de la connexion:", error);
+      return { error };
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      console.log("🚪 Déconnexion...");
+      
+      const { error } = await withRetry(
+        () => supabase.auth.signOut(),
+        2,
+        5000
+      );
+      
+      if (error) {
+        console.error("❌ Erreur de déconnexion:", error);
+      } else {
+        console.log("✅ Déconnexion réussie");
+        setUser(null);
+        setProfile(null);
+      }
+    } catch (error) {
+      console.error("❌ Erreur inattendue lors de la déconnexion:", error);
+    }
+  };
+
+  const updateProfile = async (updates: Partial<Profile>) => {
+    if (!user) return { error: "Not authenticated" };
+    
+    try {
+      console.log("📝 Mise à jour du profil...");
+      
+      const { error } = await withRetry(
+        () => supabase
+          .from("profiles")
+          .update(updates)
+          .eq("id", user.id),
+        2,
+        8000
+      );
+      
+      if (!error) {
+        console.log("✅ Profil mis à jour");
+        setProfile((prev) => (prev ? { ...prev, ...updates } : null));
+      } else {
+        console.error("❌ Erreur mise à jour profil:", error);
+      }
+      
+      return { error };
+    } catch (error) {
+      console.error("❌ Erreur inattendue mise à jour profil:", error);
+      return { error };
+    }
+  };
     return { error };
   };
 

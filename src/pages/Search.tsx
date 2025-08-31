@@ -38,55 +38,7 @@ export function Search() {
   }, [items, categories, viewMode]);
 
   useEffect(() => {
-    // Test simple de connexion Supabase
-    const testConnection = async () => {
-      console.log("🔍 Test de connexion simple...");
-
-      try {
-        // Test 1: Requête très simple
-        console.log("🔍 Test 1: Requête simple sur profiles...");
-        const startTime = Date.now();
-
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("id")
-          .limit(1);
-
-        const endTime = Date.now();
-        console.log("🔍 Test 1 - Résultat:", {
-          data,
-          error,
-          duration: `${endTime - startTime}ms`,
-          timestamp: new Date().toISOString(),
-        });
-
-        // Test 2: Test de ping
-        console.log("🔍 Test 2: Test de ping...");
-        const pingStart = Date.now();
-
-        const pingResponse = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/`,
-          {
-            method: "GET",
-            headers: {
-              apikey: import.meta.env.VITE_SUPABASE_ANON_KEY!,
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-          }
-        );
-
-        const pingEnd = Date.now();
-        console.log("🔍 Test 2 - Ping résultat:", {
-          status: pingResponse.status,
-          ok: pingResponse.ok,
-          duration: `${pingEnd - pingStart}ms`,
-        });
-      } catch (error) {
-        console.error("❌ Erreur lors du test de connexion:", error);
-      }
-    };
-
-    testConnection();
+    console.log("🔍 Page Search initialisée");
   }, []);
 
   const groupItemsByCategory = () => {
