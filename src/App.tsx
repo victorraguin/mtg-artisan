@@ -161,8 +161,8 @@ export default function App() {
                 },
               }}
             />
-            {/* Composant de debug pour surveiller l'état de l'authentification */}
-            <DebugAuth />
+            {/* Composant de debug pour surveiller l'état de l'authentification
+            <DebugAuth /> */}
           </CartProvider>
         </AuthProvider>
       </Router>

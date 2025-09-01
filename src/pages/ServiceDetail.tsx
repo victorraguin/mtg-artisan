@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import supabase from "../lib/supabase";
 import { MessageSquare, Clock, MapPin, Star, CheckCircle } from "lucide-react";
-import { LoadingSpinner } from "../components/UI/LoadingSpinner";
+import {
+  LoadingSpinner,
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+} from "../components/UI";
 import toast from "react-hot-toast";
 
 export function ServiceDetail() {
@@ -42,7 +48,7 @@ export function ServiceDetail() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8 flex justify-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 flex justify-center">
         <LoadingSpinner />
       </div>
     );
@@ -50,11 +56,14 @@ export function ServiceDetail() {
 
   if (!service) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold text-white mb-4">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 text-center">
+        <h1 className="text-2xl font-light tracking-tight text-foreground mb-4">
           Service Not Found
         </h1>
-        <Link to="/search" className="text-purple-400 hover:text-purple-300">
+        <Link
+          to="/search"
+          className="text-primary hover:text-primary/80 transition-colors"
+        >
           ← Back to Search
         </Link>
       </div>
@@ -62,23 +71,22 @@ export function ServiceDetail() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
-      <div className="flex items-center text-sm text-gray-400 mb-6">
-        <Link to="/" className="hover:text-white">
+      <div className="flex items-center text-sm text-muted-foreground mb-6">
+        <Link to="/" className="hover:text-foreground transition-colors">
           Home
         </Link>
         <span className="mx-2">/</span>
-        <Link to="/search" className="hover:text-white">
+        <Link to="/search" className="hover:text-foreground transition-colors">
           Search
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-white">{service.title}</span>
+        <span className="text-foreground">{service.title}</span>
       </div>
 
-      <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
-        {/* Header */}
-        <div className="p-8 bg-gradient-to-r from-purple-900/20 to-blue-900/20">
+      <Card className="overflow-hidden">
+        <CardHeader className="p-8 bg-gradient-to-r from-primary/5 to-primary/10">
           <Link
             to={`/creator/${service.shop?.slug}`}
             className="flex items-center space-x-4 mb-6 group"
@@ -90,17 +98,17 @@ export function ServiceDetail() {
                 className="w-16 h-16 rounded-full object-cover"
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center">
-                <span className="text-xl font-medium text-gray-400">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                <span className="text-xl font-medium text-muted-foreground">
                   {service.shop?.name?.[0]}
                 </span>
               </div>
             )}
             <div>
-              <div className="text-xl font-semibold text-purple-400 group-hover:text-purple-300">
+              <div className="text-xl font-medium text-primary group-hover:text-primary/80 transition-colors">
                 {service.shop?.name}
               </div>
-              <div className="flex items-center text-sm text-gray-400">
+              <div className="flex items-center text-sm text-muted-foreground">
                 {service.shop?.country && (
                   <>
                     <MapPin className="h-4 w-4 mr-1" />
@@ -110,7 +118,7 @@ export function ServiceDetail() {
                 {service.shop?.rating_avg && (
                   <>
                     <span className="mx-2">•</span>
-                    <Star className="h-4 w-4 mr-1 text-yellow-500" />
+                    <Star className="h-4 w-4 mr-1 text-primary" />
                     {service.shop.rating_avg} ({service.shop.reviews_count || 0}{" "}
                     reviews)
                   </>
@@ -119,54 +127,53 @@ export function ServiceDetail() {
             </div>
           </Link>
 
-          <h1 className="text-3xl font-bold text-white mb-4">
+          <h1 className="text-3xl font-light tracking-tight text-foreground mb-4">
             {service.title}
           </h1>
 
-          <div className="flex items-center space-x-6 text-sm text-gray-300">
+          <div className="flex items-center space-x-6 text-sm text-muted-foreground">
             <div className="flex items-center">
               <Clock className="h-4 w-4 mr-2" />
               {service.delivery_days} day delivery
             </div>
             {service.category?.name && (
-              <span className="bg-purple-600/20 text-purple-300 px-3 py-1 rounded-full">
+              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/20">
                 {service.category.name}
               </span>
             )}
           </div>
-        </div>
+        </CardHeader>
 
-        {/* Content */}
-        <div className="p-8">
+        <CardContent className="p-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Description */}
             <div className="lg:col-span-2 space-y-6">
               <div>
-                <h2 className="text-xl font-semibold text-white mb-4">
+                <h2 className="text-xl font-medium text-foreground mb-4">
                   About This Service
                 </h2>
-                <p className="text-gray-300 leading-relaxed whitespace-pre-line">
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {service.description}
                 </p>
               </div>
 
               {/* What's Included */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">
+                <h3 className="text-lg font-medium text-foreground mb-3">
                   What's Included
                 </h3>
                 <div className="space-y-2">
-                  <div className="flex items-center text-gray-300">
-                    <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <div className="flex items-center text-muted-foreground">
+                    <CheckCircle className="h-5 w-5 text-primary mr-3" />
                     Professional service delivery
                   </div>
-                  <div className="flex items-center text-gray-300">
-                    <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <div className="flex items-center text-muted-foreground">
+                    <CheckCircle className="h-5 w-5 text-primary mr-3" />
                     Direct communication throughout the process
                   </div>
                   {service.requires_brief && (
-                    <div className="flex items-center text-gray-300">
-                      <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                    <div className="flex items-center text-muted-foreground">
+                      <CheckCircle className="h-5 w-5 text-primary mr-3" />
                       Detailed consultation and brief review
                     </div>
                   )}
@@ -176,52 +183,53 @@ export function ServiceDetail() {
 
             {/* Pricing Card */}
             <div className="lg:col-span-1">
-              <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 sticky top-6">
-                <div className="text-3xl font-bold text-white mb-2">
+              <Card className="p-6 sticky top-6">
+                <div className="text-3xl font-light tracking-tight text-foreground mb-2">
                   ${service.base_price}
                 </div>
-                <div className="text-gray-400 mb-6">Starting price</div>
+                <div className="text-muted-foreground mb-6">Starting price</div>
 
                 {service.requires_brief ? (
                   <div className="space-y-4">
-                    <div className="bg-purple-600/10 border border-purple-500/30 rounded-lg p-4">
-                      <div className="flex items-center text-purple-400 mb-2">
+                    <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4">
+                      <div className="flex items-center text-primary mb-2">
                         <MessageSquare className="h-5 w-5 mr-2" />
                         Consultation Required
                       </div>
-                      <p className="text-sm text-gray-300">
+                      <p className="text-sm text-muted-foreground">
                         This service requires a detailed brief. You'll work with
                         the creator to define your exact needs and receive a
                         custom quote.
                       </p>
                     </div>
 
-                    <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
+                    <Button className="w-full" size="lg">
                       Request Quote
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <button
+                    <Button
                       onClick={() => toast.success("Service added to cart!")}
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors"
+                      className="w-full"
+                      size="lg"
                     >
                       Order Now
-                    </button>
+                    </Button>
                   </div>
                 )}
 
-                <div className="mt-6 pt-6 border-t border-gray-700">
-                  <div className="flex items-center text-sm text-gray-400 mb-2">
+                <div className="mt-6 pt-6 border-t border-border/30">
+                  <div className="flex items-center text-sm text-muted-foreground mb-2">
                     <Clock className="h-4 w-4 mr-2" />
                     Delivery time: {service.delivery_days} days
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

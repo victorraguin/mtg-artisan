@@ -1,6 +1,118 @@
-# Scripts de données de test
+# Scripts
 
-Ce dossier contient les scripts pour créer des données de test pour les boutiques ManaShop.
+Ce dossier contient des scripts utilitaires pour le projet MTG Artisan.
+
+## create-mtg-data.js
+
+**NOUVEAU** - Script complet pour générer de fausses données MTG avec un écosystème complet.
+
+### Utilisation
+
+```bash
+cd scripts
+node create-mtg-data.js
+```
+
+### Prérequis
+
+- Variables d'environnement configurées :
+  - `VITE_SUPABASE_URL`
+  - `SUPABASE_SERVICE_ROLE_KEY`
+
+### Données générées
+
+Ce script crée un écosystème MTG complet avec :
+
+#### 👥 Utilisateurs (11 au total)
+
+- **1 Admin** : Administrateur de la plateforme
+- **6 Créateurs/Vendeurs** avec boutiques complètes :
+  - Alice Altered (Altered Reality Studio) - Alters artistiques
+  - Bob TokenForge (Token Forge) - Tokens personnalisés
+  - Judge Sarah (Judge Academy Services) - Coaching et règles
+  - DeckMaster Mike (DeckMaster Pro) - Construction de decks
+  - Luna Moonbeam (Moonbeam Alters) - Style kawaii/anime
+  - Erik Nordic (Nordic Forge Crafts) - Accessoires artisanaux
+- **4 Acheteurs** avec profils variés
+
+#### 🏪 Boutiques complètes
+
+- Bannières et logos uniques
+- Profils de livraison configurés
+- Zones de livraison (Europe, Monde)
+- Politiques et descriptions détaillées
+- Évaluations et vérifications
+
+#### 📂 Catégories MTG
+
+**Produits :**
+
+- Alters, Tokens, Proxies, Playmat, Deck Box, Sleeves, Life Counter, Dice
+
+**Services :**
+
+- Coaching, Deckbuilding, Rules Consultation, Tournament Prep, Card Evaluation, Collection Management
+
+#### 🎴 Produits (6 exemples détaillés)
+
+- Alter Lightning Bolt style réaliste
+- Token Dragon 5/5 artwork anime
+- Playmat EDH paysage fantastique
+- Deck Box bois gravé symboles guildes
+- Proxy Black Lotus artwork alternatif
+- Compteur de vie digital LCD
+
+#### ⚙️ Services (6 exemples)
+
+- Coaching EDH personnalisé
+- Construction deck Commander
+- Consultation règles MTG
+- Préparation tournoi compétitif
+- Évaluation collection MTG
+- Organisation collection numérique
+
+#### 🛒 Données transactionnelles
+
+- **15 commandes** avec statuts variés
+- **Items de commande** avec tracking
+- **Avis clients** (4-5 étoiles principalement)
+- **Images de reviews**
+
+#### 📊 Analytics et tracking
+
+- **200 vues de produits** (connectées et anonymes)
+- **50 événements panier** avec conversions
+- **Données de session** réalistes
+- **IPs et user agents** de test
+
+#### 🖼️ Images et assets
+
+- **Images de cartes MTG** (Scryfall)
+- **Bannières de boutiques** (Unsplash fantasy)
+- **Logos et avatars** professionnels
+- **Photos de profil** réalistes
+
+### Comptes de test disponibles
+
+Après exécution, vous pouvez vous connecter avec :
+
+```
+admin@mtgartisan.com / admin123! (admin)
+alice@alteredreality.com / alice123! (creator)
+bob@tokenforge.com / bob123! (creator)
+sarah@judgeacademy.com / sarah123! (creator)
+mike@deckmaster.com / mike123! (creator)
+luna@moonbeamalters.com / luna123! (creator)
+erik@nordicforge.com / erik123! (creator)
+collector@mtgfan.com / collector123! (buyer)
+player@edhlover.com / player123! (buyer)
+casual@mtgcasual.com / casual123! (buyer)
+competitive@protour.com / competitive123! (buyer)
+```
+
+## create-test-users.js
+
+Script pour créer des utilisateurs de test basiques via l'API Supabase Admin.
 
 ## Utilisation
 
