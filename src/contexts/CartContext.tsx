@@ -93,10 +93,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       console.log("🛒 Récupération du panier...");
-      
-      // Requête simple sans retry pour éviter les boucles
+
+      // Lecture directe de cart_items pour éviter les soucis de RLS
       const { data: cartItemsData, error: cartError } = await supabase
-        .from('cart_items_enriched')
+        .from('cart_items')
         .select('*')
         .eq('cart_id', user.id);
 
@@ -108,7 +108,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       console.log("📦 Articles du panier récupérés:", cartItemsData?.length || 0);
 
-      // Transform data directly from the view
+      // Les détails (titre, image, boutique) sont stockés dans metadata
       const cartItems: CartItem[] = (cartItemsData || []).map(item => ({
         id: item.id,
         item_type: item.item_type,
@@ -117,10 +117,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         unit_price: item.unit_price,
         currency: item.currency,
         metadata: item.metadata,
-        title: item.title || 'Article inconnu',
-        image_url: item.image_url || '',
-        shop_name: item.shop_name || 'Boutique inconnue',
-        shop_id: item.shop_id || '',
+        title: item.metadata?.title || 'Article inconnu',
+        image_url: item.metadata?.image_url || '',
+        shop_name: item.metadata?.shop_name || 'Boutique inconnue',
+        shop_id: item.metadata?.shop_id || '',
       }));
 
       dispatch({ type: 'SET_ITEMS', payload: cartItems });
@@ -138,6 +138,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
+      const metadataToStore = {
+        ...item.metadata,
+        title: item.title,
+        image_url: item.image_url,
+        shop_name: item.shop_name,
+        shop_id: item.shop_id,
+      };
+
       const { data, error } = await supabase
           .from('cart_items')
           .insert({
@@ -147,7 +155,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             qty: item.qty,
             unit_price: item.unit_price,
             currency: item.currency,
-            metadata: item.metadata,
+            metadata: metadataToStore,
           })
           .select()
           .single();
@@ -157,6 +165,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const cartItem: CartItem = {
         id: data.id,
         ...item,
+        metadata: metadataToStore,
       };
 
       dispatch({ type: 'ADD_ITEM', payload: cartItem });
