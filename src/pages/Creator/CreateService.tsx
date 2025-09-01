@@ -29,7 +29,7 @@ export function CreateService() {
   const fetchInitialData = async () => {
     try {
       const [shopResult, categoriesResult] = await Promise.all([
-        supabase.from('shops').select('*').eq('owner_id', user?.id).single(),
+        supabase.from('shops').select('*').eq('owner_id', user?.id).maybeSingle(),
         supabase.from('categories').select('*').eq('type', 'service')
       ]);
 

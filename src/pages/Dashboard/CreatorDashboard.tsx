@@ -40,7 +40,7 @@ export function CreatorDashboard() {
         .from("shops")
         .select("*")
         .eq("owner_id", user?.id)
-        .single();
+        .maybeSingle();
 
       if (shopError) {
         console.error(

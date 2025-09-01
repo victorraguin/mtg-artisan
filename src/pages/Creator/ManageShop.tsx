@@ -33,7 +33,7 @@ export function ManageShop() {
         .from("shops")
         .select("*")
         .eq("owner_id", user?.id)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setShop(data);
