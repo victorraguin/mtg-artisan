@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase, withRetry } from "../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 export function useProducts(filters: any = {}) {
   return useQuery({

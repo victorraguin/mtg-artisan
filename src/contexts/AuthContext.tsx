@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import { User } from "@supabase/supabase-js";
 import type { Database } from "../lib/database.types";
-import { supabase, withRetry } from "../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
