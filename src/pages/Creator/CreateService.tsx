@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { Save, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import supabase from "../../lib/supabase";
+import { Save, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 export function CreateService() {
   const { user } = useAuth();
@@ -13,13 +13,13 @@ export function CreateService() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    base_price: '',
+    title: "",
+    description: "",
+    base_price: "",
     requires_brief: false,
-    delivery_days: '',
-    category_id: '',
-    status: 'draft' as 'draft' | 'active'
+    delivery_days: "",
+    category_id: "",
+    status: "draft" as "draft" | "active",
   });
 
   useEffect(() => {
@@ -29,20 +29,24 @@ export function CreateService() {
   const fetchInitialData = async () => {
     try {
       const [shopResult, categoriesResult] = await Promise.all([
-        supabase.from('shops').select('*').eq('owner_id', user?.id).maybeSingle(),
-        supabase.from('categories').select('*').eq('type', 'service')
+        supabase
+          .from("shops")
+          .select("*")
+          .eq("owner_id", user?.id)
+          .maybeSingle(),
+        supabase.from("categories").select("*").eq("type", "service"),
       ]);
 
       setShop(shopResult.data);
       setCategories(categoriesResult.data || []);
 
       if (!shopResult.data) {
-        toast.error('Please create your shop first');
-        navigate('/creator/shop');
+        toast.error("Please create your shop first");
+        navigate("/creator/shop");
         return;
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -54,26 +58,24 @@ export function CreateService() {
 
     setSaving(true);
     try {
-      const { error } = await supabase
-        .from('services')
-        .insert({
-          shop_id: shop.id,
-          title: formData.title,
-          description: formData.description,
-          base_price: parseFloat(formData.base_price),
-          requires_brief: formData.requires_brief,
-          delivery_days: parseInt(formData.delivery_days),
-          category_id: formData.category_id || null,
-          status: formData.status
-        });
+      const { error } = await supabase.from("services").insert({
+        shop_id: shop.id,
+        title: formData.title,
+        description: formData.description,
+        base_price: parseFloat(formData.base_price),
+        requires_brief: formData.requires_brief,
+        delivery_days: parseInt(formData.delivery_days),
+        category_id: formData.category_id || null,
+        status: formData.status,
+      });
 
       if (error) throw error;
-      
-      toast.success('Service created successfully!');
-      navigate('/dashboard/creator');
+
+      toast.success("Service created successfully!");
+      navigate("/dashboard/creator");
     } catch (error: any) {
-      console.error('Error creating service:', error);
-      toast.error(error.message || 'Failed to create service');
+      console.error("Error creating service:", error);
+      toast.error(error.message || "Failed to create service");
     } finally {
       setSaving(false);
     }
@@ -91,11 +93,17 @@ export function CreateService() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-bold text-white mb-8">Create New Service</h1>
 
-      <form onSubmit={handleSubmit} className="bg-gray-800 rounded-xl border border-gray-700 p-8 space-y-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-800 rounded-xl border border-gray-700 p-8 space-y-6"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Title */}
           <div className="md:col-span-2">
-            <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Service Title *
             </label>
             <input
@@ -103,7 +111,9 @@ export function CreateService() {
               id="title"
               required
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
               placeholder="e.g., Professional Card Altering Service"
             />
@@ -111,7 +121,10 @@ export function CreateService() {
 
           {/* Base Price */}
           <div>
-            <label htmlFor="base_price" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="base_price"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Starting Price (USD) *
             </label>
             <input
@@ -121,7 +134,9 @@ export function CreateService() {
               min="0"
               step="0.01"
               value={formData.base_price}
-              onChange={(e) => setFormData({ ...formData, base_price: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, base_price: e.target.value })
+              }
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
               placeholder="50.00"
             />
@@ -129,7 +144,10 @@ export function CreateService() {
 
           {/* Delivery Days */}
           <div>
-            <label htmlFor="delivery_days" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="delivery_days"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Delivery Time (days) *
             </label>
             <input
@@ -138,7 +156,9 @@ export function CreateService() {
               required
               min="1"
               value={formData.delivery_days}
-              onChange={(e) => setFormData({ ...formData, delivery_days: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, delivery_days: e.target.value })
+              }
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
               placeholder="7"
             />
@@ -146,13 +166,18 @@ export function CreateService() {
 
           {/* Category */}
           <div>
-            <label htmlFor="category_id" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="category_id"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Category
             </label>
             <select
               id="category_id"
               value={formData.category_id}
-              onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, category_id: e.target.value })
+              }
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
             >
               <option value="">Select Category</option>
@@ -166,13 +191,21 @@ export function CreateService() {
 
           {/* Status */}
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Status
             </label>
             <select
               id="status"
               value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value as 'draft' | 'active' })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  status: e.target.value as "draft" | "active",
+                })
+              }
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
             >
               <option value="draft">Draft</option>
@@ -183,7 +216,10 @@ export function CreateService() {
 
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
             Service Description *
           </label>
           <textarea
@@ -191,7 +227,9 @@ export function CreateService() {
             required
             rows={6}
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
             className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
             placeholder="Describe your service, what's included, your process, etc..."
           />
@@ -203,11 +241,15 @@ export function CreateService() {
             <input
               type="checkbox"
               checked={formData.requires_brief}
-              onChange={(e) => setFormData({ ...formData, requires_brief: e.target.checked })}
+              onChange={(e) =>
+                setFormData({ ...formData, requires_brief: e.target.checked })
+              }
               className="w-4 h-4 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500"
             />
             <div>
-              <span className="text-white font-medium">Requires consultation</span>
+              <span className="text-white font-medium">
+                Requires consultation
+              </span>
               <p className="text-gray-400 text-sm">
                 Customer needs to provide detailed brief before ordering
               </p>
@@ -219,7 +261,7 @@ export function CreateService() {
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={() => navigate('/dashboard/creator')}
+            onClick={() => navigate("/dashboard/creator")}
             className="text-gray-400 hover:text-white px-6 py-3 transition-colors"
           >
             Cancel
@@ -234,7 +276,7 @@ export function CreateService() {
             ) : (
               <Save className="h-5 w-5 mr-2" />
             )}
-            {saving ? 'Creating...' : 'Create Service'}
+            {saving ? "Creating..." : "Create Service"}
           </button>
         </div>
       </form>

@@ -6,6 +6,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { Layout } from "./components/Layout/Layout";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute";
+import { DebugAuth } from "./components/UI";
 
 // Pages
 import { Home } from "./pages/Home";
@@ -26,6 +27,7 @@ import { AdminDashboard } from "./pages/Admin/AdminDashboard";
 
 // Creator pages
 import { CreateProduct } from "./pages/Creator/CreateProduct";
+import { EditProduct } from "./pages/Creator/EditProduct";
 import { CreateService } from "./pages/Creator/CreateService";
 import { ManageShop } from "./pages/Creator/ManageShop";
 
@@ -35,6 +37,8 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes - évite les refetch inutiles
+      gcTime: 10 * 60 * 1000, // 10 minutes - garde en cache plus longtemps
     },
   },
 });
@@ -112,6 +116,14 @@ export default function App() {
                   }
                 />
                 <Route
+                  path="/creator/products/:productId/edit"
+                  element={
+                    <ProtectedRoute requiredRole="creator">
+                      <EditProduct />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/creator/services/new"
                   element={
                     <ProtectedRoute requiredRole="creator">
@@ -149,6 +161,8 @@ export default function App() {
                 },
               }}
             />
+            {/* Composant de debug pour surveiller l'état de l'authentification */}
+            <DebugAuth />
           </CartProvider>
         </AuthProvider>
       </Router>

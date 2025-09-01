@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { ProductWithShop, StockInfo } from "../types";
+import supabase from "../lib/supabase";
 import {
   ShoppingCart,
   Clock,
@@ -12,18 +13,28 @@ import {
   User,
 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
+import { useAnalytics, useStockCheck } from "../hooks/useAnalytics";
+import { useStockMonitoring } from "../hooks/useStockMonitoring";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
 import { Button } from "../components/UI/Button";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import { ProductViewTracker } from "../components/Analytics";
 import toast from "react-hot-toast";
 
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<ProductWithShop | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { checkStock } = useStockCheck();
+
+  // Utiliser le hook de monitoring du stock
+  const { stockInfo, refetchStock } = useStockMonitoring(
+    id || "",
+    product?.type === "physical" && product?.stock !== null
+  );
 
   useEffect(() => {
     if (id) {
@@ -58,6 +69,17 @@ export function ProductDetail() {
   const handleAddToCart = async () => {
     if (!product) return;
 
+    // Vérifier le stock avant d'ajouter
+    if (product.type === "physical" && product.stock !== null) {
+      const stock = await checkStock(product.id, quantity);
+      if (!stock.available) {
+        toast.error(
+          `Stock insuffisant. Seulement ${stock.availableStock} article(s) disponible(s)`
+        );
+        return;
+      }
+    }
+
     try {
       await addToCart({
         item_type: "product",
@@ -71,6 +93,12 @@ export function ProductDetail() {
         shop_name: product.shop?.name || "",
         shop_id: product.shop_id,
       });
+
+      // Mettre à jour les informations de stock après ajout
+      if (product.type === "physical" && product.stock !== null) {
+        refetchStock();
+      }
+
       toast.success("Produit ajouté au panier !");
     } catch (error) {
       toast.error("Échec de l'ajout au panier");
@@ -110,6 +138,8 @@ export function ProductDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+      {/* Tracking automatique des vues */}
+      {id && <ProductViewTracker productId={id} />}
       {/* Breadcrumb */}
       <div className="flex items-center text-sm text-muted-foreground/70 mb-8 overflow-x-auto">
         <Link
@@ -268,6 +298,52 @@ export function ProductDetail() {
                 </div>
               </div>
 
+              {/* Stock Information */}
+              {product.type === "physical" && stockInfo && (
+                <div className="bg-card/30 rounded-2xl p-4 border border-border/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Package className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-medium text-foreground">
+                        Stock disponible
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span
+                        className={`text-sm font-medium ${
+                          stockInfo.availableStock > 5
+                            ? "text-green-500"
+                            : stockInfo.availableStock > 0
+                            ? "text-orange-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {stockInfo.availableStock} disponible
+                        {stockInfo.availableStock > 1 ? "s" : ""}
+                      </span>
+                      {stockInfo.inCartsCount > 0 && (
+                        <span className="text-xs text-muted-foreground">
+                          ({stockInfo.inCartsCount} dans des paniers)
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {stockInfo.availableStock <= 5 &&
+                    stockInfo.availableStock > 0 && (
+                      <p className="text-xs text-orange-500 mt-2">
+                        ⚠️ Stock limité ! Plus que {stockInfo.availableStock}{" "}
+                        article{stockInfo.availableStock > 1 ? "s" : ""}{" "}
+                        disponible{stockInfo.availableStock > 1 ? "s" : ""}
+                      </p>
+                    )}
+                  {stockInfo.availableStock === 0 && (
+                    <p className="text-xs text-red-500 mt-2">
+                      ❌ Rupture de stock
+                    </p>
+                  )}
+                </div>
+              )}
+
               {/* Quantity & Add to Cart */}
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
@@ -289,7 +365,15 @@ export function ProductDetail() {
                       variant="outline"
                       size="sm"
                       icon={ArrowLeft}
-                      onClick={() => setQuantity(quantity + 1)}
+                      onClick={() => {
+                        const maxQuantity = stockInfo?.availableStock || 999;
+                        setQuantity(Math.min(maxQuantity, quantity + 1));
+                      }}
+                      disabled={
+                        stockInfo?.availableStock
+                          ? quantity >= stockInfo.availableStock
+                          : false
+                      }
                       className="w-10 h-10 p-0 rotate-180"
                     />
                   </div>
@@ -300,9 +384,14 @@ export function ProductDetail() {
                   size="lg"
                   icon={ShoppingCart}
                   onClick={handleAddToCart}
+                  disabled={stockInfo?.availableStock === 0}
                   className="w-full"
                 >
-                  Ajouter au Panier - ${(product.price * quantity).toFixed(2)}
+                  {stockInfo?.availableStock === 0
+                    ? "Rupture de stock"
+                    : `Ajouter au Panier - ${(product.price * quantity).toFixed(
+                        2
+                      )}`}
                 </Button>
               </div>
 

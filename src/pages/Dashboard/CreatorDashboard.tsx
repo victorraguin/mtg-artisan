@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { supabase } from "../../lib/supabase";
+import { Shop, ShopStats, OrderItem } from "../../types";
+import supabase from "../../lib/supabase";
 import {
   Plus,
   Package,
@@ -14,17 +15,24 @@ import {
 import { LoadingSpinner } from "../../components/UI/LoadingSpinner";
 import { Button } from "../../components/UI/Button";
 import { Card, CardHeader, CardContent } from "../../components/UI/Card";
+import { ProductsTable } from "../../components/Creator/ProductsTable";
+import { ServicesTable } from "../../components/Creator/ServicesTable";
+import { ShippingManager } from "../../components/Creator/ShippingManager";
+import { StockAlerts } from "../../components/Creator/StockAlerts";
+import { SalesAnalytics } from "../../components/Creator/SalesAnalytics";
+import { StockInfoCard } from "../../components/Creator/StockInfoCard";
 
 export function CreatorDashboard() {
   const { user, profile } = useAuth();
-  const [shop, setShop] = useState<any>(null);
-  const [stats, setStats] = useState({
+  const [shop, setShop] = useState<Shop | null>(null);
+  const [stats, setStats] = useState<ShopStats>({
     products: 0,
     services: 0,
     orders: 0,
     revenue: 0,
+    productsInCarts: 0,
   });
-  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [recentOrders, setRecentOrders] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -74,6 +82,7 @@ export function CreatorDashboard() {
           services: servicesResult.data?.length || 0,
           orders: ordersResult.data?.length || 0,
           revenue,
+          productsInCarts: 0, // Sera mis à jour par le hook useDashboard
         });
 
         setRecentOrders(ordersResult.data?.slice(0, 5) || []);
@@ -118,131 +127,181 @@ export function CreatorDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 md:py-12">
       {/* Header */}
-      <div className="flex items-center justify-between mb-12">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 md:mb-12">
         <div className="flex items-center space-x-4">
           <div className="glass w-16 h-16 rounded-3xl flex items-center justify-center border border-primary/20">
             <Palette className="h-8 w-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-4xl font-light text-foreground tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-light text-foreground tracking-tight">
               Studio Créateur
             </h1>
-            <p className="text-muted-foreground/70 text-lg">
+            <p className="text-muted-foreground/70 text-base md:text-lg">
               {shop.name} • Gérez vos créations
             </p>
           </div>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Link to="/creator/products/new">
-            <Button variant="primary" size="md" icon={Plus}>
+            <Button
+              variant="primary"
+              size="md"
+              icon={Plus}
+              className="w-full sm:w-auto"
+            >
               Ajouter un produit
             </Button>
           </Link>
           <Link to="/creator/services/new">
-            <Button variant="outline" size="md" icon={Plus}>
+            <Button
+              variant="outline"
+              size="md"
+              icon={Plus}
+              className="w-full sm:w-auto"
+            >
               Ajouter un service
             </Button>
           </Link>
         </div>
       </div>
-
+      {/* Stock Alerts */}
+      <div className="mb-8">
+        <StockAlerts shopId={shop.id} />
+      </div>
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <Card className="text-center p-6">
-          <div className="glass w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
-            <Package className="h-8 w-8 text-primary" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
+        <Card className="text-center p-4 md:p-6">
+          <div className="glass w-12 h-12 md:w-16 md:h-16 rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 border border-primary/20">
+            <Package className="h-6 w-6 md:h-8 md:w-8 text-primary" />
           </div>
-          <div className="text-3xl font-light text-foreground mb-2">
+          <div className="text-2xl md:text-3xl font-light text-foreground mb-1 md:mb-2">
             {stats.products.toLocaleString()}
           </div>
-          <div className="text-muted-foreground/70 text-sm">Produits</div>
+          <div className="text-muted-foreground/70 text-xs md:text-sm">
+            Produits
+          </div>
+          {stats.productsInCarts > 0 && (
+            <div className="text-xs text-orange-500 mt-1">
+              dont {stats.productsInCarts} en paniers
+            </div>
+          )}
         </Card>
 
-        <Card className="text-center p-6">
-          <div className="glass w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
-            <Briefcase className="h-8 w-8 text-primary" />
+        <Card className="text-center p-4 md:p-6">
+          <div className="glass w-12 h-12 md:w-16 md:h-16 rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 border border-primary/20">
+            <Briefcase className="h-6 w-6 md:h-8 md:w-8 text-primary" />
           </div>
-          <div className="text-3xl font-light text-foreground mb-2">
+          <div className="text-2xl md:text-3xl font-light text-foreground mb-1 md:mb-2">
             {stats.services.toLocaleString()}
           </div>
-          <div className="text-muted-foreground/70 text-sm">Services</div>
+          <div className="text-muted-foreground/70 text-xs md:text-sm">
+            Services
+          </div>
         </Card>
 
-        <Card className="text-center p-6">
-          <div className="glass w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
-            <TrendingUp className="h-8 w-8 text-primary" />
+        <Card className="text-center p-4 md:p-6">
+          <div className="glass w-12 h-12 md:w-16 md:h-16 rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 border border-primary/20">
+            <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-primary" />
           </div>
-          <div className="text-3xl font-light text-foreground mb-2">
+          <div className="text-2xl md:text-3xl font-light text-foreground mb-1 md:mb-2">
             {stats.orders.toLocaleString()}
           </div>
-          <div className="text-muted-foreground/70 text-sm">Commandes</div>
+          <div className="text-muted-foreground/70 text-xs md:text-sm">
+            Commandes
+          </div>
         </Card>
 
-        <Card className="text-center p-6">
-          <div className="glass w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
-            <DollarSign className="h-8 w-8 text-primary" />
+        <Card className="text-center p-4 md:p-6">
+          <div className="glass w-12 h-12 md:w-16 md:h-16 rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 border border-primary/20">
+            <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-primary" />
           </div>
-          <div className="text-3xl font-light text-foreground mb-2">
+          <div className="text-2xl md:text-3xl font-light text-foreground mb-1 md:mb-2">
             ${stats.revenue.toLocaleString()}
           </div>
-          <div className="text-muted-foreground/70 text-sm">Revenus</div>
+          <div className="text-muted-foreground/70 text-xs md:text-sm">
+            Revenus
+          </div>
         </Card>
       </div>
-
-      {/* Recent Orders */}
+      {/* Stock Information
+      <div className="mb-8">
+        <StockInfoCard />
+      </div> */}
+      {/* Products Management */}
+      <div className="mb-8">
+        <ProductsTable shopId={shop.id} />
+      </div>
+      {/* Services Management */}
+      <div className="mb-8">
+        <ServicesTable shopId={shop.id} />
+      </div>
+      {/* Sales Analytics */}
+      <div className="mb-8">
+        <SalesAnalytics shopId={shop.id} />
+      </div>
+      {/* Shipping Management */}
+      <div className="mb-8">
+        <ShippingManager shopId={shop.id} />
+      </div>
+      {/* Recent Orders Summary */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-light text-foreground tracking-tight">
-              Commandes Récentes
+              Activité Récente
             </h2>
             <Button variant="ghost" size="sm">
-              Voir toutes
+              Voir toutes les commandes
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {recentOrders.length === 0 ? (
-            <div className="text-center py-12">
-              <Package className="h-16 w-16 text-muted-foreground/40 mx-auto mb-4" />
-              <p className="text-muted-foreground/70 text-lg">
-                Aucune commande pour le moment
+            <div className="text-center py-8">
+              <TrendingUp className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
+              <p className="text-muted-foreground/70">
+                Aucune commande récente
+              </p>
+              <p className="text-muted-foreground/60 text-sm mt-1">
+                Les nouvelles commandes apparaîtront ici
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {recentOrders.map((item) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentOrders.slice(0, 6).map((item) => (
                 <div
                   key={item.id}
                   className="glass rounded-2xl p-4 border border-border/30"
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-foreground font-medium">
-                        Commande #{item.id.slice(-8)}
-                      </h3>
-                      <p className="text-muted-foreground/70 text-sm">
-                        Qté: {item.qty} • ${item.unit_price} l'unité
-                      </p>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-foreground font-medium text-sm">
+                      Commande #{item.id.slice(-6)}
+                    </h3>
+                    <div
+                      className={`text-xs font-medium px-2 py-1 rounded-full ${
+                        item.status === "completed"
+                          ? "text-green-500 bg-green-500/10"
+                          : item.status === "shipped"
+                          ? "text-blue-500 bg-blue-500/10"
+                          : "text-primary bg-primary/10"
+                      }`}
+                    >
+                      {item.status === "completed"
+                        ? "Complétée"
+                        : item.status === "shipped"
+                        ? "Expédiée"
+                        : "En cours"}
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-light text-foreground">
-                        ${(item.unit_price * item.qty).toFixed(2)}
-                      </div>
-                      <div
-                        className={`text-sm font-medium ${
-                          item.status === "completed"
-                            ? "text-green-500"
-                            : item.status === "shipped"
-                            ? "text-blue-500"
-                            : "text-primary"
-                        }`}
-                      >
-                        {item.status.replace("_", " ")}
-                      </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-light text-foreground">
+                      ${(item.unit_price * item.qty).toFixed(2)}
                     </div>
+                    <p className="text-muted-foreground/70 text-xs">
+                      Qté: {item.qty}
+                    </p>
                   </div>
                 </div>
               ))}

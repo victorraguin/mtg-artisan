@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../lib/supabase";
+import supabase from "../lib/supabase";
 
 export function useCategories(type?: "product" | "service") {
   return useQuery({
@@ -17,5 +17,6 @@ export function useCategories(type?: "product" | "service") {
       return data || [];
     },
     staleTime: 10 * 60 * 1000, // 10 minutes pour les catégories
+    gcTime: 30 * 60 * 1000, // 30 minutes
   });
 }

@@ -15,13 +15,13 @@ export function Footer() {
                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               <span className="text-xl font-light tracking-wider text-foreground group-hover:text-primary transition-colors duration-300">
-                MTG ARTISANS
+                MANASHOP
               </span>
             </Link>
             <p className="text-muted-foreground/80 max-w-md leading-relaxed text-sm">
-              La marketplace de référence pour l'art personnalisé Magic: The
-              Gathering, les alters, tokens et services professionnels.
-              Connectez-vous avec des artistes talentueux du monde entier.
+              Les boutiques d'art de référence pour l'art personnalisé Magic: The
+              Gathering, les alters, tokens et créations uniques.
+              Découvrez des artistes talentueux du monde entier.
             </p>
             <div className="flex space-x-4 mt-8">
               <a
@@ -45,10 +45,10 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Marketplace */}
+          {/* Boutiques */}
           <div>
             <h3 className="text-foreground font-light text-lg mb-6 tracking-wide">
-              Marketplace
+              Boutiques
             </h3>
             <ul className="space-y-3">
               <li>
@@ -80,7 +80,7 @@ export function Footer() {
                   to="/search?type=service&category=Deckbuilding"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Services de Deckbuilding
+                  Artisans de Deckbuilding
                 </Link>
               </li>
             </ul>
@@ -130,7 +130,7 @@ export function Footer() {
 
         <div className="border-t border-border/30 mt-12 pt-8 text-center">
           <p className="text-muted-foreground/60 text-sm">
-            &copy; 2025 MTG Artisans. Tous droits réservés.
+            &copy; 2025 ManaShop. Tous droits réservés.
             <span className="mx-2">•</span>
             Magic: The Gathering est une marque déposée de Wizards of the Coast.
             <span className="mx-2">•</span>

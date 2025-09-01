@@ -1,8 +1,8 @@
-# MTG Artisans - Design System
+# ManaShop - Design System
 
 ## Vue d'ensemble
 
-Ce design system met en œuvre une approche sobre, foncée et minimaliste pour l'application MTG Artisans, avec seulement trois couleurs principales pour créer une expérience utilisateur moderne et unique.
+Ce design system met en œuvre une approche sobre, foncée et minimaliste pour l'application ManaShop, avec seulement trois couleurs principales pour créer une expérience magique et unique.
 
 ## Palette de Couleurs
 

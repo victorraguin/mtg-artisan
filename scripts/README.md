@@ -1,6 +1,6 @@
 # Scripts de données de test
 
-Ce dossier contient les scripts pour créer des données de test pour l'application MTG Artisans.
+Ce dossier contient les scripts pour créer des données de test pour les boutiques ManaShop.
 
 ## Utilisation
 
@@ -31,14 +31,14 @@ Une fois les utilisateurs créés, exécutez le script SQL dans l'éditeur SQL d
 
 ## Comptes de test créés
 
-| Email | Mot de passe | Rôle | Description |
-|-------|--------------|------|-------------|
-| admin@mtgartisans.com | admin123! | admin | Administrateur de la plateforme |
-| alice@artmaster.com | alice123! | creator | Artiste spécialisée dans les alters |
-| bob@tokencraft.com | bob123! | creator | Créateur de tokens personnalisés |
-| sarah@judgeacademy.com | sarah123! | creator | Juge niveau 2, coaching |
-| pro@decksolutions.com | pro123! | creator | Constructeur de decks professionnel |
-| collector@mtg.com | collector123! | buyer | Collectionneur MTG |
+| Email                  | Mot de passe  | Rôle    | Description                         |
+| ---------------------- | ------------- | ------- | ----------------------------------- |
+| admin@manashop.com     | admin123!     | admin   | Administrateur de la plateforme     |
+| alice@artmaster.com    | alice123!     | creator | Artiste spécialisée dans les alters |
+| bob@tokencraft.com     | bob123!       | creator | Créateur de tokens personnalisés    |
+| sarah@judgeacademy.com | sarah123!     | creator | Juge niveau 2, coaching             |
+| pro@decksolutions.com  | pro123!       | creator | Constructeur de decks professionnel |
+| collector@manashop.com | collector123! | buyer   | Collectionneur ManaShop             |
 
 ## Données créées
 
@@ -76,3 +76,90 @@ Avec ces données, vous pouvez tester :
 - Les PayPal IDs sont fictifs (pour les tests)
 - Les politiques RLS doivent être configurées dans Supabase
 - Pour tester les paiements, configurez PayPal Sandbox
+
+# Configuration du Stockage Supabase
+
+## 🎯 Objectif
+
+Configurer le stockage Supabase pour permettre aux boutiques d'uploader des bannières personnalisées.
+
+## 🚀 Configuration Rapide
+
+### Option 1: Console SQL Supabase (Recommandée)
+
+1. Allez dans votre dashboard Supabase
+2. Cliquez sur "SQL Editor" dans le menu de gauche
+3. Copiez-collez le contenu de `supabase/setup-storage.sql`
+4. Cliquez sur "Run" pour exécuter le script
+
+### Option 2: Script Node.js
+
+1. Installez les dépendances : `npm install @supabase/supabase-js`
+2. Modifiez `scripts/setup-storage.js` avec vos clés Supabase
+3. Exécutez : `node scripts/setup-storage.js`
+
+## 📁 Structure du Bucket
+
+```
+shop-assets/
+├── {user_id}-banner-{timestamp}.jpg
+├── {user_id}-banner-{timestamp}.png
+└── {user_id}-banner-{timestamp}.gif
+```
+
+## 🔒 Politiques de Sécurité
+
+- **Lecture publique** : Tous les utilisateurs peuvent voir les bannières
+- **Upload restreint** : Seuls les propriétaires de boutique peuvent uploader
+- **Modification restreinte** : Seuls les propriétaires peuvent modifier/supprimer
+- **Validation des fichiers** : JPG, PNG, GIF, WebP uniquement
+- **Limite de taille** : 5MB maximum
+
+## 🎨 Utilisation dans l'App
+
+### Upload de bannière
+
+```typescript
+const { data, error } = await supabase.storage
+  .from("shop-assets")
+  .upload(`shop-banners/${fileName}`, file);
+```
+
+### Affichage de la bannière
+
+```typescript
+const {
+  data: { publicUrl },
+} = supabase.storage.from("shop-assets").getPublicUrl(filePath);
+```
+
+## ⚠️ Notes Importantes
+
+1. **Permissions** : Assurez-vous que RLS est activé sur `storage.objects`
+2. **Authentification** : Les politiques RLS nécessitent que l'utilisateur soit connecté
+3. **Nettoyage** : Les anciennes bannières ne sont pas automatiquement supprimées
+4. **Performance** : Les images sont servies directement depuis Supabase CDN
+
+## 🔧 Dépannage
+
+### Erreur "Bucket not found"
+
+- Vérifiez que le script SQL a été exécuté avec succès
+- Vérifiez que vous êtes dans le bon projet Supabase
+
+### Erreur "Policy already exists"
+
+- Normal, les politiques sont créées avec `ON CONFLICT DO NOTHING`
+- Vérifiez que les politiques existent dans la console Supabase
+
+### Erreur "Access denied"
+
+- Vérifiez que l'utilisateur est connecté
+- Vérifiez que les politiques RLS sont correctement configurées
+
+## 📱 Test
+
+1. Créez une boutique via `/creator/shop`
+2. Uploadez une bannière
+3. Vérifiez l'affichage sur `/creator/{slug}`
+4. Vérifiez que la bannière apparaît dans le carrousel d'artistes populaires

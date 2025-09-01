@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
-import { supabase } from "../lib/supabase";
+import supabase from "../lib/supabase";
 import { CheckoutSummary } from "../components/Checkout/CheckoutSummary";
 import { PayPalButtons } from "../components/Checkout/PayPalButtons";
 import { MapPin, User, Phone, Save, ArrowLeft, CreditCard } from "lucide-react";
@@ -130,7 +130,7 @@ export function Checkout() {
             size="lg"
             onClick={() => navigate("/search")}
           >
-            Parcourir la marketplace
+            Parcourir les boutiques
           </Button>
         </Card>
       </div>

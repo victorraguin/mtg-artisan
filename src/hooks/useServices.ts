@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../lib/supabase";
+import supabase from "../lib/supabase";
 
 export function useServices(filters: any = {}) {
   return useQuery({
@@ -24,12 +24,15 @@ export function useServices(filters: any = {}) {
         query = query.eq("category_id", filters.categoryId);
       }
 
-      const { data, error } = await query.order("created_at", { ascending: false });
+      const { data, error } = await query.order("created_at", {
+        ascending: false,
+      });
 
       if (error) throw error;
       return data || [];
     },
     staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Filter, X, Grid, List, Search as SearchIcon } from "lucide-react";
-import { supabase } from "../lib/supabase";
+import supabase from "../lib/supabase";
 import { useCategories } from "../hooks/useCategories";
 import { ProductCard } from "../components/Cards/ProductCard";
 import { ServiceCard } from "../components/Cards/ServiceCard";
@@ -216,7 +216,7 @@ export function Search() {
               <h1 className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-2">
                 {filters.query
                   ? `Résultats pour "${filters.query}"`
-                  : "Parcourir la Marketplace"}
+                  : "Parcourir les Boutiques"}
               </h1>
               <p className="text-muted-foreground/70 text-lg">
                 {loading
@@ -287,7 +287,7 @@ export function Search() {
                 >
                   <option value="all">Tous les éléments</option>
                   <option value="product">Produits</option>
-                  <option value="service">Services</option>
+                  <option value="service">Artisans</option>
                 </select>
               </div>
 

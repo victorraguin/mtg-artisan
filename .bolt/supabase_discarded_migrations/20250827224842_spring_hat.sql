@@ -1,5 +1,5 @@
 /*
-  # Injection des données de test pour MTG Artisans
+  # Injection des données de test pour les boutiques ManaShop
 
   1. Catégories
     - 8 catégories pour produits et services
@@ -39,17 +39,17 @@ INSERT INTO categories (id, name, type, mtg_scope) VALUES
 -- Vous devrez remplacer ces UUIDs par les vrais IDs des utilisateurs créés
 INSERT INTO profiles (id, role, display_name, avatar_url, country, bio) VALUES
   ('11111111-1111-1111-1111-111111111111', 'admin', 'Admin User', 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?w=150', 'United States', 'Platform administrator'),
-  ('22222222-2222-2222-2222-222222222222', 'creator', 'ArtMaster Alice', 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?w=150', 'Canada', 'Professional MTG card alterer with 10+ years experience. Specializing in detailed character portraits and landscape extensions.'),
+  ('22222222-2222-2222-2222-222222222222', 'creator', 'ArtMaster Alice', 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?w=150', 'Canada', 'Professional ManaShop card alterer with 10+ years experience. Specializing in detailed character portraits and landscape extensions.'),
   ('33333333-3333-3333-3333-333333333333', 'creator', 'TokenCraft Bob', 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?w=150', 'United Kingdom', 'Custom token creator and digital artist. I bring your creatures to life with unique designs.'),
   ('44444444-4444-4444-4444-444444444444', 'creator', 'Judge Sarah', 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?w=150', 'Germany', 'Level 2 Judge offering coaching and rules consultation. Competitive player for 15+ years.'),
   ('55555555-5555-5555-5555-555555555555', 'creator', 'DeckBuilder Pro', 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?w=150', 'Australia', 'Professional deckbuilder and tournament grinder. Specializing in competitive EDH and Modern.'),
-  ('66666666-6666-6666-6666-666666666666', 'buyer', 'MTG Collector', 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=150', 'United States', 'Passionate MTG collector always looking for unique artwork and custom pieces.');
+  ('66666666-6666-6666-6666-666666666666', 'buyer', 'ManaShop Collector', 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=150', 'United States', 'Passionate ManaShop collector always looking for unique artwork and custom pieces.');
 
 -- Créer les boutiques
 INSERT INTO shops (id, owner_id, name, slug, banner_url, logo_url, bio, policies, paypal_email, is_verified, rating_avg, country) VALUES
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '22222222-2222-2222-2222-222222222222', 'Alice Art Studio', 'alice-art-studio', 'https://images.pexels.com/photos/1183992/pexels-photo-1183992.jpeg?w=800', 'https://images.pexels.com/photos/1183992/pexels-photo-1183992.jpeg?w=200', 'Premium MTG card alters and custom artwork. Each piece is hand-painted with professional acrylics and sealed for tournament play.', 'Returns: 30 days for defects only. Shipping: Worldwide, tracked and insured. Processing: 7-14 business days.', 'alice@artmaster.com', true, 4.9, 'Canada'),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '22222222-2222-2222-2222-222222222222', 'Alice Art Studio', 'alice-art-studio', 'https://images.pexels.com/photos/1183992/pexels-photo-1183992.jpeg?w=800', 'https://images.pexels.com/photos/1183992/pexels-photo-1183992.jpeg?w=200', 'Premium ManaShop card alters and custom artwork. Each piece is hand-painted with professional acrylics and sealed for tournament play.', 'Returns: 30 days for defects only. Shipping: Worldwide, tracked and insured. Processing: 7-14 business days.', 'alice@artmaster.com', true, 4.9, 'Canada'),
   
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '33333333-3333-3333-3333-333333333333', 'TokenCraft Workshop', 'tokencraft-workshop', 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?w=800', 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?w=200', 'Custom creature and artifact tokens for your MTG decks. Digital art printed on premium cardstock with professional finish.', 'Digital delivery within 24-48 hours. Physical tokens ship within 3-5 business days. Custom designs welcome!', 'bob@tokencraft.com', true, 4.8, 'United Kingdom'),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '33333333-3333-3333-3333-333333333333', 'TokenCraft Workshop', 'tokencraft-workshop', 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?w=800', 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?w=200', 'Custom creature and artifact tokens for your ManaShop decks. Digital art printed on premium cardstock with professional finish.', 'Digital delivery within 24-48 hours. Physical tokens ship within 3-5 business days. Custom designs welcome!', 'bob@tokencraft.com', true, 4.8, 'United Kingdom'),
   
   ('cccccccc-cccc-cccc-cccc-cccccccccccc', '44444444-4444-4444-4444-444444444444', 'Judge Academy', 'judge-academy', 'https://images.pexels.com/photos/5428833/pexels-photo-5428833.jpeg?w=800', 'https://images.pexels.com/photos/5428833/pexels-photo-5428833.jpeg?w=200', 'Professional MTG judge coaching and rules consultation. Level up your judging skills or prepare for certification exams.', 'Sessions conducted via Discord/Zoom. Materials provided digitally. Satisfaction guaranteed or full refund within 7 days.', 'sarah@judgeacademy.com', true, 5.0, 'Germany'),
   

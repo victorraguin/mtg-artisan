@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
@@ -7,13 +7,19 @@ import {
   Palette,
   Package,
   LogOut,
+  Store,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCart } from "../../contexts/CartContext";
+import supabase from "../../lib/supabase";
 
 export function UserMenu() {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hasShop, setHasShop] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Gestion d'erreur pour useAuth
   let user, profile, signOut;
@@ -38,6 +44,46 @@ export function UserMenu() {
     getItemCount = () => 0;
   }
 
+  // Vérifier si l'utilisateur a une boutique
+  useEffect(() => {
+    const checkShop = async () => {
+      if (user && profile?.role === "creator") {
+        try {
+          const { data } = await supabase
+            .from("shops")
+            .select("id")
+            .eq("owner_id", user.id)
+            .maybeSingle();
+          setHasShop(!!data);
+        } catch (error) {
+          console.error(
+            "Erreur lors de la vérification de la boutique:",
+            error
+          );
+        }
+      }
+    };
+
+    checkShop();
+  }, [user, profile]);
+
+  // Fermer le menu au clic extérieur
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const getDashboardRoute = () => {
     if (!profile) return "/dashboard/buyer";
 
@@ -45,7 +91,7 @@ export function UserMenu() {
       case "admin":
         return "/admin";
       case "creator":
-        return "/dashboard/creator";
+        return hasShop ? "/dashboard/creator" : "/creator/shop";
       case "buyer":
       default:
         return "/dashboard/buyer";
@@ -59,7 +105,7 @@ export function UserMenu() {
       case "admin":
         return "Admin Panel";
       case "creator":
-        return "Creator Studio";
+        return hasShop ? "Creator Studio" : "Studio Créateur";
       case "buyer":
       default:
         return "Mes Commandes";
@@ -73,7 +119,7 @@ export function UserMenu() {
       case "admin":
         return Shield;
       case "creator":
-        return Palette;
+        return hasShop ? Palette : Store;
       case "buyer":
       default:
         return Package;
@@ -92,19 +138,21 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 sm:space-x-3">
         <Link
           to="/auth/signin"
-          className="text-muted-foreground hover:text-primary transition-colors duration-300 px-4 py-2 text-sm font-light"
+          className="flex items-center space-x-2 text-muted-foreground hover:text-primary transition-colors duration-300 px-3 sm:px-4 py-2 text-sm font-light rounded-xl hover:bg-card/50"
         >
-          Se connecter
+          <LogIn className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="hidden sm:inline">Se connecter</span>
         </Link>
         <Link
           to="/auth/signup"
           className="gradient-border rounded-xl overflow-hidden"
         >
-          <span className="block px-6 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-300">
-            S'inscrire
+          <span className="block px-4 sm:px-6 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-300 flex items-center space-x-2">
+            <UserPlus className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="hidden sm:inline">S'inscrire</span>
           </span>
         </Link>
       </div>
@@ -129,7 +177,7 @@ export function UserMenu() {
       </Link>
 
       {/* User Menu */}
-      <div className="relative">
+      <div className="relative" ref={dropdownRef}>
         <button
           className="flex items-center space-x-2 p-3 text-muted-foreground hover:text-primary transition-colors duration-300 rounded-xl hover:bg-card/50"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -159,21 +207,23 @@ export function UserMenu() {
               {(profile?.role === "creator" || profile?.role === "admin") && (
                 <>
                   <Link
-                    to="/dashboard/creator"
+                    to={getDashboardRoute()}
                     className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
                     onClick={() => setIsDropdownOpen(false)}
                   >
-                    <Palette className="w-4 h-4 mr-3 text-primary" />
-                    Studio Créateur
+                    <DashboardIcon className="w-4 h-4 mr-3 text-primary" />
+                    {getDashboardLabel()}
                   </Link>
-                  <Link
-                    to="/creator/shop"
-                    className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    <Package className="w-4 h-4 mr-3 text-primary" />
-                    Gérer la Boutique
-                  </Link>
+                  {hasShop && (
+                    <Link
+                      to="/creator/shop"
+                      className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <Package className="w-4 h-4 mr-3 text-primary" />
+                      Gérer la Boutique
+                    </Link>
+                  )}
                 </>
               )}
 
@@ -183,8 +233,8 @@ export function UserMenu() {
                 className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <DashboardIcon className="w-4 h-4 mr-3 text-primary" />
-                {getDashboardLabel()}
+                <Package className="w-4 h-4 mr-3 text-primary" />
+                Mes Commandes
               </Link>
 
               <hr className="border-border/30 my-2" />
