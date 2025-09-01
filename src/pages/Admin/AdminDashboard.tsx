@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
+import supabase from "../../lib/supabase";
 import {
   Users,
   Package,
@@ -88,7 +88,7 @@ export function AdminDashboard() {
               Admin Panel
             </h1>
             <p className="text-muted-foreground/70 text-lg">
-              Gestion de la marketplace MTG Artisans
+              Gestion des boutiques ManaShop
             </p>
           </div>
         </div>

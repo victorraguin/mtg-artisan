@@ -56,7 +56,7 @@ export function SignUp() {
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
             <span className="text-2xl font-light tracking-wider text-foreground group-hover:text-primary transition-colors duration-300">
-              MTG ARTISANS
+              MANASHOP
             </span>
           </Link>
           <h2 className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-3">

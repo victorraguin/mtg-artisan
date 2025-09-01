@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { supabase, withRetry } from '../lib/supabase';
-import { useAuth } from './AuthContext';
-import toast from 'react-hot-toast';
+import React, { createContext, useContext, useReducer, useEffect } from "react";
+import supabase from "../lib/supabase";
+import { useAuth } from "./AuthContext";
+import analyticsService from "../services/analytics";
+import toast from "react-hot-toast";
 
 export interface CartItem {
   id: string;
-  item_type: 'product' | 'service';
+  item_type: "product" | "service";
   item_id: string;
   qty: number;
   unit_price: number;
@@ -23,36 +24,36 @@ interface CartState {
 }
 
 type CartAction =
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ITEMS'; payload: CartItem[] }
-  | { type: 'ADD_ITEM'; payload: CartItem }
-  | { type: 'UPDATE_ITEM'; payload: { id: string; qty: number } }
-  | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'CLEAR_CART' };
+  | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_ITEMS"; payload: CartItem[] }
+  | { type: "ADD_ITEM"; payload: CartItem }
+  | { type: "UPDATE_ITEM"; payload: { id: string; qty: number } }
+  | { type: "REMOVE_ITEM"; payload: string }
+  | { type: "CLEAR_CART" };
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
-    case 'SET_LOADING':
+    case "SET_LOADING":
       return { ...state, loading: action.payload };
-    case 'SET_ITEMS':
+    case "SET_ITEMS":
       return { ...state, items: action.payload, loading: false };
-    case 'ADD_ITEM':
+    case "ADD_ITEM":
       return { ...state, items: [...state.items, action.payload] };
-    case 'UPDATE_ITEM':
+    case "UPDATE_ITEM":
       return {
         ...state,
-        items: state.items.map(item =>
+        items: state.items.map((item) =>
           item.id === action.payload.id
             ? { ...item, qty: action.payload.qty }
             : item
         ),
       };
-    case 'REMOVE_ITEM':
+    case "REMOVE_ITEM":
       return {
         ...state,
-        items: state.items.filter(item => item.id !== action.payload),
+        items: state.items.filter((item) => item.id !== action.payload),
       };
-    case 'CLEAR_CART':
+    case "CLEAR_CART":
       return { ...state, items: [] };
     default:
       return state;
@@ -62,7 +63,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 interface CartContextType {
   items: CartItem[];
   loading: boolean;
-  addToCart: (item: Omit<CartItem, 'id'>) => Promise<void>;
+  addToCart: (item: Omit<CartItem, "id">) => Promise<void>;
   updateQuantity: (itemId: string, qty: number) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -77,39 +78,46 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     items: [],
     loading: false,
   });
-  const { user } = useAuth();
+  const { user, authStable } = useAuth();
 
   useEffect(() => {
-    if (user) {
+    // Attendre que l'auth soit stable avant de récupérer le panier
+    if (!authStable) return;
+
+    if (user?.id) {
+      console.log("🛒 Récupération du panier pour:", user.id);
       fetchCart();
     } else {
-      dispatch({ type: 'SET_ITEMS', payload: [] });
+      dispatch({ type: "SET_ITEMS", payload: [] });
     }
-  }, [user]);
+  }, [user?.id, authStable]); // Dépendance sur l'ID et l'état stable
 
   const fetchCart = async () => {
     if (!user) return;
 
-    dispatch({ type: 'SET_LOADING', payload: true });
+    dispatch({ type: "SET_LOADING", payload: true });
     try {
       console.log("🛒 Récupération du panier...");
-      
-      // Requête simple sans retry pour éviter les boucles
+
+      // Lecture directe de cart_items pour éviter les soucis de RLS
       const { data: cartItemsData, error: cartError } = await supabase
-        .from('cart_items_enriched')
-        .select('*')
-        .eq('cart_id', user.id);
+        .from("cart_items")
+        .select("*")
+        .eq("cart_id", user.id);
 
       if (cartError) {
         console.warn("⚠️ Erreur panier:", cartError.message);
-        dispatch({ type: 'SET_ITEMS', payload: [] });
+        dispatch({ type: "SET_ITEMS", payload: [] });
         return;
       }
-      
-      console.log("📦 Articles du panier récupérés:", cartItemsData?.length || 0);
 
-      // Transform data directly from the view
-      const cartItems: CartItem[] = (cartItemsData || []).map(item => ({
+      console.log(
+        "📦 Articles du panier récupérés:",
+        cartItemsData?.length || 0
+      );
+
+      // Les détails (titre, image, boutique) sont stockés dans metadata
+      const cartItems: CartItem[] = (cartItemsData || []).map((item) => ({
         id: item.id,
         item_type: item.item_type,
         item_id: item.item_id,
@@ -117,53 +125,91 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         unit_price: item.unit_price,
         currency: item.currency,
         metadata: item.metadata,
-        title: item.title || 'Article inconnu',
-        image_url: item.image_url || '',
-        shop_name: item.shop_name || 'Boutique inconnue',
-        shop_id: item.shop_id || '',
+        title: item.metadata?.title || "Article inconnu",
+        image_url: item.metadata?.image_url || "",
+        shop_name: item.metadata?.shop_name || "Boutique inconnue",
+        shop_id: item.metadata?.shop_id || "",
       }));
 
-      dispatch({ type: 'SET_ITEMS', payload: cartItems });
+      dispatch({ type: "SET_ITEMS", payload: cartItems });
       console.log("✅ Panier chargé avec succès");
     } catch (error) {
-      console.warn('⚠️ Erreur panier:', error);
-      dispatch({ type: 'SET_ITEMS', payload: [] });
+      console.warn("⚠️ Erreur panier:", error);
+      dispatch({ type: "SET_ITEMS", payload: [] });
     }
   };
 
-  const addToCart = async (item: Omit<CartItem, 'id'>) => {
+  const addToCart = async (item: Omit<CartItem, "id">) => {
     if (!user) {
-      toast.error('Please sign in to add items to cart');
+      toast.error(
+        "Veuillez vous connecter pour ajouter des articles au panier"
+      );
       return;
     }
 
+    // Vérifier le stock disponible pour les produits physiques
+    if (item.item_type === "product") {
+      try {
+        const stockInfo = await analyticsService.checkStockAvailability(
+          item.item_id,
+          item.qty
+        );
+
+        if (!stockInfo.available) {
+          toast.error(
+            `Stock insuffisant. Seulement ${stockInfo.availableStock} article(s) disponible(s)`
+          );
+          return;
+        }
+      } catch (error) {
+        console.error("Erreur lors de la vérification du stock:", error);
+        toast.error("Impossible de vérifier le stock");
+        return;
+      }
+    }
+
     try {
+      const metadataToStore = {
+        ...item.metadata,
+        title: item.title,
+        image_url: item.image_url,
+        shop_name: item.shop_name,
+        shop_id: item.shop_id,
+      };
+
       const { data, error } = await supabase
-          .from('cart_items')
-          .insert({
-            cart_id: user.id,
-            item_type: item.item_type,
-            item_id: item.item_id,
-            qty: item.qty,
-            unit_price: item.unit_price,
-            currency: item.currency,
-            metadata: item.metadata,
-          })
-          .select()
-          .single();
+        .from("cart_items")
+        .insert({
+          cart_id: user.id,
+          item_type: item.item_type,
+          item_id: item.item_id,
+          qty: item.qty,
+          unit_price: item.unit_price,
+          currency: item.currency,
+          metadata: metadataToStore,
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
       const cartItem: CartItem = {
         id: data.id,
         ...item,
+        metadata: metadataToStore,
       };
 
-      dispatch({ type: 'ADD_ITEM', payload: cartItem });
-      toast.success('Added to cart');
+      dispatch({ type: "ADD_ITEM", payload: cartItem });
+
+      // Tracker l'ajout au panier pour les analytics
+      if (item.item_type === "product") {
+        analyticsService.trackCartAddition(item.item_id, item.qty, user.id);
+      }
+
+      toast.success("Ajouté au panier");
     } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Failed to add to cart');
+      console.error("Erreur lors de l'ajout au panier:", error);
+      toast.error("Impossible d'ajouter au panier");
     }
   };
 
@@ -175,33 +221,42 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const { error } = await supabase
-          .from('cart_items')
-          .update({ qty })
-          .eq('id', itemId);
+        .from("cart_items")
+        .update({ qty })
+        .eq("id", itemId);
 
       if (error) throw error;
 
-      dispatch({ type: 'UPDATE_ITEM', payload: { id: itemId, qty } });
+      dispatch({ type: "UPDATE_ITEM", payload: { id: itemId, qty } });
     } catch (error) {
-      console.error('Error updating quantity:', error);
-      toast.error('Failed to update quantity');
+      console.error("Error updating quantity:", error);
+      toast.error("Failed to update quantity");
     }
   };
 
   const removeFromCart = async (itemId: string) => {
     try {
+      // Récupérer les informations de l'article avant suppression pour le tracking
+      const itemToRemove = state.items.find((item) => item.id === itemId);
+
       const { error } = await supabase
-          .from('cart_items')
-          .delete()
-          .eq('id', itemId);
+        .from("cart_items")
+        .delete()
+        .eq("id", itemId);
 
       if (error) throw error;
 
-      dispatch({ type: 'REMOVE_ITEM', payload: itemId });
-      toast.success('Removed from cart');
+      dispatch({ type: "REMOVE_ITEM", payload: itemId });
+
+      // Tracker la suppression du panier pour les analytics
+      if (itemToRemove?.item_type === "product") {
+        analyticsService.trackCartRemoval(itemToRemove.item_id, user?.id);
+      }
+
+      toast.success("Supprimé du panier");
     } catch (error) {
-      console.error('Error removing from cart:', error);
-      toast.error('Failed to remove from cart');
+      console.error("Erreur lors de la suppression:", error);
+      toast.error("Impossible de supprimer du panier");
     }
   };
 
@@ -210,21 +265,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const { error } = await supabase
-          .from('cart_items')
-          .delete()
-          .eq('cart_id', user.id);
+        .from("cart_items")
+        .delete()
+        .eq("cart_id", user.id);
 
       if (error) throw error;
 
-      dispatch({ type: 'CLEAR_CART' });
+      dispatch({ type: "CLEAR_CART" });
     } catch (error) {
-      console.error('Error clearing cart:', error);
-      toast.error('Failed to clear cart');
+      console.error("Error clearing cart:", error);
+      toast.error("Failed to clear cart");
     }
   };
 
   const getTotal = () => {
-    return state.items.reduce((total, item) => total + (item.unit_price * item.qty), 0);
+    return state.items.reduce(
+      (total, item) => total + item.unit_price * item.qty,
+      0
+    );
   };
 
   const getItemCount = () => {
@@ -252,7 +310,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
 }

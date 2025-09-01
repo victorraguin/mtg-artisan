@@ -11,7 +11,9 @@ import {
   Users,
   Award,
   ArrowUpRight,
+  Heart,
 } from "lucide-react";
+import { ArtistCarousel } from "../components/UI/ArtistCarousel";
 
 export function Home() {
   const featuredCategories = [
@@ -21,6 +23,7 @@ export function Home() {
       image:
         "https://draftsim.com/wp-content/uploads/2023/10/To-the-Slaughter-Illustration-by-Christine-Choi-1024x636.jpg",
       link: "/search?category=Card+Alters",
+      popular: true,
     },
     {
       name: "Custom Tokens",
@@ -28,6 +31,7 @@ export function Home() {
       image:
         "https://draftsim.com/wp-content/uploads/2022/06/Banishing-Light-%E2%80%93-Will-Murai-1024x748.jpg",
       link: "/search?category=Custom+Tokens",
+      popular: true,
     },
     {
       name: "Deckbuilding",
@@ -35,6 +39,7 @@ export function Home() {
       image:
         "https://draftsim.com/wp-content/uploads/2022/06/Promise-of-Tomorrow-%E2%80%93-Seb-McKinnon-2-1024x749.jpg",
       link: "/search?type=service&category=Deckbuilding",
+      popular: false,
     },
     {
       name: "Playmats",
@@ -42,6 +47,7 @@ export function Home() {
       image:
         "https://draftsim.com/wp-content/uploads/2022/06/Gods-Demigods-Constellation-%E2%80%93-Jason-A.-Engle-1-1024x606.jpg",
       link: "/search?category=Playmats",
+      popular: true,
     },
   ];
 
@@ -63,22 +69,24 @@ export function Home() {
           <div className="animate-fade-in">
             <div className="inline-flex items-center px-6 py-3 rounded-2xl glass text-primary text-sm font-light mb-12 border border-primary/30">
               <Sparkles className="w-4 h-4 mr-2" />
-              La Marketplace de Référence MTG Artisan
+              L'Artisanat Magique de Référence
             </div>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-light mb-8 text-foreground leading-tight animate-fade-in tracking-tight">
-            Marketplace d'Art
-            <br />
-            <span className="text-primary">MTG Premium</span>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6">
+              <span>Boutiques</span>
+              <span className="text-primary">d'Art</span>
+              <span>Magique</span>
+            </div>
           </h1>
 
           <p
             className="text-lg md:text-xl lg:text-2xl text-muted-foreground/80 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in px-4"
             style={{ animationDelay: "0.2s" }}
           >
-            Commandez des alters de cartes personnalisés, des jetons et des
-            services professionnels auprès d'artistes talentueux du monde entier
+            Découvrez des alters de cartes uniques, des jetons et des créations
+            magiques d'artistes talentueux du monde entier
           </p>
 
           <div
@@ -87,17 +95,17 @@ export function Home() {
           >
             <Link
               to="/search"
-              className="gradient-border rounded-2xl overflow-hidden group"
+              className="gradient-border rounded-2xl overflow-hidden group transform hover:scale-[1.02] transition-all duration-300"
             >
               <span className="block px-8 md:px-10 py-4 md:py-5 text-sm md:text-base font-medium text-foreground hover:text-primary transition-colors duration-300 bg-card">
                 <Search className="inline mr-2 h-5 w-5" />
-                Explorer la Marketplace
+                Explorer les Boutiques
                 <ArrowRight className="inline ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
               </span>
             </Link>
             <Link
               to="/auth/signup"
-              className="px-8 md:px-10 py-4 md:py-5 rounded-2xl font-medium transition-all duration-300 text-sm md:text-base glass border border-border/30 hover:border-primary/30 hover:text-primary"
+              className="px-8 md:px-10 py-4 md:py-5 rounded-2xl font-medium transition-all duration-300 text-sm md:text-base glass border border-border/30 hover:border-primary/30 hover:text-primary hover:scale-[1.02] transform"
             >
               Devenir Créateur
             </Link>
@@ -105,17 +113,9 @@ export function Home() {
 
           {/* Stats preview */}
           <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mt-20 md:mt-24 animate-fade-in px-4"
+            className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mt-20 md:mt-24 animate-fade-in px-4"
             style={{ animationDelay: "0.6s" }}
           >
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-2">
-                10k+
-              </div>
-              <div className="text-muted-foreground/60 text-sm">
-                Pièces Personnalisées
-              </div>
-            </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-2">
                 500+
@@ -149,7 +149,7 @@ export function Home() {
             Catégories Populaires
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground/70 max-w-2xl mx-auto px-4">
-            De l'art personnalisé aux services professionnels
+            Découvrez les créations les plus demandées par nos clients
           </p>
         </div>
 
@@ -158,8 +158,16 @@ export function Home() {
             <Link
               key={category.name}
               to={category.link}
-              className="group bg-card rounded-3xl overflow-hidden border border-border/30 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10"
+              className="group bg-card rounded-3xl overflow-hidden border border-border/30 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 relative"
             >
+              {category.popular && (
+                <div className="absolute top-4 left-4 z-10">
+                  <div className="bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium flex items-center">
+                    <Star className="h-3 w-3 mr-1" />
+                    Populaire
+                  </div>
+                </div>
+              )}
               <div className="aspect-square bg-muted relative overflow-hidden">
                 <img
                   src={category.image}
@@ -184,15 +192,30 @@ export function Home() {
         </div>
       </section>
 
+      {/* Popular Artists Section */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-foreground px-4 tracking-tight">
+            Artistes Populaires
+          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground/70 max-w-2xl mx-auto px-4">
+            Découvrez nos artistes les plus talentueux et leurs créations
+            uniques
+          </p>
+        </div>
+
+        <ArtistCarousel />
+      </section>
+
       {/* Features Section */}
       <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-foreground tracking-tight">
-              Pourquoi Choisir MTG Artisans ?
+              Pourquoi Choisir ManaShop ?
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground/70 max-w-3xl mx-auto">
-              La marketplace de confiance pour l'art et les services MTG de
+              Les boutiques d'art de confiance pour vos créations magiques de
               qualité
             </p>
           </div>
@@ -248,16 +271,16 @@ export function Home() {
               Prêt à Trouver Votre Artiste Parfait ?
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Rejoignez des milliers de joueurs qui ont commandé des œuvres
-              d'art personnalisées incroyables
+              Rejoignez des milliers de joueurs qui ont découvert des œuvres
+              d'art magiques incroyables
             </p>
             <Link
               to="/search"
-              className="gradient-border rounded-2xl overflow-hidden group inline-flex items-center"
+              className="gradient-border rounded-2xl overflow-hidden group inline-flex items-center transform hover:scale-[1.02] transition-all duration-300"
             >
               <span className="block px-10 md:px-12 py-4 md:py-5 text-sm md:text-base font-medium text-foreground hover:text-primary transition-colors duration-300 bg-card">
                 <Palette className="inline mr-2 h-5 w-5" />
-                Commencer à Explorer
+                Découvrir les Boutiques
                 <ArrowRight className="inline ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
               </span>
             </Link>

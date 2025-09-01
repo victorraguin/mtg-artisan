@@ -7,7 +7,7 @@
   
   2. Insert missing categories safely
     - Use INSERT ... ON CONFLICT DO NOTHING to avoid duplicates
-    - Add standard MTG marketplace categories
+    - Add standard MTG boutique categories
   
   3. Security
     - Maintain existing RLS policies

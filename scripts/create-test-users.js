@@ -14,7 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 
 const testUsers = [
   {
-    email: 'admin@mtgartisans.com',
+    email: 'admin@manashop.com',
     password: 'admin123!',
     role: 'admin',
     display_name: 'Admin User'
@@ -44,10 +44,10 @@ const testUsers = [
     display_name: 'DeckBuilder Pro'
   },
   {
-    email: 'collector@mtg.com',
+    email: 'collector@manashop.com',
     password: 'collector123!',
     role: 'buyer',
-    display_name: 'MTG Collector'
+    display_name: 'ManaShop Collector'
   }
 ];
 
@@ -115,7 +115,7 @@ function getAvatarUrl(displayName) {
     'TokenCraft Bob': 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?w=150',
     'Judge Sarah': 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?w=150',
     'DeckBuilder Pro': 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?w=150',
-    'MTG Collector': 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=150'
+    'ManaShop Collector': 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=150'
   };
   return avatars[displayName] || null;
 }
@@ -131,11 +131,11 @@ function getCountry(email) {
 function getBio(role, displayName) {
   const bios = {
     'Admin User': 'Platform administrator',
-    'ArtMaster Alice': 'Professional MTG card alterer with 10+ years experience. Specializing in detailed character portraits and landscape extensions.',
+    'ArtMaster Alice': 'Professional ManaShop card alterer with 10+ years experience. Specializing in detailed character portraits and landscape extensions.',
     'TokenCraft Bob': 'Custom token creator and digital artist. I bring your creatures to life with unique designs.',
     'Judge Sarah': 'Level 2 Judge offering coaching and rules consultation. Competitive player for 15+ years.',
     'DeckBuilder Pro': 'Professional deckbuilder and tournament grinder. Specializing in competitive EDH and Modern.',
-    'MTG Collector': 'Passionate MTG collector always looking for unique artwork and custom pieces.'
+    'ManaShop Collector': 'Passionate ManaShop collector always looking for unique artwork and custom pieces.'
   };
   return bios[displayName] || '';
 }

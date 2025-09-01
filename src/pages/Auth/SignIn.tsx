@@ -16,10 +16,10 @@ export function SignIn() {
   const navigate = useNavigate();
 
   const testAccounts = [
-    { email: "admin@mtgartisans.com", password: "admin123!", role: "Admin" },
+    { email: "admin@manashop.com", password: "admin123!", role: "Admin" },
     { email: "alice@artmaster.com", password: "alice123!", role: "Creator" },
     { email: "bob@tokencraft.com", password: "bob123!", role: "Creator" },
-    { email: "collector@mtg.com", password: "collector123!", role: "Buyer" },
+    { email: "collector@manashop.com", password: "collector123!", role: "Buyer" },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,7 +73,7 @@ export function SignIn() {
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
             <span className="text-2xl font-light tracking-wider text-foreground group-hover:text-primary transition-colors duration-300">
-              MTG ARTISANS
+              MANASHOP
             </span>
           </Link>
           <h2 className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-3">

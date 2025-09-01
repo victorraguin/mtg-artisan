@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Search, Sparkles, Menu, X } from "lucide-react";
 import { UserMenu } from "./UserMenu";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Fermer le menu mobile au clic extérieur
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Fermer le menu mobile au clic sur un lien
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   return (
-    <header className="glass border-b border-border/30 sticky top-0 z-50 h-20">
+    <header className="bg-background/95 backdrop-blur-xl border-b border-border/30 sticky top-0 z-50 h-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full">
         <div className="flex items-center justify-between h-full">
           {/* Logo */}
@@ -17,7 +40,7 @@ export function Header() {
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
             <span className="text-xl font-light tracking-wider text-foreground group-hover:text-primary transition-colors duration-300">
-              MTG ARTISANS
+              MANASHOP
             </span>
           </Link>
 
@@ -27,13 +50,13 @@ export function Header() {
               to="/search"
               className="text-foreground/80 hover:text-primary transition-colors duration-300"
             >
-              Marketplace
+              Boutiques
             </Link>
             <Link
               to="/search?type=services"
               className="text-foreground/80 hover:text-primary transition-colors duration-300"
             >
-              Services
+              Artisans
             </Link>
           </nav>
 
@@ -70,21 +93,24 @@ export function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border/30">
+          <div
+            ref={mobileMenuRef}
+            className="lg:hidden py-4 border-t border-border/30 bg-background/95 backdrop-blur-xl"
+          >
             <nav className="flex flex-col space-y-4">
               <Link
                 to="/search"
-                className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-card/50"
+                onClick={handleMobileMenuClose}
               >
-                Marketplace
+                Boutiques
               </Link>
               <Link
                 to="/search?type=services"
-                className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-card/50"
+                onClick={handleMobileMenuClose}
               >
-                Services
+                Artisans
               </Link>
             </nav>
           </div>

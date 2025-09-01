@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase, withRetry } from "../lib/supabase";
+import supabase from "../lib/supabase";
 
 export function useProducts(filters: any = {}) {
   return useQuery({
@@ -24,14 +24,15 @@ export function useProducts(filters: any = {}) {
         query = query.eq("category_id", filters.categoryId);
       }
 
-      const { data, error } = await query.order("created_at", { ascending: false });
+      const { data, error } = await query.order("created_at", {
+        ascending: false,
+      });
 
       if (error) throw error;
       return data || [];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -56,6 +57,5 @@ export function useProduct(id: string) {
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
-    retry: 3,
   });
 }

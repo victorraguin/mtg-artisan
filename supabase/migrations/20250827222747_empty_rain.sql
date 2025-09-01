@@ -1,5 +1,5 @@
 /*
-  # MTG Artisan Marketplace - Initial Schema
+  # ManaShop Boutiques - Initial Schema
 
   1. New Tables
     - `profiles` - User profiles with role-based access

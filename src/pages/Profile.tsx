@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { Save, User, MapPin, Phone, Edit3 } from "lucide-react";
+import { Save, User, MapPin, Edit3 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "../components/UI/Button";
 import { Input } from "../components/UI/Input";
@@ -18,7 +18,6 @@ export function Profile() {
     shipping_city: profile?.shipping_city || "",
     shipping_postal_code: profile?.shipping_postal_code || "",
     shipping_country: profile?.shipping_country || "",
-    phone: profile?.phone || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +37,7 @@ export function Profile() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-6 lg:px-8 py-12">
       <div className="mb-12">
         <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
           Paramètres du Profil
@@ -80,27 +79,6 @@ export function Profile() {
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Informations de contact */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-medium text-foreground flex items-center">
-                <Phone className="h-5 w-5 mr-2 text-primary" />
-                Informations de contact
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Input
-                  label="Numéro de téléphone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  placeholder="+33 6 12 34 56 78"
-                  id="phone"
-                />
-              </div>
-            </div>
-
             {/* Adresse de livraison */}
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-foreground flex items-center">
@@ -256,15 +234,16 @@ export function Profile() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-6">
+            <div className="flex justify-end pt-6 border-t border-border/30">
               <Button
                 type="submit"
                 variant="gradient"
                 size="lg"
                 icon={Save}
                 loading={saving}
+                className="px-8 py-3 text-base font-medium"
               >
-                {saving ? "Sauvegarde..." : "Sauvegarder les modifications"}
+                {saving ? "Sauvegarde..." : "Sauvegarder dans mon profil"}
               </Button>
             </div>
           </form>
