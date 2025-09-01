@@ -30,8 +30,6 @@ export function useProducts(filters: any = {}) {
       return data || [];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -56,6 +54,5 @@ export function useProduct(id: string) {
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
-    retry: 3,
   });
 }

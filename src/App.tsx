@@ -29,7 +29,15 @@ import { CreateProduct } from "./pages/Creator/CreateProduct";
 import { CreateService } from "./pages/Creator/CreateService";
 import { ManageShop } from "./pages/Creator/ManageShop";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+    },
+  },
+});
 
 export default function App() {
   return (

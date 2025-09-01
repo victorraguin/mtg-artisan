@@ -17,6 +17,5 @@ export function useCategories(type?: "product" | "service") {
       return data || [];
     },
     staleTime: 10 * 60 * 1000, // 10 minutes pour les catégories
-    retry: 3,
   });
 }

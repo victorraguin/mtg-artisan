@@ -30,7 +30,6 @@ export function useServices(filters: any = {}) {
       return data || [];
     },
     staleTime: 5 * 60 * 1000,
-    retry: 3,
   });
 }
 
@@ -55,6 +54,5 @@ export function useService(id: string) {
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
-    retry: 3,
   });
 }
