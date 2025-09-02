@@ -1,5 +1,5 @@
 export type NotificationCategory = 'orders' | 'messages' | 'reviews' | 'shop' | 'system';
-export type NotificationChannel = 'inapp' | 'email' | 'push' | 'webhook';
+export type NotificationChannel = 'email' | 'push' | 'webhook';
 export type DigestFrequency = 'immediate' | 'daily' | 'weekly';
 
 export interface NotificationEvent {
