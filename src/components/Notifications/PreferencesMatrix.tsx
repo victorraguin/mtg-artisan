@@ -23,10 +23,7 @@ export default function PreferencesMatrix() {
     const key: PrefKey = `${category}-${channel}`;
     const enabled = !prefs[key];
     setPrefs({ ...prefs, [key]: enabled });
-    await fetch('/functions/v1/preferences', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify([{ category, channel, enabled }])
+      body: JSON.stringify({ category, channel, enabled })
     });
   };
 
