@@ -31,7 +31,7 @@ serve(async (req) => {
     .single();
 
   if (!escrow) return new Response('escrow introuvable', { status: 404 });
-  if (escrow.status !== 'delivered' && new Date(escrow.auto_release_at) > new Date()) {
+  if (escrow.status !== 'delivered' || new Date(escrow.auto_release_at) > new Date()) {
     return new Response('conditions non remplies', { status: 400 });
   }
 
