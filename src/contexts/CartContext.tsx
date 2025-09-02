@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect } from "react";
 import supabase from "../lib/supabase";
 import { useAuth } from "./AuthContext";
 import analyticsService from "../services/analytics";
+import { StockNotificationService } from "../services/stockNotificationService";
 import toast from "react-hot-toast";
 
 export interface CartItem {
@@ -204,6 +205,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Tracker l'ajout au panier pour les analytics
       if (item.item_type === "product") {
         analyticsService.trackCartAddition(item.item_id, item.qty, user.id);
+        // Vérifier le stock et envoyer des notifications si nécessaire
+        StockNotificationService.checkStockAfterCartAction(item.item_id);
       }
 
       toast.success("Ajouté au panier");

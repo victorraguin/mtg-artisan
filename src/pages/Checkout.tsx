@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
+import { NotificationService } from "../services/notificationService";
+import { StockNotificationService } from "../services/stockNotificationService";
 import supabase from "../lib/supabase";
 import { CheckoutSummary } from "../components/Checkout/CheckoutSummary";
 import { PayPalButtons } from "../components/Checkout/PayPalButtons";
@@ -101,6 +103,53 @@ export function Checkout() {
         .insert(orderItems);
 
       if (itemsError) throw itemsError;
+
+      // Émettre les événements de notification
+      try {
+        // Notification pour l'acheteur
+        await NotificationService.emitEvent("order.paid", [profile?.id!], {
+          orderId: order.id,
+          total: getTotal(),
+          currency: "EUR",
+        });
+
+        // Notifications pour les vendeurs (groupées par boutique)
+        const shopNotifications = new Map<string, any>();
+        for (const item of items) {
+          if (!shopNotifications.has(item.shop_id)) {
+            shopNotifications.set(item.shop_id, {
+              shopId: item.shop_id,
+              orderId: order.id,
+              buyerName: profile?.display_name || "Un client",
+              items: [],
+            });
+          }
+          shopNotifications.get(item.shop_id)!.items.push(item);
+        }
+
+        // Récupérer les propriétaires des boutiques et envoyer les notifications
+        for (const [shopId, notifData] of shopNotifications) {
+          const { data: shop } = await supabase
+            .from("shops")
+            .select("owner_id")
+            .eq("id", shopId)
+            .single();
+
+          if (shop?.owner_id) {
+            await NotificationService.emitEvent(
+              "order.created",
+              [shop.owner_id],
+              notifData
+            );
+          }
+        }
+      } catch (notifError) {
+        console.error("Erreur lors de l'envoi des notifications:", notifError);
+        // Ne pas faire échouer la commande pour une erreur de notification
+      }
+
+      // Vérifier le stock après la commande
+      StockNotificationService.checkStockAfterOrder(orderItems);
 
       // Clear cart and redirect
       clearCart();
