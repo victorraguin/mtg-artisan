@@ -1,0 +1,9 @@
+import { serve } from 'https://deno.land/std/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+serve(async () => {
+  const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+  // Fetch users with daily/weekly preferences and aggregate notifications
+  // Placeholder implementation
+  return new Response('ok');
+});
