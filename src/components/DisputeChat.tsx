@@ -19,7 +19,7 @@ export default function DisputeChat({ disputeId, userId }: Props) {
 
   useEffect(() => {
     supabase
-      .from<Message>('dispute_messages')
+      .from('dispute_messages')
       .select('*')
       .eq('dispute_id', disputeId)
       .order('created_at')
