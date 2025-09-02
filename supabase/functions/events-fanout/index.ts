@@ -22,19 +22,27 @@ serve(async () => {
       idempotencyKey: event.idempotency_key
     }, prefs);
 
+    let notificationIdMap: Record<string, number> = {};
     if (result.notifications.length) {
-      await supabase.from('notifications').insert(result.notifications.map(n => ({
+      const { data: insertedNotifications } = await supabase.from('notifications').insert(result.notifications.map(n => ({
         user_id: n.userId,
         category: n.category,
         event_name: n.eventName,
         title: event.name
-      })));
+      }))).select('id,user_id');
+      // Build a map from userId to notificationId
+      if (insertedNotifications) {
+        for (const notif of insertedNotifications) {
+          notificationIdMap[notif.user_id] = notif.id;
+        }
+      }
     }
     if (result.deliveries.length) {
       await supabase.from('notification_deliveries').insert(result.deliveries.map(d => ({
         user_id: d.userId,
         channel: d.channel,
-        status: 'queued'
+        status: 'queued',
+        notification_id: notificationIdMap[d.userId]
       })));
     }
   }
