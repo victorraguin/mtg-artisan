@@ -1,4 +1,4 @@
--- Système d'escompte et litige
+-- Système d'escrow et litige
 
 -- Table des escrows
 create table escrows (
