@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCart } from "../../contexts/CartContext";
+import { NotificationsBell } from "../Notifications";
 import supabase from "../../lib/supabase";
 
 export function UserMenu() {
@@ -163,6 +164,9 @@ export function UserMenu() {
 
   return (
     <div className="flex items-center space-x-2">
+      {/* Notifications Bell - only for authenticated users */}
+      {user && <NotificationsBell />}
+      
       {/* Cart */}
       <Link
         to="/cart"

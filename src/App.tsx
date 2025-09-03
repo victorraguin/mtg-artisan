@@ -31,6 +31,14 @@ import { EditProduct } from "./pages/Creator/EditProduct";
 import { CreateService } from "./pages/Creator/CreateService";
 import { ManageShop } from "./pages/Creator/ManageShop";
 
+// Notification pages
+import { NotificationPreferences } from "./pages/NotificationPreferences";
+import { NotificationTest } from "./pages/NotificationTest";
+
+// Debug components
+import { QuickNotificationTest } from "./components/Debug/QuickNotificationTest";
+import { DirectNotificationTest } from "./components/Debug/DirectNotificationTest";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -42,6 +50,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// Expose queryClient globally for services
+(window as any).queryClient = queryClient;
 
 export default function App() {
   return (
@@ -149,6 +160,24 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
+
+                {/* Notification routes */}
+                <Route
+                  path="/notifications/preferences"
+                  element={
+                    <ProtectedRoute>
+                      <NotificationPreferences />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/notifications/test"
+                  element={
+                    <ProtectedRoute>
+                      <NotificationTest />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </Layout>
             <Toaster
@@ -162,7 +191,7 @@ export default function App() {
               }}
             />
             {/* Composant de debug pour surveiller l'état de l'authentification */}
-            <DebugAuth />
+            <QuickNotificationTest />
           </CartProvider>
         </AuthProvider>
       </Router>
