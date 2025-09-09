@@ -16,11 +16,13 @@ import {
 import supabase from "../../lib/supabase";
 import { Save, ArrowLeft, Edit3 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function EditProduct() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
+  const { t } = useTranslation();
   const [shop, setShop] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,20 +59,20 @@ export function EditProduct() {
       ]);
 
       if (!shopResult.data) {
-        toast.error("Veuillez créer votre boutique d'abord");
+        toast.error(t("creator.common.createShopFirst"));
         navigate("/creator/shop");
         return;
       }
 
       if (!productResult.data) {
-        toast.error("Produit non trouvé");
+        toast.error(t("creator.edit.productNotFound"));
         navigate("/dashboard/creator");
         return;
       }
 
       // Vérifier que l'utilisateur est propriétaire du produit
       if (productResult.data.shop_id !== shopResult.data.id) {
-        toast.error("Accès non autorisé");
+        toast.error(t("creator.edit.unauthorized"));
         navigate("/dashboard/creator");
         return;
       }
@@ -93,8 +95,8 @@ export function EditProduct() {
         images: product.images || [],
       });
     } catch (error) {
-      console.error("Erreur lors de la récupération des données:", error);
-      toast.error("Erreur lors du chargement du produit");
+      console.error(t("creator.common.dataFetchError"), error);
+      toast.error(t("creator.edit.loadError"));
     } finally {
       setLoading(false);
     }
@@ -133,11 +135,11 @@ export function EditProduct() {
 
       if (error) throw error;
 
-      toast.success("Produit mis à jour avec succès !");
+      toast.success(t("creator.edit.success"));
       navigate("/dashboard/creator");
     } catch (error: any) {
-      console.error("Erreur lors de la mise à jour du produit:", error);
-      toast.error(error.message || "Échec de la mise à jour du produit");
+      console.error(t("creator.edit.errorUpdating"), error);
+      toast.error(error.message || t("creator.edit.error"));
     } finally {
       setSaving(false);
     }
@@ -163,15 +165,15 @@ export function EditProduct() {
             onClick={() => navigate("/dashboard/creator")}
             className="self-start"
           >
-            Retour
+            {t("creator.common.back")}
           </Button>
         </div>
         <div className="space-y-2">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-foreground">
-            Éditer le produit
+            {t("creator.edit.title")}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
-            Modifiez les détails de votre produit
+            {t("creator.edit.subtitle")}
           </p>
         </div>
       </div>
@@ -181,7 +183,7 @@ export function EditProduct() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4 md:mb-6">
             <Edit3 className="h-5 w-5 md:h-6 md:w-6 text-primary" />
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-foreground">
-              Informations du produit
+              {t("creator.common.productInfo")}
             </h2>
           </div>
         </CardHeader>
@@ -190,7 +192,7 @@ export function EditProduct() {
           <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
             {/* Type de produit */}
             <RadioGroup
-              label="Type de produit *"
+              label={t("creator.common.productType")}
               value={formData.type}
               onChange={(value) =>
                 setFormData({
@@ -201,13 +203,13 @@ export function EditProduct() {
               options={[
                 {
                   value: "physical",
-                  label: "Physique",
-                  description: "Expédition au client",
+                  label: t("creator.common.physical"),
+                  description: t("creator.common.physicalDescription"),
                 },
                 {
                   value: "digital",
-                  label: "Numérique",
-                  description: "Livraison par téléchargement",
+                  label: t("creator.common.digital"),
+                  description: t("creator.common.digitalDescription"),
                 },
               ]}
             />
@@ -215,7 +217,7 @@ export function EditProduct() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {/* Titre */}
               <Input
-                label="Titre du produit *"
+                label={t("creator.common.productTitle")}
                 required
                 value={formData.title}
                 onChange={(e) =>
@@ -226,7 +228,7 @@ export function EditProduct() {
 
               {/* Prix */}
               <Input
-                label="Prix (USD) *"
+                label={t("creator.common.priceUsd")}
                 type="number"
                 required
                 min="0"
@@ -247,7 +249,7 @@ export function EditProduct() {
               {formData.type === "physical" && (
                 <div>
                   <Input
-                    label="Stock total en inventaire"
+                    label={t("creator.common.inventoryStock")}
                     type="number"
                     min="0"
                     step="1"
@@ -265,16 +267,14 @@ export function EditProduct() {
                     placeholder="1"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    💡 Le stock disponible affiché aux clients sera
-                    automatiquement calculé (stock total - articles actuellement
-                    dans des paniers)
+                    {t("creator.common.stockNote")}
                   </p>
                 </div>
               )}
 
               {/* Délai de livraison */}
               <Input
-                label="Délai de livraison (jours)"
+                label={t("creator.common.leadTime")}
                 type="number"
                 min="0"
                 step="1"
@@ -293,7 +293,7 @@ export function EditProduct() {
 
               {/* Catégorie */}
               <Select
-                label="Catégorie"
+                label={t("creator.common.category")}
                 value={formData.category_id}
                 onChange={(value) =>
                   setFormData({ ...formData, category_id: value })
@@ -302,12 +302,12 @@ export function EditProduct() {
                   value: category.id,
                   label: category.name,
                 }))}
-                placeholder="Sélectionner une catégorie"
+                placeholder={t("creator.common.selectCategory")}
               />
 
               {/* Statut */}
               <Select
-                label="Statut"
+                label={t("creator.common.status")}
                 value={formData.status}
                 onChange={(value) =>
                   setFormData({
@@ -316,29 +316,29 @@ export function EditProduct() {
                   })
                 }
                 options={[
-                  { value: "draft", label: "Brouillon" },
-                  { value: "active", label: "Actif" },
-                  { value: "paused", label: "En pause" },
-                  { value: "sold_out", label: "Épuisé" },
+                  { value: "draft", label: t("creator.common.draft") },
+                  { value: "active", label: t("creator.common.active") },
+                  { value: "paused", label: t("creator.common.paused") },
+                  { value: "sold_out", label: t("creator.common.soldOut") },
                 ]}
               />
             </div>
 
             {/* Description */}
             <Textarea
-              label="Description *"
+              label={t("creator.common.description")}
               required
               rows={4}
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              placeholder="Décrivez votre produit en détail..."
+              placeholder={t("creator.common.descriptionPlaceholder")}
             />
 
             {/* Images */}
             <ImageUpload
-              label="Images du produit"
+              label={t("creator.common.productImages")}
               images={formData.images}
               onImagesChange={(images) => setFormData({ ...formData, images })}
               maxImages={3}
@@ -346,10 +346,10 @@ export function EditProduct() {
 
             {/* Tags */}
             <TagInput
-              label="Tags"
+              label={t("creator.common.tags")}
               tags={formData.tags}
               onTagsChange={(tags) => setFormData({ ...formData, tags })}
-              placeholder="Ajouter un tag..."
+              placeholder={t("creator.common.addTag")}
             />
 
             {/* Boutons d'action */}
@@ -361,7 +361,7 @@ export function EditProduct() {
                 size="lg"
                 className="order-2 sm:order-1"
               >
-                Annuler
+                {t("creator.common.cancel")}
               </Button>
               <Button
                 type="submit"
@@ -370,7 +370,9 @@ export function EditProduct() {
                 size="lg"
                 className="order-1 sm:order-2"
               >
-                {saving ? "Mise à jour..." : "Mettre à jour le produit"}
+                {saving
+                  ? t("creator.edit.submitting")
+                  : t("creator.edit.submit")}
               </Button>
             </div>
           </form>
