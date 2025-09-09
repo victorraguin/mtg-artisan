@@ -1,0 +1,10 @@
+{
+  "product": {
+    "notFound": "Produit Non Trouvé",
+    "notFoundDescription": "Le produit que vous recherchez n'existe pas…",
+    "backToSearch": "Retour à la Recherche",
+    "digital": "Numérique",
+    "quantity": "Quantité:",
+    "deliveryTime": "Délai de livraison: {{days}} jours"
+  }
+}
