@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,6 +13,7 @@ import { usePopularArtists } from "../../hooks/usePopularArtists";
 import { LoadingSpinner } from "./LoadingSpinner";
 
 export function ArtistCarousel() {
+  const { t } = useTranslation();
   const { artists, loading, error } = usePopularArtists(8);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -56,12 +58,14 @@ export function ArtistCarousel() {
           <Users className="h-12 w-12 text-muted-foreground" />
         </div>
         <h3 className="text-xl font-light text-foreground mb-3">
-          {error ? "Erreur de chargement" : "Aucun artiste disponible"}
+          {error
+            ? t("artistCarousel.error")
+            : t("artistCarousel.noArtists")}
         </h3>
         <p className="text-muted-foreground/70 max-w-md mx-auto">
           {error
-            ? "Impossible de charger les artistes populaires pour le moment."
-            : "Les artistes populaires apparaîtront ici une fois qu'ils auront rejoint la plateforme."}
+            ? t("artistCarousel.errorDescription")
+            : t("artistCarousel.noArtistsDescription")}
         </p>
 
         {/* Fallback avec des cartes d'exemple */}
@@ -71,10 +75,10 @@ export function ArtistCarousel() {
               <Star className="w-10 h-10 text-primary" />
             </div>
             <h4 className="text-lg font-light text-foreground mb-2">
-              Artistes Vérifiés
+              {t("artistCarousel.verifiedArtistsTitle")}
             </h4>
             <p className="text-muted-foreground/70 text-sm">
-              Tous nos artistes sont des professionnels qualifiés
+              {t("artistCarousel.verifiedArtistsDescription")}
             </p>
           </div>
 
@@ -83,10 +87,10 @@ export function ArtistCarousel() {
               <Package className="w-10 h-10 text-primary" />
             </div>
             <h4 className="text-lg font-light text-foreground mb-2">
-              Créations Uniques
+              {t("artistCarousel.uniqueCreationsTitle")}
             </h4>
             <p className="text-muted-foreground/70 text-sm">
-              Des œuvres d'art personnalisées et originales
+              {t("artistCarousel.uniqueCreationsDescription")}
             </p>
           </div>
 
@@ -95,10 +99,10 @@ export function ArtistCarousel() {
               <Briefcase className="w-10 h-10 text-primary" />
             </div>
             <h4 className="text-lg font-light text-foreground mb-2">
-              Services Premium
+              {t("artistCarousel.premiumServicesTitle")}
             </h4>
             <p className="text-muted-foreground/70 text-sm">
-              Expertise et qualité garanties
+              {t("artistCarousel.premiumServicesDescription")}
             </p>
           </div>
         </div>

@@ -1,0 +1,14 @@
+{
+  "artistCarousel": {
+    "error": "Erreur de chargement",
+    "noArtists": "Aucun artiste disponible",
+    "errorDescription": "Impossible de charger les artistes populaires pour le moment.",
+    "noArtistsDescription": "Les artistes populaires apparaîtront ici une fois qu'ils auront rejoint la plateforme.",
+    "verifiedArtistsTitle": "Artistes Vérifiés",
+    "verifiedArtistsDescription": "Tous nos artistes sont des professionnels qualifiés",
+    "uniqueCreationsTitle": "Créations Uniques",
+    "uniqueCreationsDescription": "Des œuvres d'art personnalisées et originales",
+    "premiumServicesTitle": "Services Premium",
+    "premiumServicesDescription": "Expertise et qualité garanties"
+  }
+}

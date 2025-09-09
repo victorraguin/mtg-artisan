@@ -1,0 +1,14 @@
+{
+  "artistCarousel": {
+    "error": "Loading error",
+    "noArtists": "No artists available",
+    "errorDescription": "Unable to load popular artists at the moment.",
+    "noArtistsDescription": "Popular artists will appear here once they join the platform.",
+    "verifiedArtistsTitle": "Verified Artists",
+    "verifiedArtistsDescription": "All our artists are qualified professionals",
+    "uniqueCreationsTitle": "Unique Creations",
+    "uniqueCreationsDescription": "Custom and original artworks",
+    "premiumServicesTitle": "Premium Services",
+    "premiumServicesDescription": "Expertise and quality guaranteed"
+  }
+}
