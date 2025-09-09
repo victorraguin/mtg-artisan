@@ -6,5 +6,55 @@
     "digital": "Numérique",
     "quantity": "Quantité:",
     "deliveryTime": "Délai de livraison: {{days}} jours"
+  },
+  "notificationPreferences": {
+    "title": "Préférences de notifications",
+    "subtitle": "Gérez comment vous souhaitez recevoir les notifications pour chaque type d'événement.",
+    "categories": {
+      "orders": {
+        "label": "Commandes",
+        "description": "Nouvelles commandes, mises à jour de statut, livraisons"
+      },
+      "messages": {
+        "label": "Messages",
+        "description": "Messages de clients et conversations"
+      },
+      "reviews": {
+        "label": "Avis",
+        "description": "Nouveaux avis et évaluations"
+      },
+      "shop": {
+        "label": "Boutique",
+        "description": "Gestion de boutique, devis, paiements"
+      },
+      "system": {
+        "label": "Système",
+        "description": "Mises à jour importantes et maintenance"
+      }
+    },
+    "channels": {
+      "inapp": {
+        "label": "Dans l'app",
+        "description": "Notifications dans l'interface"
+      },
+      "email": {
+        "label": "Email",
+        "description": "Notifications par email"
+      }
+    },
+    "categoryColumn": "Catégorie",
+    "save": "Sauvegarder les préférences",
+    "saving": "Sauvegarde...",
+    "about": "\uD83D\uDCA1 À propos des notifications",
+    "aboutInapp": "Notifications visibles dans l'interface utilisateur",
+    "aboutEmail": "Notifications envoyées à votre adresse email",
+    "enable": "Activer",
+    "disable": "Désactiver",
+    "toast": {
+      "success": "Préférences sauvegardées avec succès",
+      "error": "Erreur lors de la sauvegarde des préférences"
+    },
+    "toggle": "{{action}} les notifications {{channel}}",
+    "toggleForCategory": "{{action}} les notifications {{channel}} pour {{category}}"
   }
 }
