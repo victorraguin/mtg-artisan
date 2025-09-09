@@ -1,0 +1,132 @@
+{
+  "notificationTester": {
+    "noUser": {
+      "title": "Testeur de Notifications",
+      "message": "Vous devez être connecté pour tester les notifications."
+    },
+    "toast": {
+      "success": "Notification \"{{eventName}}\" envoyée avec succès !",
+      "error": "Erreur lors de l'envoi de la notification"
+    },
+    "header": {
+      "title": "Testeur de Notifications MTG Artisan",
+      "description": "Testez les différents types de notifications de l'application. Les notifications apparaîtront dans la cloche en haut à droite et comme toast."
+    },
+    "sendButton": {
+      "title": "Envoyer cette notification"
+    },
+    "categories": {
+      "orders": "Commandes",
+      "services": "Services",
+      "messages": "Messages",
+      "reviews": "Avis",
+      "shop": "Boutique",
+      "system": "Système"
+    },
+    "events": {
+      "orderPaid": {
+        "label": "Commande payée",
+        "description": "Simuler une commande payée avec succès"
+      },
+      "orderShipped": {
+        "label": "Commande expédiée",
+        "description": "Simuler l'expédition d'une commande"
+      },
+      "alterCommissioned": {
+        "label": "Alter commandé",
+        "description": "Simuler la commande d'un alter MTG"
+      },
+      "tokenReady": {
+        "label": "Tokens prêts",
+        "description": "Simuler des tokens personnalisés prêts"
+      },
+      "coachingScheduled": {
+        "label": "Coaching programmé",
+        "description": "Simuler une session de coaching programmée"
+      },
+      "deckbuildingCompleted": {
+        "label": "Deck terminé",
+        "description": "Simuler un deck construit terminé"
+      },
+      "messageNew": {
+        "label": "Nouveau message",
+        "description": "Simuler un nouveau message reçu"
+      },
+      "messageCommissionRequest": {
+        "label": "Demande de commission",
+        "description": "Simuler une demande de commission personnalisée"
+      },
+      "reviewPosted": {
+        "label": "Nouvel avis",
+        "description": "Simuler un nouvel avis client"
+      },
+      "shopVerified": {
+        "label": "Boutique vérifiée",
+        "description": "Simuler la vérification d'une boutique"
+      },
+      "productLowStock": {
+        "label": "Stock faible",
+        "description": "Simuler une alerte de stock faible"
+      },
+      "payoutCompleted": {
+        "label": "Paiement reçu",
+        "description": "Simuler un paiement reçu"
+      },
+      "systemUpdate": {
+        "label": "Mise à jour système",
+        "description": "Simuler une notification de mise à jour"
+      },
+      "accountLoginNewDevice": {
+        "label": "Nouvelle connexion",
+        "description": "Simuler une connexion depuis un nouvel appareil"
+      }
+    },
+    "instructions": {
+      "title": "💡 Instructions",
+      "items": {
+        "sendButton": {
+          "part1": "Cliquez sur le bouton",
+          "part2": "pour envoyer une notification test"
+        },
+        "bellAppearance": "Les notifications apparaîtront dans la cloche de notifications en haut à droite",
+        "toastConfirmation": "Un toast de confirmation s'affichera également",
+        "testCategories": "Vous pouvez tester les différentes catégories et types d'événements",
+        "persistence": "Les notifications sont persistantes et resteront visibles même après rafraîchissement"
+      }
+    }
+  },
+  "notificationTest": {
+    "title": "Test des Notifications",
+    "description": "Page de développement pour tester le système de notifications de MTG Artisan.",
+    "architectureTitle": "Architecture du Système",
+    "dbTablesTitle": "📊 Tables de Base de Données",
+    "dbTables": {
+      "events": "Queue d'événements entrants",
+      "notifications": "Notifications créées pour les utilisateurs",
+      "preferences": "Préférences utilisateur",
+      "deliveries": "Tâches de livraison (email, push, etc.)",
+      "templates": "Templates de messages"
+    },
+    "functionsTitle": "⚙️ Fonctions Supabase",
+    "functions": {
+      "eventsEmit": "Émet un événement",
+      "eventsFanout": "Traite les événements en notifications",
+      "notificationsRead": "Marque comme lu",
+      "notificationsSeen": "Marque comme vu",
+      "preferences": "Gère les préférences"
+    },
+    "flowTitle": "🔄 Flux de Données",
+    "flow": {
+      "step1": "1. L'application émet un événement via",
+      "step2": "2. L'événement est stocké dans",
+      "step3": {
+        "part1": "3. La fonction",
+        "part2": "traite les événements"
+      },
+      "step4": "4. Les notifications sont créées dans",
+      "step5": "5. Les tâches de livraison sont créées dans",
+      "step6": "6. L'interface React s'abonne aux changements en temps réel",
+      "step7": "7. Les notifications apparaissent dans la cloche et comme toasts"
+    }
+  }
+}

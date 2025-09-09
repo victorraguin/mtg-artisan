@@ -1,0 +1,132 @@
+{
+  "notificationTester": {
+    "noUser": {
+      "title": "Notification Tester",
+      "message": "You must be logged in to test notifications."
+    },
+    "toast": {
+      "success": "Notification \"{{eventName}}\" sent successfully!",
+      "error": "Error sending notification"
+    },
+    "header": {
+      "title": "MTG Artisan Notification Tester",
+      "description": "Test the different types of notifications in the app. Notifications will appear in the bell at the top right and as a toast."
+    },
+    "sendButton": {
+      "title": "Send this notification"
+    },
+    "categories": {
+      "orders": "Orders",
+      "services": "Services",
+      "messages": "Messages",
+      "reviews": "Reviews",
+      "shop": "Shop",
+      "system": "System"
+    },
+    "events": {
+      "orderPaid": {
+        "label": "Order paid",
+        "description": "Simulate a successfully paid order"
+      },
+      "orderShipped": {
+        "label": "Order shipped",
+        "description": "Simulate an order being shipped"
+      },
+      "alterCommissioned": {
+        "label": "Alter commissioned",
+        "description": "Simulate ordering a MTG alter"
+      },
+      "tokenReady": {
+        "label": "Tokens ready",
+        "description": "Simulate custom tokens ready"
+      },
+      "coachingScheduled": {
+        "label": "Coaching scheduled",
+        "description": "Simulate a scheduled coaching session"
+      },
+      "deckbuildingCompleted": {
+        "label": "Deck completed",
+        "description": "Simulate a finished deck build"
+      },
+      "messageNew": {
+        "label": "New message",
+        "description": "Simulate a new message received"
+      },
+      "messageCommissionRequest": {
+        "label": "Commission request",
+        "description": "Simulate a custom commission request"
+      },
+      "reviewPosted": {
+        "label": "New review",
+        "description": "Simulate a new customer review"
+      },
+      "shopVerified": {
+        "label": "Shop verified",
+        "description": "Simulate a shop verification"
+      },
+      "productLowStock": {
+        "label": "Low stock",
+        "description": "Simulate a low stock alert"
+      },
+      "payoutCompleted": {
+        "label": "Payout received",
+        "description": "Simulate a received payout"
+      },
+      "systemUpdate": {
+        "label": "System update",
+        "description": "Simulate a system update notification"
+      },
+      "accountLoginNewDevice": {
+        "label": "New login",
+        "description": "Simulate a login from a new device"
+      }
+    },
+    "instructions": {
+      "title": "💡 Instructions",
+      "items": {
+        "sendButton": {
+          "part1": "Click the button",
+          "part2": "to send a test notification"
+        },
+        "bellAppearance": "Notifications will appear in the notification bell at the top right",
+        "toastConfirmation": "A confirmation toast will also appear",
+        "testCategories": "You can test the different categories and event types",
+        "persistence": "Notifications are persistent and remain visible even after refresh"
+      }
+    }
+  },
+  "notificationTest": {
+    "title": "Notification Test",
+    "description": "Development page to test the MTG Artisan notification system.",
+    "architectureTitle": "System Architecture",
+    "dbTablesTitle": "📊 Database Tables",
+    "dbTables": {
+      "events": "Incoming events queue",
+      "notifications": "Notifications created for users",
+      "preferences": "User preferences",
+      "deliveries": "Delivery tasks (email, push, etc.)",
+      "templates": "Message templates"
+    },
+    "functionsTitle": "⚙️ Supabase Functions",
+    "functions": {
+      "eventsEmit": "Emits an event",
+      "eventsFanout": "Processes events into notifications",
+      "notificationsRead": "Marks as read",
+      "notificationsSeen": "Marks as seen",
+      "preferences": "Manages preferences"
+    },
+    "flowTitle": "🔄 Data Flow",
+    "flow": {
+      "step1": "1. The application emits an event via",
+      "step2": "2. The event is stored in",
+      "step3": {
+        "part1": "3. The",
+        "part2": "function processes the events"
+      },
+      "step4": "4. Notifications are created in",
+      "step5": "5. Delivery tasks are created in",
+      "step6": "6. The React interface subscribes to realtime changes",
+      "step7": "7. Notifications appear in the bell and as toasts"
+    }
+  }
+}
