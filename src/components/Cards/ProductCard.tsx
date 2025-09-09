@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, Clock, MapPin } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface ProductCardProps {
   product: any;
@@ -10,6 +11,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { t } = useTranslation();
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ export function ProductCard({ product }: ProductCardProps) {
         shop_id: product.shop_id,
       });
     } catch (error) {
-      toast.error("Failed to add to cart");
+      toast.error(t("add_to_cart_failed"));
     }
   };
 
@@ -50,7 +52,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 <div className="w-16 h-16 border-2 border-dashed border-muted-foreground/30 rounded-full flex items-center justify-center mb-2">
                   <span className="text-2xl">📷</span>
                 </div>
-                <p className="text-sm">Aucune image</p>
+                <p className="text-sm">{t("no_image")}</p>
               </div>
             </div>
           )}
@@ -58,7 +60,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Digital Badge */}
           {product.type === "digital" && (
             <div className="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-medium text-primary border border-primary/30">
-              Digital
+              {t("digital")}
             </div>
           )}
 
@@ -105,7 +107,7 @@ export function ProductCard({ product }: ProductCardProps) {
               {product.lead_time_days && (
                 <div className="flex items-center text-xs text-muted-foreground/60 mt-1">
                   <Clock className="h-3 w-3 mr-1" />
-                  {product.lead_time_days} jours
+                  {t("lead_time_days", { count: product.lead_time_days })}
                 </div>
               )}
             </div>
