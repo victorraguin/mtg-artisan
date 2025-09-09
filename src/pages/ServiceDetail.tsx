@@ -4,6 +4,7 @@ import supabase from "../lib/supabase";
 import { MessageSquare, Clock, MapPin, Star, CheckCircle } from "lucide-react";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
 import toast from "react-hot-toast";
+import { t } from "i18next";
 
 export function ServiceDetail() {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +35,7 @@ export function ServiceDetail() {
       setService(data);
     } catch (error) {
       console.error("Error fetching service:", error);
-      toast.error("Service not found");
+      toast.error(t("serviceDetail.notFound"));
     } finally {
       setLoading(false);
     }
@@ -203,7 +204,7 @@ export function ServiceDetail() {
                 ) : (
                   <div className="space-y-4">
                     <button
-                      onClick={() => toast.success("Service added to cart!")}
+                      onClick={() => toast.success(t("serviceDetail.addedToCart"))}
                       className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors"
                     >
                       Order Now
