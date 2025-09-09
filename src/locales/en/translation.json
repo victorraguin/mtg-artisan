@@ -1,0 +1,7 @@
+{
+  "createService": {
+    "needShop": "Please create your shop first",
+    "success": "Service created successfully!",
+    "error": "Failed to create service"
+  }
+}

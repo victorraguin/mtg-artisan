@@ -4,6 +4,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import supabase from "../../lib/supabase";
 import { Save, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { t } from "i18next";
 
 export function CreateService() {
   const { user } = useAuth();
@@ -41,7 +42,7 @@ export function CreateService() {
       setCategories(categoriesResult.data || []);
 
       if (!shopResult.data) {
-        toast.error("Please create your shop first");
+        toast.error(t("createService.needShop"));
         navigate("/creator/shop");
         return;
       }
@@ -71,11 +72,11 @@ export function CreateService() {
 
       if (error) throw error;
 
-      toast.success("Service created successfully!");
+      toast.success(t("createService.success"));
       navigate("/dashboard/creator");
     } catch (error: any) {
       console.error("Error creating service:", error);
-      toast.error(error.message || "Failed to create service");
+      toast.error(error.message || t("createService.error"));
     } finally {
       setSaving(false);
     }
