@@ -12,32 +12,32 @@ import toast from "react-hot-toast";
 const categories = [
   {
     key: "orders",
-    label: "Commandes",
-    description: "Nouvelles commandes, mises à jour de statut, livraisons",
+    label: "Orders",
+    description: "New orders, status updates, deliveries",
     icon: "📦",
   },
   {
     key: "messages",
     label: "Messages",
-    description: "Messages de clients et conversations",
+    description: "Customer messages and conversations",
     icon: "💬",
   },
   {
     key: "reviews",
-    label: "Avis",
-    description: "Nouveaux avis et évaluations",
+    label: "Reviews",
+    description: "New reviews and ratings",
     icon: "⭐",
   },
   {
     key: "shop",
-    label: "Boutique",
-    description: "Gestion de boutique, devis, paiements",
+    label: "Shop",
+    description: "Shop management, quotes, payments",
     icon: "🏪",
   },
   {
     key: "system",
-    label: "Système",
-    description: "Mises à jour importantes et maintenance",
+    label: "System",
+    description: "Important updates and maintenance",
     icon: "⚙️",
   },
 ] as const;
@@ -45,14 +45,14 @@ const categories = [
 const channels = [
   {
     key: "inapp",
-    label: "Dans l'app",
-    description: "Notifications dans l'interface",
+    label: "In-app",
+    description: "Notifications inside the interface",
     icon: Bell,
   },
   {
     key: "email",
     label: "Email",
-    description: "Notifications par email",
+    description: "Email notifications",
     icon: Mail,
   },
 ] as const;
@@ -62,13 +62,13 @@ export function NotificationPreferences() {
   const [preferences, setPreferences] = useState<Record<string, boolean>>({});
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Récupérer les préférences actuelles
+  // Fetch current preferences
   const { data: currentPreferences = [], isLoading } = useQuery({
     queryKey: ["notification-preferences"],
     queryFn: NotificationService.getPreferences,
   });
 
-  // Mutation pour sauvegarder les préférences
+  // Mutation to save preferences
   const savePreferencesMutation = useMutation({
     mutationFn: async () => {
       const promises = Object.entries(preferences).map(([key, enabled]) => {
@@ -80,31 +80,31 @@ export function NotificationPreferences() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification-preferences"] });
       setHasChanges(false);
-      toast.success("Préférences sauvegardées avec succès");
+      toast.success("Preferences saved successfully");
     },
     onError: (error) => {
-      toast.error("Erreur lors de la sauvegarde des préférences");
+      toast.error("Error saving preferences");
       console.error("Error saving preferences:", error);
     },
   });
 
-  // Initialiser les préférences locales
+  // Initialize local preferences
   useEffect(() => {
-    // Ne pas traiter si les données sont encore en cours de chargement
+    // Skip if data is still loading
     if (isLoading) return;
 
     const prefs: Record<string, boolean> = {};
 
-    // Initialiser avec les valeurs par défaut
+    // Initialize with default values
     categories.forEach((category) => {
       channels.forEach((channel) => {
         const key = `${category.key}-${channel.key}`;
-        // Par défaut, toutes les notifications sont activées
+        // By default, all notifications are enabled
         prefs[key] = true;
       });
     });
 
-    // Appliquer les préférences existantes
+    // Apply existing preferences
     currentPreferences.forEach((pref) => {
       const key = `${pref.category}-${pref.channel}`;
       prefs[key] = pref.enabled;
@@ -147,15 +147,14 @@ export function NotificationPreferences() {
       <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-            Préférences de notifications
+            Notification Preferences
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base">
-            Gérez comment vous souhaitez recevoir les notifications pour chaque
-            type d'événement.
+            Manage how you want to receive notifications for each event type.
           </p>
         </div>
 
-        {/* Version mobile - Cards empilées */}
+        {/* Mobile version - stacked cards */}
         <div className="block md:hidden space-y-4">
           {categories.map((category) => (
             <div
@@ -206,8 +205,8 @@ export function NotificationPreferences() {
                           isEnabled ? "bg-primary" : "bg-muted"
                         }`}
                         title={`${
-                          isEnabled ? "Désactiver" : "Activer"
-                        } les notifications ${channel.label.toLowerCase()}`}
+                          isEnabled ? "Disable" : "Enable"
+                        } ${channel.label.toLowerCase()} notifications`}
                       >
                         <div
                           className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
@@ -229,7 +228,7 @@ export function NotificationPreferences() {
           <div className="bg-card/50 border-b border-border p-4 lg:p-6">
             <div className="grid grid-cols-3 gap-4 lg:gap-8">
               <div className="font-semibold text-foreground text-base lg:text-lg">
-                Catégorie
+                Category
               </div>
               {channels.map((channel) => (
                 <div key={channel.key} className="text-center">
@@ -247,7 +246,7 @@ export function NotificationPreferences() {
             </div>
           </div>
 
-          {/* Lignes des catégories */}
+          {/* Category rows */}
           <div className="divide-y divide-border">
             {categories.map((category) => (
               <div
@@ -285,8 +284,8 @@ export function NotificationPreferences() {
                             isEnabled ? "bg-primary" : "bg-muted"
                           }`}
                           title={`${
-                            isEnabled ? "Désactiver" : "Activer"
-                          } les notifications ${channel.label.toLowerCase()} pour ${category.label.toLowerCase()}`}
+                            isEnabled ? "Disable" : "Enable"
+                          } ${channel.label.toLowerCase()} notifications for ${category.label.toLowerCase()}`}
                         >
                           <div
                             className={`absolute top-1 w-4 h-4 lg:w-5 lg:h-5 bg-white rounded-full transition-transform shadow-sm ${
@@ -316,31 +315,29 @@ export function NotificationPreferences() {
               {savePreferencesMutation.isPending ? (
                 <>
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  <span>Sauvegarde...</span>
+                  <span>Saving...</span>
                 </>
               ) : (
                 <>
                   <Save className="w-4 h-4" />
-                  <span>Sauvegarder les préférences</span>
+                  <span>Save preferences</span>
                 </>
               )}
             </button>
           </div>
         )}
 
-        {/* Note informative */}
+        {/* Info note */}
         <div className="mt-8 p-4 bg-muted/30 border border-border rounded-lg">
           <h3 className="font-medium text-foreground mb-2">
-            💡 À propos des notifications
+            💡 About notifications
           </h3>
           <ul className="text-sm text-muted-foreground space-y-1">
             <li>
-              • <strong>Dans l'app</strong> : Notifications visibles dans
-              l'interface utilisateur
+              • <strong>In-app</strong>: Notifications visible in the user interface
             </li>
             <li>
-              • <strong>Email</strong> : Notifications envoyées à votre adresse
-              email
+              • <strong>Email</strong>: Notifications sent to your email address
             </li>
           </ul>
         </div>

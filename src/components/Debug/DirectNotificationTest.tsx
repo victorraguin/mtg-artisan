@@ -14,7 +14,7 @@ export function DirectNotificationTest() {
     category: string
   ) => {
     try {
-      // Utiliser la fonction notifications-direct pour bypasser RLS
+      // Use notifications-direct function to bypass RLS
       const { error } = await supabase.functions.invoke(
         "notifications-direct",
         {
@@ -30,37 +30,37 @@ export function DirectNotificationTest() {
       );
 
       if (error) throw error;
-      toast.success("Notification créée directement !");
+      toast.success("Notification created directly!");
     } catch (error) {
-      toast.error("Erreur lors de la création");
+      toast.error("Error creating notification");
       console.error(error);
     }
   };
 
   const testNotifications = [
     {
-      title: "💳 Commande payée",
-      body: "Votre commande TEST-123 a été payée (89.99€)",
+      title: "💳 Order paid",
+      body: "Your order TEST-123 has been paid (89.99€)",
       category: "orders",
     },
     {
-      title: "🎨 Alter commandé",
-      body: "Votre alter Lightning Bolt a été commandé",
+      title: "🎨 Alter ordered",
+      body: "Your Lightning Bolt alter has been ordered",
       category: "orders",
     },
     {
-      title: "⚠️ Stock faible",
-      body: "Plus que 2 exemplaires de Test Product",
+      title: "⚠️ Low stock",
+      body: "Only 2 copies of Test Product left",
       category: "shop",
     },
     {
-      title: "💬 Nouveau message",
-      body: "Test User vous a envoyé un message",
+      title: "💬 New message",
+      body: "Test User sent you a message",
       category: "messages",
     },
     {
-      title: "✅ Boutique vérifiée",
-      body: "Votre boutique Ma Boutique Test est maintenant vérifiée",
+      title: "✅ Shop verified",
+      body: "Your shop My Test Shop is now verified",
       category: "shop",
     },
   ];
@@ -68,7 +68,7 @@ export function DirectNotificationTest() {
   return (
     <div className="fixed bottom-20 right-4 bg-card border border-border rounded-lg p-4 shadow-lg z-50">
       <h3 className="text-sm font-medium text-foreground mb-3">
-        🔧 Test Direct (sans Edge Function)
+        🔧 Direct Test (without Edge Function)
       </h3>
       <div className="space-y-2">
         {testNotifications.map((notif, index) => (

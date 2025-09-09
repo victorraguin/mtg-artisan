@@ -6,32 +6,32 @@ import toast from 'react-hot-toast';
 
 const TEST_EVENTS = [
   {
-    category: 'Commandes',
+    category: 'Orders',
     icon: Package,
     color: 'text-blue-500',
     events: [
       {
         name: 'order.paid',
-        label: 'Commande payée',
-        description: 'Simuler une commande payée avec succès',
-        payload: { orderId: 'ORD-123', total: 89.99, currency: 'EUR', buyerName: 'Alice Dupont' }
+        label: 'Order paid',
+        description: 'Simulate a successfully paid order',
+        payload: { orderId: 'ORD-123', total: 89.99, currency: 'EUR', buyerName: 'Alice Smith' }
       },
       {
         name: 'order.shipped',
-        label: 'Commande expédiée',
-        description: 'Simuler l\'expédition d\'une commande',
+        label: 'Order shipped',
+        description: 'Simulate a shipped order',
         payload: { orderId: 'ORD-123', trackingNumber: 'FR123456789', shopName: 'ArtMaster Studio' }
       },
       {
         name: 'alter.commissioned',
-        label: 'Alter commandé',
-        description: 'Simuler la commande d\'un alter MTG',
-        payload: { cardName: 'Lightning Bolt', artistName: 'Marie Artisan', orderId: 'ALT-456' }
+        label: 'Alter commissioned',
+        description: 'Simulate an MTG alter order',
+        payload: { cardName: 'Lightning Bolt', artistName: 'Mary Artisan', orderId: 'ALT-456' }
       },
       {
         name: 'token.ready',
-        label: 'Tokens prêts',
-        description: 'Simuler des tokens personnalisés prêts',
+        label: 'Tokens ready',
+        description: 'Simulate custom tokens ready',
         payload: { tokenName: 'Goblin Token Set', orderId: 'TOK-789' }
       }
     ]
@@ -43,14 +43,14 @@ const TEST_EVENTS = [
     events: [
       {
         name: 'coaching.scheduled',
-        label: 'Coaching programmé',
-        description: 'Simuler une session de coaching programmée',
+        label: 'Coaching scheduled',
+        description: 'Simulate a scheduled coaching session',
         payload: { coachName: 'Pro Player', date: '2024-02-15', time: '19:00' }
       },
       {
         name: 'deckbuilding.completed',
-        label: 'Deck terminé',
-        description: 'Simuler un deck construit terminé',
+        label: 'Deck completed',
+        description: 'Simulate a finished deck build',
         payload: { format: 'Modern Burn', builderName: 'DeckMaster', orderId: 'DECK-321' }
       }
     ]
@@ -62,71 +62,71 @@ const TEST_EVENTS = [
     events: [
       {
         name: 'message.new',
-        label: 'Nouveau message',
-        description: 'Simuler un nouveau message reçu',
-        payload: { senderName: 'Bob Collectionneur' }
+        label: 'New message',
+        description: 'Simulate a new message received',
+        payload: { senderName: 'Bob Collector' }
       },
       {
         name: 'message.commission_request',
-        label: 'Demande de commission',
-        description: 'Simuler une demande de commission personnalisée',
+        label: 'Commission request',
+        description: 'Simulate a custom commission request',
         payload: { buyerName: 'Sarah Magic' }
       }
     ]
   },
   {
-    category: 'Avis',
+    category: 'Reviews',
     icon: Star,
     color: 'text-yellow-500',
     events: [
       {
         name: 'review.posted',
-        label: 'Nouvel avis',
-        description: 'Simuler un nouvel avis client',
-        payload: { reviewerName: 'Client Satisfait', rating: 5, productName: 'Alter Lightning Bolt' }
+        label: 'New review',
+        description: 'Simulate a new customer review',
+        payload: { reviewerName: 'Happy Customer', rating: 5, productName: 'Alter Lightning Bolt' }
       }
     ]
   },
   {
-    category: 'Boutique',
+    category: 'Shop',
     icon: Settings,
     color: 'text-orange-500',
     events: [
       {
         name: 'shop.verified',
-        label: 'Boutique vérifiée',
-        description: 'Simuler la vérification d\'une boutique',
-        payload: { shopName: 'Mon Atelier MTG' }
+        label: 'Shop verified',
+        description: 'Simulate a shop verification',
+        payload: { shopName: 'My MTG Workshop' }
       },
       {
         name: 'product.low_stock',
-        label: 'Stock faible',
-        description: 'Simuler une alerte de stock faible',
+        label: 'Low stock',
+        description: 'Simulate a low stock alert',
         payload: { productName: 'Playmat Dragon', stock: 2 }
       },
       {
         name: 'payout.completed',
-        label: 'Paiement reçu',
-        description: 'Simuler un paiement reçu',
+        label: 'Payout received',
+        description: 'Simulate a received payout',
         payload: { amount: 250.50, currency: 'EUR' }
       }
     ]
   },
   {
-    category: 'Système',
+    category: 'System',
     icon: AlertTriangle,
     color: 'text-red-500',
     events: [
       {
         name: 'system.update',
-        label: 'Mise à jour système',
-        description: 'Simuler une notification de mise à jour',
+        label: 'System update',
+        description: 'Simulate a system update notification',
         payload: {}
       },
       {
         name: 'account.login_new_device',
-        label: 'Nouvelle connexion',
-        description: 'Simuler une connexion depuis un nouvel appareil',
+        label: 'New login',
+        description: 'Simulate a login from a new device',
         payload: { device: 'iPhone 15', location: 'Paris, France' }
       }
     ]
@@ -141,10 +141,10 @@ export function NotificationTester() {
     return (
       <div className="p-6 bg-card border border-border rounded-lg">
         <h3 className="text-lg font-semibold text-foreground mb-2">
-          Testeur de Notifications
+          Notification Tester
         </h3>
         <p className="text-muted-foreground">
-          Vous devez être connecté pour tester les notifications.
+          You must be logged in to test notifications.
         </p>
       </div>
     );
@@ -156,10 +156,10 @@ export function NotificationTester() {
     setIsLoading(eventName);
     try {
       await NotificationService.emitEvent(eventName, [user.id], payload);
-      toast.success(`Notification "${eventName}" envoyée avec succès !`);
+      toast.success(`Notification "${eventName}" sent successfully!`);
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de la notification:', error);
-      toast.error('Erreur lors de l\'envoi de la notification');
+      console.error('Error sending notification:', error);
+      toast.error('Error sending notification');
     } finally {
       setIsLoading(null);
     }
@@ -170,11 +170,10 @@ export function NotificationTester() {
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-foreground mb-2 flex items-center space-x-2">
           <Play className="w-5 h-5 text-primary" />
-          <span>Testeur de Notifications MTG Artisan</span>
+          <span>MTG Artisan Notification Tester</span>
         </h3>
         <p className="text-muted-foreground text-sm">
-          Testez les différents types de notifications de l'application. 
-          Les notifications apparaîtront dans la cloche en haut à droite et comme toast.
+          Test the different types of notifications in the app. Notifications will appear in the bell at the top right and as toasts.
         </p>
       </div>
 
@@ -209,7 +208,7 @@ export function NotificationTester() {
                       onClick={() => handleSendNotification(event.name, event.payload)}
                       disabled={isLoading === event.name}
                       className="ml-3 p-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                      title="Envoyer cette notification"
+                      title="Send this notification"
                     >
                       {isLoading === event.name ? (
                         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -228,11 +227,11 @@ export function NotificationTester() {
       <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
         <h5 className="font-medium text-foreground text-sm mb-2">💡 Instructions</h5>
         <ul className="text-xs text-muted-foreground space-y-1">
-          <li>• Cliquez sur le bouton <Send className="w-3 h-3 inline" /> pour envoyer une notification test</li>
-          <li>• Les notifications apparaîtront dans la cloche de notifications en haut à droite</li>
-          <li>• Un toast de confirmation s'affichera également</li>
-          <li>• Vous pouvez tester les différentes catégories et types d'événements</li>
-          <li>• Les notifications sont persistantes et resteront visibles même après rafraîchissement</li>
+          <li>• Click the <Send className="w-3 h-3 inline" /> button to send a test notification</li>
+          <li>• Notifications will appear in the notification bell at the top right</li>
+          <li>• A confirmation toast will also appear</li>
+          <li>• You can test the different categories and event types</li>
+          <li>• Notifications are persistent and remain visible even after refresh</li>
         </ul>
       </div>
     </div>

@@ -10,7 +10,7 @@ export function useNotifications() {
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Récupérer les notifications
+  // Fetch notifications
   const {
     data: notifications = [],
     isLoading,
@@ -19,29 +19,29 @@ export function useNotifications() {
     queryKey: ["notifications"],
     queryFn: () => NotificationService.getNotifications(),
     enabled: !!user,
-    refetchInterval: 30000, // Actualise toutes les 30 secondes
+    refetchInterval: 30000, // Refresh every 30 seconds
   });
 
-  // Récupérer le nombre de notifications non lues
+  // Fetch unread notification count
   const { data: unreadCount = 0 } = useQuery({
     queryKey: ["notifications", "unread-count"],
     queryFn: () => NotificationService.getUnreadCount(),
     enabled: !!user,
-    refetchInterval: 60000, // Refetch toutes les 60 secondes pour rester synchronisé
-    staleTime: 30000, // Considérer les données comme fraîches pendant 30 secondes
+    refetchInterval: 60000, // Refetch every 60 seconds to stay in sync
+    staleTime: 30000, // Consider data fresh for 30 seconds
   });
 
-  // Marquer comme lu avec optimistic update
+  // Mark as read with optimistic update
   const markAsReadMutation = useMutation({
     mutationFn: NotificationService.markAsRead,
     onMutate: async (notificationId: string) => {
-      // Annuler les requêtes en cours
+      // Cancel ongoing queries
       await queryClient.cancelQueries({ queryKey: ["notifications"] });
       await queryClient.cancelQueries({
         queryKey: ["notifications", "unread-count"],
       });
 
-      // Sauvegarder l'état actuel
+      // Save current state
       const previousNotifications = queryClient.getQueryData<Notification[]>([
         "notifications",
       ]);
@@ -50,7 +50,7 @@ export function useNotifications() {
         "unread-count",
       ]);
 
-      // Optimistic update des notifications
+      // Optimistic update of notifications
       if (previousNotifications) {
         const updatedNotifications = previousNotifications.map((notif) =>
           notif.id === notificationId
@@ -60,7 +60,7 @@ export function useNotifications() {
         queryClient.setQueryData(["notifications"], updatedNotifications);
       }
 
-      // Optimistic update du compteur
+      // Optimistic update of the counter
       if (previousUnreadCount && previousUnreadCount > 0) {
         const wasUnread = previousNotifications?.find(
           (n) => n.id === notificationId && !n.read_at
@@ -80,7 +80,7 @@ export function useNotifications() {
       return { previousNotifications, previousUnreadCount };
     },
     onError: (err, notificationId, context) => {
-      // Restaurer l'état précédent en cas d'erreur
+      // Restore previous state in case of error
       if (context?.previousNotifications) {
         queryClient.setQueryData(
           ["notifications"],
@@ -93,10 +93,10 @@ export function useNotifications() {
           context.previousUnreadCount
         );
       }
-      console.error("Erreur lors du marquage comme lu:", err);
+      console.error("Error marking as read:", err);
     },
     onSettled: () => {
-      // Refetch pour s'assurer que les données sont à jour
+      // Refetch to ensure data is up to date
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({
         queryKey: ["notifications", "unread-count"],
@@ -104,7 +104,7 @@ export function useNotifications() {
     },
   });
 
-  // Marquer comme vu
+  // Mark as seen
   const markAsSeenMutation = useMutation({
     mutationFn: NotificationService.markAsSeen,
     onSuccess: () => {
@@ -112,17 +112,17 @@ export function useNotifications() {
     },
   });
 
-  // Marquer toutes comme lues avec optimistic update
+  // Mark all as read with optimistic update
   const markAllAsReadMutation = useMutation({
     mutationFn: NotificationService.markAllAsRead,
     onMutate: async () => {
-      // Annuler les requêtes en cours
+      // Cancel ongoing queries
       await queryClient.cancelQueries({ queryKey: ["notifications"] });
       await queryClient.cancelQueries({
         queryKey: ["notifications", "unread-count"],
       });
 
-      // Sauvegarder l'état actuel
+      // Save current state
       const previousNotifications = queryClient.getQueryData<Notification[]>([
         "notifications",
       ]);
@@ -131,7 +131,7 @@ export function useNotifications() {
         "unread-count",
       ]);
 
-      // Optimistic update : marquer toutes les notifications comme lues
+      // Optimistic update: mark all notifications as read
       if (previousNotifications) {
         const updatedNotifications = previousNotifications.map((notif) => ({
           ...notif,
@@ -140,13 +140,13 @@ export function useNotifications() {
         queryClient.setQueryData(["notifications"], updatedNotifications);
       }
 
-      // Optimistic update : compteur à 0
+      // Optimistic update: counter to 0
       queryClient.setQueryData(["notifications", "unread-count"], 0);
 
       return { previousNotifications, previousUnreadCount };
     },
     onError: (err, variables, context) => {
-      // Restaurer l'état précédent en cas d'erreur
+      // Restore previous state in case of error
       if (context?.previousNotifications) {
         queryClient.setQueryData(
           ["notifications"],
@@ -159,14 +159,14 @@ export function useNotifications() {
           context.previousUnreadCount
         );
       }
-      console.error("Erreur lors du marquage de toutes comme lues:", err);
-      toast.error("Erreur lors du marquage des notifications");
+      console.error("Error marking all as read:", err);
+      toast.error("Error marking notifications");
     },
     onSuccess: () => {
-      toast.success("Toutes les notifications ont été marquées comme lues");
+      toast.success("All notifications have been marked as read");
     },
     onSettled: () => {
-      // Refetch pour s'assurer que les données sont à jour
+      // Refetch to ensure data is up to date
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({
         queryKey: ["notifications", "unread-count"],
@@ -174,25 +174,25 @@ export function useNotifications() {
     },
   });
 
-  // S'abonner aux notifications en temps réel
+  // Subscribe to real-time notifications
   useEffect(() => {
     if (!user?.id) return;
 
     const subscription = NotificationService.subscribeToNotifications(
       user.id,
       (notification) => {
-        // Optimistic update : ajouter la nouvelle notification
+        // Optimistic update: add the new notification
         const previousNotifications =
           queryClient.getQueryData<Notification[]>(["notifications"]) || [];
         const previousUnreadCount =
           queryClient.getQueryData<number>(["notifications", "unread-count"]) ||
           0;
 
-        // Ajouter la nouvelle notification en première position
+        // Add the new notification at the top
         const updatedNotifications = [notification, ...previousNotifications];
         queryClient.setQueryData(["notifications"], updatedNotifications);
 
-        // Incrémenter le compteur si la notification n'est pas lue
+        // Increment counter if notification is unread
         if (!notification.read_at) {
           const newCount = previousUnreadCount + 1;
           console.log(
@@ -204,10 +204,10 @@ export function useNotifications() {
           queryClient.setQueryData(["notifications", "unread-count"], newCount);
         }
 
-        // Pas d'invalidation immédiate pour laisser l'optimistic update être visible
-        // L'invalidation se fera naturellement lors des prochaines interactions
+        // No immediate invalidation to let the optimistic update be visible
+        // Invalidation will occur naturally during next interactions
 
-        // Afficher une notification toast
+        // Show a toast notification
         toast.success(notification.title, {
           duration: 4000,
           icon: notification.icon || "🔔",

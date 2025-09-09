@@ -13,27 +13,27 @@ export function QuickNotificationTest() {
   const testNotifications = [
     {
       name: "order.paid",
-      label: "💳 Commande payée",
+      label: "💳 Order paid",
       payload: { orderId: "TEST-123", total: 89.99, currency: "EUR" },
     },
     {
       name: "alter.commissioned",
-      label: "🎨 Alter commandé",
+      label: "🎨 Alter ordered",
       payload: { cardName: "Lightning Bolt", artistName: "Test Artist" },
     },
     {
       name: "product.low_stock",
-      label: "⚠️ Stock faible",
+      label: "⚠️ Low stock",
       payload: { productName: "Test Product", stock: 2 },
     },
     {
       name: "shop.verified",
-      label: "✅ Boutique vérifiée",
-      payload: { shopName: "Ma Boutique Test" },
+      label: "✅ Shop verified",
+      payload: { shopName: "My Test Shop" },
     },
     {
       name: "message.new",
-      label: "💬 Nouveau message",
+      label: "💬 New message",
       payload: { senderName: "Test User" },
     },
   ];
@@ -46,10 +46,10 @@ export function QuickNotificationTest() {
     try {
       await NotificationService.emitEvent(eventName, targetUserIds, payload);
       toast.success(
-        `Notification "${eventName}" envoyée à ${targetUserIds.length} utilisateur(s) !`
+        `Notification "${eventName}" sent to ${targetUserIds.length} user(s)!`
       );
 
-      // Forcer la mise à jour des données après un délai
+      // Force data refresh after a delay
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["notifications"] });
         queryClient.invalidateQueries({
@@ -61,15 +61,15 @@ export function QuickNotificationTest() {
         });
       }, 1000);
     } catch (error) {
-      toast.error("Erreur lors de l'envoi");
+      toast.error("Error sending");
       console.error(error);
     }
   };
 
   const sendCrossUserNotification = async () => {
-    // Récupérer quelques utilisateurs pour le test cross-user
+    // Fetch some users for the cross-user test
     const prompt = window.prompt(
-      "Entrez l'ID d'un autre utilisateur (ou laissez vide pour vous-même):"
+      "Enter another user's ID (or leave blank for yourself):"
     );
     const targetId = prompt?.trim() || user.id;
 
@@ -77,7 +77,7 @@ export function QuickNotificationTest() {
       "message.new",
       {
         senderName: user.email,
-        message: "Test de notification cross-utilisateur !",
+        message: "Cross-user notification test!",
       },
       [targetId]
     );
@@ -89,9 +89,9 @@ export function QuickNotificationTest() {
         "../../services/notificationService"
       );
       await NotificationService.markAllAsRead();
-      toast.success("Test 'Tout lire' terminé ! Vérifiez la console.");
+      toast.success("'Mark all as read' test complete! Check the console.");
     } catch (error) {
-      toast.error("Erreur lors du test 'Tout lire'");
+      toast.error("Error during 'Mark all as read' test");
       console.error(error);
     }
   };
@@ -116,13 +116,13 @@ export function QuickNotificationTest() {
           onClick={testMarkAllAsRead}
           className="block w-full text-left text-xs bg-orange-500/10 hover:bg-orange-500/20 text-orange-600 px-3 py-2 rounded transition-colors"
         >
-          🔄 Test "Tout lire"
+          🔄 'Mark all as read' test
         </button>
         <button
           onClick={sendCrossUserNotification}
           className="block w-full text-left text-xs bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 px-3 py-2 rounded transition-colors"
         >
-          👥 Test Cross-Utilisateur
+          👥 Cross-user test
         </button>
       </div>
       <p className="text-xs text-muted-foreground mt-2">

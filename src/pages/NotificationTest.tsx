@@ -6,11 +6,10 @@ export function NotificationTest() {
     <div className="max-w-6xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
-          Test des Notifications
+          Notification Test
         </h1>
         <p className="text-muted-foreground">
-          Page de développement pour tester le système de notifications de MTG
-          Artisan.
+          Development page for testing the MTG Artisan notification system.
         </p>
       </div>
 
@@ -18,56 +17,52 @@ export function NotificationTest() {
 
       <div className="mt-8 p-6 bg-card border border-border rounded-lg">
         <h2 className="text-xl font-semibold text-foreground mb-4">
-          Architecture du Système
+          System Architecture
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="font-medium text-foreground mb-3">
-              📊 Tables de Base de Données
+              📊 Database Tables
             </h3>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>
-                • <code>notification_events</code> - Queue d'événements entrants
+                • <code>notification_events</code> - Incoming event queue
               </li>
               <li>
-                • <code>notifications</code> - Notifications créées pour les
-                utilisateurs
+                • <code>notifications</code> - Notifications created for users
               </li>
               <li>
-                • <code>notification_preferences</code> - Préférences
-                utilisateur
+                • <code>notification_preferences</code> - User preferences
               </li>
               <li>
-                • <code>notification_deliveries</code> - Tâches de livraison
-                (email, push, etc.)
+                • <code>notification_deliveries</code> - Delivery tasks (email, push, etc.)
               </li>
               <li>
-                • <code>notification_templates</code> - Templates de messages
+                • <code>notification_templates</code> - Message templates
               </li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-medium text-foreground mb-3">
-              ⚙️ Fonctions Supabase
+              ⚙️ Supabase Functions
             </h3>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>
-                • <code>events-emit</code> - Émet un événement
+                • <code>events-emit</code> - Emits an event
               </li>
               <li>
-                • <code>events-fanout</code> - Traite les événements en
-                notifications
+                • <code>events-fanout</code> - Processes events into notifications
               </li>
               <li>
-                • <code>notifications-read</code> - Marque comme lu
+                • <code>notifications-read</code> - Marks as read
               </li>
               <li>
-                • <code>notifications-seen</code> - Marque comme vu
+                • <code>notifications-seen</code> - Marks as seen
               </li>
               <li>
-                • <code>preferences</code> - Gère les préférences
+                • <code>preferences</code> - Manages preferences
               </li>
             </ul>
           </div>
@@ -75,29 +70,27 @@ export function NotificationTest() {
 
         <div className="mt-6 p-4 bg-muted/30 border border-border rounded-lg">
           <h4 className="font-medium text-foreground text-sm mb-2">
-            🔄 Flux de Données
+            🔄 Data Flow
           </h4>
           <ol className="text-xs text-muted-foreground space-y-1">
             <li>
-              1. L'application émet un événement via{" "}
-              <code>NotificationService.emitEvent()</code>
+              1. The application emits an event via <code>NotificationService.emitEvent()</code>
             </li>
             <li>
-              2. L'événement est stocké dans <code>notification_events</code>
+              2. The event is stored in <code>notification_events</code>
             </li>
             <li>
-              3. La fonction <code>events-fanout</code> traite les événements
+              3. The <code>events-fanout</code> function processes the events
             </li>
             <li>
-              4. Les notifications sont créées dans <code>notifications</code>
+              4. Notifications are created in <code>notifications</code>
             </li>
             <li>
-              5. Les tâches de livraison sont créées dans{" "}
-              <code>notification_deliveries</code>
+              5. Delivery tasks are created in <code>notification_deliveries</code>
             </li>
-            <li>6. L'interface React s'abonne aux changements en temps réel</li>
+            <li>6. The React interface subscribes to real-time changes</li>
             <li>
-              7. Les notifications apparaissent dans la cloche et comme toasts
+              7. Notifications appear in the bell and as toasts
             </li>
           </ol>
         </div>
