@@ -1,0 +1,33 @@
+{
+  "title": "Admin Panel",
+  "subtitle": "Manage ManaShop stores",
+  "stats": {
+    "totalUsers": "Total Users",
+    "totalCreators": "Creators",
+    "productsServices": "Products & Services",
+    "totalRevenue": "Total Revenue"
+  },
+  "recentOrders": {
+    "title": "Recent Orders",
+    "viewAll": "View All",
+    "none": "No recent orders",
+    "orderNumber": "Order #{{id}}",
+    "itemCount": "{{count}} item",
+    "itemCount_plural": "{{count}} items"
+  },
+  "quickActions": {
+    "title": "Quick Actions",
+    "manageUsers": {
+      "title": "Manage Users",
+      "description": "View and edit user profiles"
+    },
+    "moderateContent": {
+      "title": "Moderate Content",
+      "description": "Review and approve products"
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "Analyze performance"
+    }
+  }
+}
