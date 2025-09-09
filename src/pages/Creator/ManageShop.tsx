@@ -16,9 +16,11 @@ import toast from "react-hot-toast";
 import { Button } from "../../components/UI/Button";
 import { Input } from "../../components/UI/Input";
 import { Card, CardHeader, CardContent } from "../../components/UI/Card";
+import { useTranslation } from "react-i18next";
 
 export function ManageShop() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [shop, setShop] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -89,15 +91,15 @@ export function ManageShop() {
     if (!file) return;
 
     // Validation du fichier
-    if (file.size > 5 * 1024 * 1024) { // 5MB max
-      toast.error("L'image doit faire moins de 5MB");
-      return;
-    }
+      if (file.size > 5 * 1024 * 1024) { // 5MB max
+        toast.error(t("manageShop.imageTooLarge"));
+        return;
+      }
 
-    if (!file.type.startsWith('image/')) {
-      toast.error("Veuillez sélectionner une image valide");
-      return;
-    }
+      if (!file.type.startsWith('image/')) {
+        toast.error(t("manageShop.invalidImage"));
+        return;
+      }
 
     try {
       setUploadingBanner(true);
@@ -123,10 +125,10 @@ export function ManageShop() {
       handleInputChange("banner_url", publicUrl);
       setBannerPreview(publicUrl);
       
-      toast.success("Bannière uploadée avec succès !");
+      toast.success(t("manageShop.bannerUploadSuccess"));
     } catch (error: any) {
       console.error("Erreur upload bannière:", error);
-      toast.error("Échec de l'upload de la bannière");
+      toast.error(t("manageShop.bannerUploadError"));
     } finally {
       setUploadingBanner(false);
     }
@@ -143,7 +145,7 @@ export function ManageShop() {
 
         if (updateError) {
           console.error("Erreur suppression bannière:", updateError);
-          toast.error("Erreur lors de la suppression de la bannière");
+          toast.error(t("manageShop.bannerRemoveError"));
           return;
         }
       }
@@ -156,19 +158,19 @@ export function ManageShop() {
       if (shop) {
         setOriginalData((prev: any) => prev ? { ...prev, banner_url: "" } : null);
         setHasChanges(false);
-        toast.success("Bannière supprimée avec succès !");
+        toast.success(t("manageShop.bannerRemoveSuccess"));
       }
     } catch (error) {
       console.error("Erreur lors de la suppression de la bannière:", error);
-      toast.error("Erreur lors de la suppression de la bannière");
+      toast.error(t("manageShop.bannerRemoveError"));
     }
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (shop && !hasChanges) {
-      toast.success("Aucune modification à sauvegarder");
+      toast.success(t("manageShop.noChangesToSave"));
       return;
     }
 
@@ -184,7 +186,7 @@ export function ManageShop() {
 
         if (error) throw error;
         
-        toast.success("Boutique mise à jour avec succès !");
+        toast.success(t("manageShop.updateSuccess"));
         setOriginalData({ ...formData });
         setHasChanges(false);
       } else {
@@ -196,12 +198,12 @@ export function ManageShop() {
 
         if (error) throw error;
         
-        toast.success("Boutique créée avec succès !");
+        toast.success(t("manageShop.createSuccess"));
         await fetchShop();
       }
     } catch (error: any) {
       console.error("Error saving shop:", error);
-      toast.error(error.message || "Échec de la sauvegarde de la boutique");
+      toast.error(error.message || t("manageShop.saveError"));
     } finally {
       setSaving(false);
     }
@@ -225,12 +227,12 @@ export function ManageShop() {
           </div>
           <div>
             <h1 className="text-4xl font-light text-foreground tracking-tight">
-              {shop ? "Gérer votre Boutique" : "Créer votre Boutique"}
+              {shop ? t("manageShop.manageTitle") : t("manageShop.createTitle")}
             </h1>
             <p className="text-muted-foreground/70 text-lg">
               {shop
-                ? "Modifiez les informations de votre boutique"
-                : "Configurez votre espace créateur"}
+                ? t("manageShop.manageSubtitle")
+                : t("manageShop.createSubtitle")}
             </p>
           </div>
         </div>
@@ -241,8 +243,7 @@ export function ManageShop() {
         <div className="mb-8 p-4 bg-primary/10 border border-primary/30 rounded-2xl flex items-center space-x-3">
           <AlertTriangle className="h-5 w-5 text-primary" />
           <span className="text-foreground">
-            Vous avez des modifications non sauvegardées. N'oubliez pas de
-            sauvegarder vos changements.
+            {t("manageShop.unsavedChanges")}
           </span>
         </div>
       )}
@@ -250,7 +251,7 @@ export function ManageShop() {
       <Card>
         <CardHeader>
           <h2 className="text-2xl font-light text-foreground tracking-tight">
-            Informations de la Boutique
+            {t("manageShop.shopInfo")}
           </h2>
         </CardHeader>
         <CardContent>
@@ -259,7 +260,7 @@ export function ManageShop() {
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-foreground flex items-center">
                 <Image className="h-5 w-5 mr-2 text-primary" />
-                Bannière de la Boutique
+                {t("manageShop.bannerSection")}
               </h3>
 
               <div className="space-y-4">
@@ -269,7 +270,7 @@ export function ManageShop() {
                     <div className="h-48 bg-muted rounded-2xl overflow-hidden relative">
                       <img
                         src={bannerPreview}
-                        alt="Bannière de la boutique"
+                        alt={t("manageShop.bannerAlt")}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
@@ -287,7 +288,9 @@ export function ManageShop() {
                 {/* Upload de bannière */}
                 <div className="space-y-3">
                   <label className="block text-sm font-medium text-foreground">
-                    {bannerPreview ? "Changer la bannière" : "Ajouter une bannière"}
+                    {bannerPreview
+                      ? t("manageShop.changeBanner")
+                      : t("manageShop.addBanner")}
                   </label>
                   <div className="flex items-center space-x-4">
                     <input
@@ -308,11 +311,13 @@ export function ManageShop() {
                         <Upload className="h-4 w-4" />
                       )}
                       <span className="text-sm">
-                        {uploadingBanner ? "Upload en cours..." : "Choisir une image"}
+                        {uploadingBanner
+                          ? t("manageShop.uploading")
+                          : t("manageShop.chooseImage")}
                       </span>
                     </label>
                     <span className="text-xs text-muted-foreground/70">
-                      JPG, PNG ou GIF • Max 5MB • Recommandé: 1200x400px
+                      {t("manageShop.bannerGuidelines")}
                     </span>
                   </div>
                   
@@ -325,10 +330,10 @@ export function ManageShop() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center space-x-2 px-3 py-2 bg-primary/10 text-primary text-sm rounded-lg hover:bg-primary/20 transition-colors duration-300"
                       >
-                        <span>👁️ Voir la bannière</span>
+                        <span>{t("manageShop.viewBanner")}</span>
                       </a>
                       <span className="text-xs text-muted-foreground/70">
-                        Ouvre votre profil boutique dans un nouvel onglet
+                        {t("manageShop.openNewTab")}
                       </span>
                     </div>
                   )}
@@ -340,16 +345,16 @@ export function ManageShop() {
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-foreground flex items-center">
                 <User className="h-5 w-5 mr-2 text-primary" />
-                Informations de base
+                {t("manageShop.basicInfoSection")}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input
-                  label="Nom de la boutique *"
+                  label={t("manageShop.shopNameLabel")}
                   required
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  placeholder="Nom de votre boutique"
+                  placeholder={t("manageShop.shopNamePlaceholder")}
                   id="name"
                 />
 
@@ -358,7 +363,7 @@ export function ManageShop() {
                     htmlFor="slug"
                     className="block text-sm font-medium text-foreground mb-3"
                   >
-                    URL de la boutique *
+                    {t("manageShop.shopUrlLabel")}
                   </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground/60 text-sm">
@@ -376,13 +381,12 @@ export function ManageShop() {
                         handleInputChange("slug", value);
                       }}
                       className="w-full bg-card/50 border border-border/50 rounded-2xl pl-20 pr-4 py-3 text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                      placeholder="ma-boutique"
+                      placeholder={t("manageShop.slugPlaceholder")}
                     />
                   </div>
                   {shop && (
                     <p className="text-sm text-muted-foreground/70 mt-2">
-                      ⚠️ Attention : Modifier l'URL peut rendre les liens
-                      partagés inaccessibles
+                      {t("manageShop.slugWarning")}
                     </p>
                   )}
                 </div>
@@ -393,7 +397,7 @@ export function ManageShop() {
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-foreground flex items-center">
                 <Globe className="h-5 w-5 mr-2 text-primary" />
-                Localisation et Paiement
+                {t("manageShop.locationPaymentSection")}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -402,7 +406,7 @@ export function ManageShop() {
                     htmlFor="country"
                     className="block text-sm font-medium text-foreground mb-3"
                   >
-                    Pays
+                    {t("manageShop.countryLabel")}
                   </label>
                   <select
                     id="country"
@@ -412,25 +416,25 @@ export function ManageShop() {
                     }
                     className="w-full bg-card/50 border border-border/50 rounded-2xl px-4 py-3 text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                   >
-                    <option value="">Sélectionner un pays</option>
-                    <option value="United States">États-Unis</option>
-                    <option value="Canada">Canada</option>
-                    <option value="United Kingdom">Royaume-Uni</option>
-                    <option value="Germany">Allemagne</option>
-                    <option value="France">France</option>
-                    <option value="Japan">Japon</option>
-                    <option value="Australia">Australie</option>
+                    <option value="">{t("manageShop.selectCountry")}</option>
+                    <option value="United States">{t("manageShop.countries.unitedStates")}</option>
+                    <option value="Canada">{t("manageShop.countries.canada")}</option>
+                    <option value="United Kingdom">{t("manageShop.countries.unitedKingdom")}</option>
+                    <option value="Germany">{t("manageShop.countries.germany")}</option>
+                    <option value="France">{t("manageShop.countries.france")}</option>
+                    <option value="Japan">{t("manageShop.countries.japan")}</option>
+                    <option value="Australia">{t("manageShop.countries.australia")}</option>
                   </select>
                 </div>
 
                 <Input
-                  label="Email PayPal"
+                  label={t("manageShop.paypalEmailLabel")}
                   type="email"
                   value={formData.paypal_email}
                   onChange={(e) =>
                     handleInputChange("paypal_email", e.target.value)
                   }
-                  placeholder="votre.paypal@email.com"
+                  placeholder={t("manageShop.paypalEmailPlaceholder")}
                   id="paypal_email"
                   icon={CreditCard}
                 />
@@ -441,7 +445,7 @@ export function ManageShop() {
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-foreground flex items-center">
                 <Store className="h-5 w-5 mr-2 text-primary" />
-                Description et Politiques
+                {t("manageShop.descriptionPoliciesSection")}
               </h3>
 
               <div>
@@ -449,7 +453,7 @@ export function ManageShop() {
                   htmlFor="bio"
                   className="block text-sm font-medium text-foreground mb-3"
                 >
-                  Bio de la boutique
+                  {t("manageShop.shopBioLabel")}
                 </label>
                 <textarea
                   id="bio"
@@ -457,7 +461,7 @@ export function ManageShop() {
                   value={formData.bio}
                   onChange={(e) => handleInputChange("bio", e.target.value)}
                   className="w-full bg-card/50 border border-border/50 rounded-2xl px-4 py-3 text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-none"
-                  placeholder="Parlez aux clients potentiels de votre travail et de votre expertise..."
+                  placeholder={t("manageShop.shopBioPlaceholder")}
                 />
               </div>
 
@@ -466,7 +470,7 @@ export function ManageShop() {
                   htmlFor="policies"
                   className="block text-sm font-medium text-foreground mb-3"
                 >
-                  Politiques de la boutique
+                  {t("manageShop.shopPoliciesLabel")}
                 </label>
                 <textarea
                   id="policies"
@@ -476,7 +480,7 @@ export function ManageShop() {
                     handleInputChange("policies", e.target.value)
                   }
                   className="w-full bg-card/50 border border-border/50 rounded-2xl px-4 py-3 text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-none"
-                  placeholder="Retours, remboursements, politiques d'expédition, etc..."
+                  placeholder={t("manageShop.shopPoliciesPlaceholder")}
                 />
               </div>
             </div>
@@ -493,10 +497,10 @@ export function ManageShop() {
                 disabled={shop && !hasChanges}
               >
                 {saving
-                  ? "Sauvegarde..."
+                  ? t("manageShop.saving")
                   : shop
-                  ? "Mettre à jour la boutique"
-                  : "Créer la boutique"}
+                  ? t("manageShop.updateShop")
+                  : t("manageShop.createShop")}
               </Button>
             </div>
           </form>
