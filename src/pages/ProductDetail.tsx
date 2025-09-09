@@ -20,9 +20,11 @@ import { Button } from "../components/UI/Button";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
 import { ProductViewTracker } from "../components/Analytics";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
   const [product, setProduct] = useState<ProductWithShop | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -60,7 +62,7 @@ export function ProductDetail() {
       setProduct(data);
     } catch (error) {
       console.error("Erreur lors de la récupération du produit:", error);
-      toast.error("Produit non trouvé");
+      toast.error(t("product.notFound"));
     } finally {
       setLoading(false);
     }
@@ -121,14 +123,14 @@ export function ProductDetail() {
             <Package className="h-12 w-12 text-primary" />
           </div>
           <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
-            Produit Non Trouvé
+            {t("product.notFound")}
           </h1>
           <p className="text-muted-foreground/70 text-lg mb-8">
-            Le produit que vous recherchez n'existe pas ou a été supprimé
+            {t("product.notFoundDescription")}
           </p>
           <Link to="/search">
             <Button variant="gradient" size="lg" icon={ArrowLeft}>
-              Retour à la Recherche
+              {t("product.backToSearch")}
             </Button>
           </Link>
         </div>
@@ -213,7 +215,7 @@ export function ProductDetail() {
               )}
               {product.is_digital && (
                 <span className="px-3 py-1 bg-blue-500/10 text-blue-400 text-sm rounded-full border border-blue-500/20">
-                  Numérique
+                  {t("product.digital")}
                 </span>
               )}
             </div>
@@ -348,7 +350,7 @@ export function ProductDetail() {
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
                   <label className="text-sm font-medium text-foreground">
-                    Quantité:
+                    {t("product.quantity")}
                   </label>
                   <div className="flex items-center space-x-3">
                     <Button
@@ -400,7 +402,7 @@ export function ProductDetail() {
                 {product.lead_time && (
                   <div className="flex items-center text-sm text-muted-foreground/70">
                     <Clock className="h-4 w-4 mr-2" />
-                    Délai de livraison: {product.lead_time} jours
+                    {t("product.deliveryTime", { days: product.lead_time })}
                   </div>
                 )}
 

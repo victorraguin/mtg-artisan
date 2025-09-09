@@ -1,4 +1,12 @@
 {
+  "product": {
+    "notFound": "Produit Non Trouvé",
+    "notFoundDescription": "Le produit que vous recherchez n'existe pas…",
+    "backToSearch": "Retour à la Recherche",
+    "digital": "Numérique",
+    "quantity": "Quantité:",
+    "deliveryTime": "Délai de livraison: {{days}} jours"
+  },
   "notificationPreferences": {
     "title": "Préférences de notifications",
     "subtitle": "Gérez comment vous souhaitez recevoir les notifications pour chaque type d'événement.",
