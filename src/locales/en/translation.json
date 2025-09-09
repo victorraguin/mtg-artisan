@@ -1,0 +1,52 @@
+{
+  "notificationPreferences": {
+    "title": "Notification preferences",
+    "subtitle": "Manage how you want to receive notifications for each event type.",
+    "categories": {
+      "orders": {
+        "label": "Orders",
+        "description": "New orders, status updates, deliveries"
+      },
+      "messages": {
+        "label": "Messages",
+        "description": "Customer messages and conversations"
+      },
+      "reviews": {
+        "label": "Reviews",
+        "description": "New reviews and ratings"
+      },
+      "shop": {
+        "label": "Shop",
+        "description": "Shop management, quotes, payments"
+      },
+      "system": {
+        "label": "System",
+        "description": "Important updates and maintenance"
+      }
+    },
+    "channels": {
+      "inapp": {
+        "label": "In app",
+        "description": "Notifications in the interface"
+      },
+      "email": {
+        "label": "Email",
+        "description": "Notifications by email"
+      }
+    },
+    "categoryColumn": "Category",
+    "save": "Save preferences",
+    "saving": "Saving...",
+    "about": "\uD83D\uDCA1 About notifications",
+    "aboutInapp": "Notifications visible in the user interface",
+    "aboutEmail": "Notifications sent to your email address",
+    "enable": "Enable",
+    "disable": "Disable",
+    "toast": {
+      "success": "Preferences saved successfully",
+      "error": "Error saving preferences"
+    },
+    "toggle": "{{action}} notifications {{channel}}",
+    "toggleForCategory": "{{action}} {{channel}} notifications for {{category}}"
+  }
+}
