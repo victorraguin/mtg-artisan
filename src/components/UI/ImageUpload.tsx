@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { Button } from "./Button";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface ImageUploadProps {
   label?: string;
@@ -12,12 +13,14 @@ interface ImageUploadProps {
 }
 
 export function ImageUpload({
-  label = "Images",
+  label,
   images,
   onImagesChange,
   maxImages = 3,
   className = "",
 }: ImageUploadProps) {
+  const { t } = useTranslation();
+  const resolvedLabel = label ?? t("imageUpload.images");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,9 +32,7 @@ export function ImageUpload({
 
     const remainingSlots = maxImages - images.length;
     if (files.length > remainingSlots) {
-      toast.error(
-        `Vous ne pouvez ajouter que ${remainingSlots} image(s) supplémentaire(s)`
-      );
+      toast.error(t("imageUpload.limit", { count: remainingSlots }));
       return;
     }
 
@@ -44,13 +45,13 @@ export function ImageUpload({
 
         // Validation du type de fichier
         if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} n'est pas une image valide`);
+          toast.error(t("imageUpload.invalidType", { name: file.name }));
           continue;
         }
 
         // Validation de la taille (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(`${file.name} est trop volumineux (max 5MB)`);
+          toast.error(t("imageUpload.tooLarge", { name: file.name }));
           continue;
         }
 
@@ -68,15 +69,15 @@ export function ImageUpload({
       }
 
       onImagesChange([...images, ...newImageUrls]);
-      toast.success(`${newImageUrls.length} image(s) ajoutée(s)`);
+      toast.success(t("imageUpload.uploadSuccess", { count: newImageUrls.length }));
 
       // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     } catch (error) {
-      console.error("Erreur lors de l'upload:", error);
-      toast.error("Erreur lors de l'upload des images");
+      console.error("Error uploading images:", error);
+      toast.error(t("imageUpload.uploadError"));
     } finally {
       setUploading(false);
     }
@@ -91,9 +92,9 @@ export function ImageUpload({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {label && (
+      {resolvedLabel && (
         <label className="block text-sm font-medium text-foreground">
-          {label} ({images.length}/{maxImages})
+          {resolvedLabel} ({images.length}/{maxImages})
         </label>
       )}
 
@@ -118,7 +119,7 @@ export function ImageUpload({
                   onClick={() => removeImage(index)}
                   className="text-white border-white/50 hover:border-white hover:bg-white/10"
                 >
-                  Supprimer
+                  {t("imageUpload.delete")}
                 </Button>
               </div>
               {/* Indicateur de position */}

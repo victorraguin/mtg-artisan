@@ -1,0 +1,9 @@
+{
+  "images": "Images",
+  "limit": "You can only add {{count}} more image(s)",
+  "invalidType": "{{name}} is not a valid image",
+  "tooLarge": "{{name}} is too large (max 5MB)",
+  "uploadSuccess": "{{count}} image(s) added",
+  "uploadError": "Error uploading images",
+  "delete": "Remove"
+}
