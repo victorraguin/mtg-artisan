@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Search, Sparkles, Menu, X } from "lucide-react";
 import { UserMenu } from "./UserMenu";
+import { useTranslation } from "react-i18next";
 
 export function Header() {
+  const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -50,13 +52,13 @@ export function Header() {
               to="/search"
               className="text-foreground/80 hover:text-primary transition-colors duration-300"
             >
-              Boutiques
+              {t("header.shops")}
             </Link>
             <Link
               to="/search?type=services"
               className="text-foreground/80 hover:text-primary transition-colors duration-300"
             >
-              Artisans
+              {t("header.artisans")}
             </Link>
           </nav>
 
@@ -66,7 +68,7 @@ export function Header() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
               <input
                 type="text"
-                placeholder="Rechercher des créations..."
+                placeholder={t("header.searchPlaceholder")}
                 className="w-full bg-card/50 border border-border/50 rounded-2xl pl-10 pr-4 py-2 text-foreground placeholder:text-muted-foreground/60 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300 backdrop-blur-sm"
               />
             </div>
@@ -103,14 +105,14 @@ export function Header() {
                 className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-card/50"
                 onClick={handleMobileMenuClose}
               >
-                Boutiques
+                {t("header.shops")}
               </Link>
               <Link
                 to="/search?type=services"
                 className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-card/50"
                 onClick={handleMobileMenuClose}
               >
-                Artisans
+                {t("header.artisans")}
               </Link>
             </nav>
           </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Card, CardContent, CardHeader } from "../UI";
 import { Product, ProductStatistics } from "../../types";
 import { AlertTriangle, Package, Edit3 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import supabase from "../../lib/supabase";
 
 interface LowStockProduct extends Product {
@@ -15,6 +16,7 @@ interface StockAlertsProps {
 }
 
 export function StockAlerts({ shopId }: StockAlertsProps) {
+  const { t } = useTranslation();
   const [lowStockProducts, setLowStockProducts] = useState<LowStockProduct[]>(
     []
   );
@@ -89,7 +91,7 @@ export function StockAlerts({ shopId }: StockAlertsProps) {
         <div className="flex items-center gap-3">
           <AlertTriangle className="h-5 w-5 text-orange-500" />
           <h3 className="text-lg font-medium text-foreground">
-            Alertes Stock ({lowStockProducts.length})
+            {t("stockAlerts.title", { count: lowStockProducts.length })}
           </h3>
         </div>
       </CardHeader>
@@ -108,13 +110,15 @@ export function StockAlerts({ shopId }: StockAlertsProps) {
                   </p>
                   <p className="text-xs text-orange-600">
                     {product.available_stock === 0
-                      ? "Rupture de stock"
-                      : `Plus que ${product.available_stock} disponible${
-                          product.available_stock > 1 ? "s" : ""
-                        }`}
+                      ? t("stockAlerts.outOfStock")
+                      : t("stockAlerts.remaining", {
+                          count: product.available_stock,
+                        })}
                     {product.currently_in_carts > 0 && (
                       <span className="ml-2">
-                        ({product.currently_in_carts} en paniers)
+                        {t("stockAlerts.inCarts", {
+                          count: product.currently_in_carts,
+                        })}
                       </span>
                     )}
                   </p>
@@ -122,7 +126,7 @@ export function StockAlerts({ shopId }: StockAlertsProps) {
               </div>
               <Link to={`/creator/products/${product.id}/edit`}>
                 <Button variant="outline" size="sm" icon={Edit3}>
-                  Gérer
+                  {t("stockAlerts.manage")}
                 </Button>
               </Link>
             </div>

@@ -16,6 +16,7 @@ import {
 import supabase from "../../lib/supabase";
 import { Save, Upload, ArrowLeft, Plus } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function CreateProduct() {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ export function CreateProduct() {
     status: "draft" as "draft" | "active",
     images: [] as string[],
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchInitialData();
@@ -56,7 +58,7 @@ export function CreateProduct() {
       setCategories(categoriesResult.data || []);
 
       if (!shopResult.data) {
-        toast.error("Veuillez créer votre boutique d'abord");
+        toast.error(t("createProduct.needShop"));
         navigate("/creator/shop");
         return;
       }
@@ -94,11 +96,11 @@ export function CreateProduct() {
 
       if (error) throw error;
 
-      toast.success("Produit créé avec succès !");
+      toast.success(t("createProduct.success"));
       navigate("/dashboard/creator");
     } catch (error: any) {
       console.error("Erreur lors de la création du produit:", error);
-      toast.error(error.message || "Échec de la création du produit");
+      toast.error(error.message || t("createProduct.error"));
     } finally {
       setSaving(false);
     }

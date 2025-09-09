@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, CardContent, CardHeader, EmptyState } from "../UI";
 import supabase from "../../lib/supabase";
+import { useTranslation } from "react-i18next";
 import {
   Edit3,
   Eye,
@@ -38,6 +39,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchServices();
@@ -64,8 +66,8 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
 
       setServices(servicesWithStats);
     } catch (error) {
-      console.error("Erreur lors de la récupération des services:", error);
-      toast.error("Impossible de charger les services");
+      console.error("Error fetching services:", error);
+      toast.error(t("servicesTable.loadError"));
     } finally {
       setLoading(false);
     }
@@ -81,14 +83,14 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
       if (error) throw error;
       setCategories(data || []);
     } catch (error) {
-      console.error("Erreur lors de la récupération des catégories:", error);
+      console.error("Error fetching categories:", error);
     }
   };
 
   const getCategoryName = (categoryId: string | null) => {
-    if (!categoryId) return "Sans catégorie";
+    if (!categoryId) return t("common.noCategory");
     const category = categories.find((cat) => cat.id === categoryId);
-    return category?.name || "Sans catégorie";
+    return category?.name || t("common.noCategory");
   };
 
   const getStatusColor = (status: string) => {
@@ -107,11 +109,11 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "active":
-        return "Actif";
+        return t("common.status.active");
       case "draft":
-        return "Brouillon";
+        return t("common.status.draft");
       case "paused":
-        return "En pause";
+        return t("common.status.paused");
       default:
         return status;
     }
@@ -120,7 +122,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
   const deleteService = async (serviceId: string, serviceTitle: string) => {
     if (
       !window.confirm(
-        `Êtes-vous sûr de vouloir supprimer le service "${serviceTitle}" ? Cette action est irréversible.`
+        t("servicesTable.confirmDelete", { title: serviceTitle })
       )
     ) {
       return;
@@ -134,11 +136,11 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
 
       if (error) throw error;
 
-      toast.success("Service supprimé avec succès");
+      toast.success(t("servicesTable.deleteSuccess"));
       fetchServices(); // Recharger la liste
     } catch (error: any) {
-      console.error("Erreur lors de la suppression:", error);
-      toast.error(error.message || "Impossible de supprimer le service");
+      console.error("Error deleting:", error);
+      toast.error(error.message || t("servicesTable.deleteError"));
     }
   };
 
@@ -160,11 +162,11 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-light text-foreground tracking-tight">
-              Mes Services
+              {t("servicesTable.heading")}
             </h2>
             <Link to="/creator/services/new">
               <Button variant="primary" size="sm" icon={Briefcase}>
-                Créer un service
+                {t("servicesTable.create")}
               </Button>
             </Link>
           </div>
@@ -172,9 +174,9 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
         <CardContent>
           <EmptyState
             icon={Briefcase}
-            title="Aucun service créé"
-            description="Créez votre premier service pour proposer vos compétences et services"
-            actionLabel="Créer mon premier service"
+            title={t("servicesTable.emptyTitle")}
+            description={t("servicesTable.emptyDescription")}
+            actionLabel={t("servicesTable.emptyAction")}
             actionIcon={Briefcase}
             onAction={() => navigate("/creator/services/new")}
           />
@@ -188,11 +190,11 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h2 className="text-2xl font-light text-foreground tracking-tight">
-            Mes Services ({services.length})
+            {t("servicesTable.headingCount", { count: services.length })}
           </h2>
           <Link to="/creator/services/new">
             <Button variant="primary" size="sm" icon={Briefcase}>
-              Créer un service
+              {t("servicesTable.create")}
             </Button>
           </Link>
         </div>
@@ -232,12 +234,11 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                           {getCategoryName(service.category_id)}
                         </span>
                         <span className="bg-muted/20 px-2 py-1 rounded-full">
-                          {service.delivery_days} jour
-                          {service.delivery_days > 1 ? "s" : ""}
+                          {t("common.days", { count: service.delivery_days })}
                         </span>
                         {service.requires_brief && (
                           <span className="bg-muted/20 px-2 py-1 rounded-full">
-                            Brief requis
+                            {t("common.briefRequired")}
                           </span>
                         )}
                       </div>
@@ -252,7 +253,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                       ${service.base_price}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      À partir de
+                      {t("common.startingFrom")}
                     </div>
                   </div>
                 </div>
@@ -267,7 +268,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                           {service.views}
                         </span>
                       </div>
-                      <div className="text-xs text-muted-foreground">Vues</div>
+                      <div className="text-xs text-muted-foreground">{t("common.views")}</div>
                     </div>
                     <div>
                       <div className="flex items-center justify-center mb-1">
@@ -277,7 +278,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                         </span>
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Commandes
+                        {t("common.orders")}
                       </div>
                     </div>
                     <div>
@@ -288,7 +289,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                         </span>
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Revenus
+                        {t("common.revenue")}
                       </div>
                     </div>
                   </div>
@@ -301,10 +302,10 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                     size="sm"
                     icon={Edit3}
                     onClick={() =>
-                      toast.info("Page d'édition de service à venir")
+                      toast.info(t("servicesTable.editComingSoon"))
                     }
                   >
-                    <span className="sr-only">Éditer</span>
+                    <span className="sr-only">{t("common.edit")}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -312,7 +313,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                     icon={ExternalLink}
                     onClick={() => navigate(`/service/${service.id}`)}
                   >
-                    <span className="sr-only">Voir</span>
+                    <span className="sr-only">{t("common.view")}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -321,7 +322,7 @@ export function ServicesTable({ shopId }: ServicesTableProps) {
                     onClick={() => deleteService(service.id, service.title)}
                     className="text-red-500 hover:text-red-600 hover:border-red-500/30"
                   >
-                    <span className="sr-only">Supprimer</span>
+                    <span className="sr-only">{t("common.delete")}</span>
                   </Button>
                 </div>
               </div>

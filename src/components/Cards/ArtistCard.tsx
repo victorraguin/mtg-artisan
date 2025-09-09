@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   MapPin,
   Star,
@@ -32,6 +33,7 @@ export interface ArtistCardProps {
 }
 
 export function ArtistCard({ artist }: ArtistCardProps) {
+  const { t } = useTranslation();
   const totalCreations = artist.products_count + artist.services_count;
   const rating = artist.total_rating || 0;
   const hasRating = rating > 0;
@@ -46,7 +48,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
         {artist.shop.banner_url ? (
           <img
             src={artist.shop.banner_url}
-            alt={`Bannière de ${artist.shop.name}`}
+            alt={t("artistCard.bannerAlt", { shopName: artist.shop.name })}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
         ) : (
@@ -61,7 +63,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
           <div className="absolute top-4 right-4">
             <div className="bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium flex items-center">
               <Star className="h-3 w-3 mr-1" />
-              Vérifié
+              {t("artistCard.verified")}
             </div>
           </div>
         )}
@@ -118,13 +120,13 @@ export function ArtistCard({ artist }: ArtistCardProps) {
               <div className="flex items-center space-x-2">
                 <Package className="h-4 w-4 text-primary" />
                 <span className="text-sm text-muted-foreground/70">
-                  {artist.products_count} produits
+                  {t("artistCard.products", { count: artist.products_count })}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <Briefcase className="h-4 w-4 text-primary" />
                 <span className="text-sm text-muted-foreground/70">
-                  {artist.services_count} services
+                  {t("artistCard.services", { count: artist.services_count })}
                 </span>
               </div>
             </div>

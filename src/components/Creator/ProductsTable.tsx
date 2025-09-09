@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardHeader, EmptyState } from "../UI";
 import { useShopStatistics } from "../../hooks/useAnalytics";
 import { Product, ProductWithStats, Category } from "../../types";
 import supabase from "../../lib/supabase";
+import { useTranslation } from "react-i18next";
 import {
   Edit3,
   Eye,
@@ -27,6 +28,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
   >([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     statistics,
@@ -50,8 +52,8 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
       if (error) throw error;
       setProducts(data || []);
     } catch (error) {
-      console.error("Erreur lors de la récupération des produits:", error);
-      toast.error("Impossible de charger les produits");
+      console.error("Error fetching products:", error);
+      toast.error(t("productsTable.loadError"));
     }
   };
 
@@ -95,13 +97,13 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
       if (error) throw error;
       setCategories(data || []);
     } catch (error) {
-      console.error("Erreur lors de la récupération des catégories:", error);
+      console.error("Error fetching categories:", error);
     }
   };
 
   const getCategoryName = (categoryId: string) => {
     const category = categories.find((cat) => cat.id === categoryId);
-    return category?.name || "Sans catégorie";
+    return category?.name || t("common.noCategory");
   };
 
   const getStatusColor = (status: string) => {
@@ -122,13 +124,13 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "active":
-        return "Actif";
+        return t("common.status.active");
       case "draft":
-        return "Brouillon";
+        return t("common.status.draft");
       case "paused":
-        return "En pause";
+        return t("common.status.paused");
       case "sold_out":
-        return "Épuisé";
+        return t("common.status.sold_out");
       default:
         return status;
     }
@@ -137,7 +139,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
   const deleteProduct = async (productId: string, productTitle: string) => {
     if (
       !window.confirm(
-        `Êtes-vous sûr de vouloir supprimer le produit "${productTitle}" ? Cette action est irréversible.`
+        t("productsTable.confirmDelete", { title: productTitle })
       )
     ) {
       return;
@@ -151,12 +153,12 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
 
       if (error) throw error;
 
-      toast.success("Produit supprimé avec succès");
+      toast.success(t("productsTable.deleteSuccess"));
       fetchProducts(); // Recharger la liste
       refetch(); // Recharger les statistiques
     } catch (error: any) {
-      console.error("Erreur lors de la suppression:", error);
-      toast.error(error.message || "Impossible de supprimer le produit");
+      console.error("Error deleting:", error);
+      toast.error(error.message || t("productsTable.deleteError"));
     }
   };
 
@@ -178,11 +180,11 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-light text-foreground tracking-tight">
-              Mes Produits
+              {t("productsTable.heading")}
             </h2>
             <Link to="/creator/products/new">
               <Button variant="primary" size="sm" icon={Package}>
-                Créer un produit
+                {t("productsTable.create")}
               </Button>
             </Link>
           </div>
@@ -190,9 +192,9 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
         <CardContent>
           <EmptyState
             icon={Package}
-            title="Aucun produit créé"
-            description="Créez votre premier produit pour commencer à vendre vos créations"
-            actionLabel="Créer mon premier produit"
+            title={t("productsTable.emptyTitle")}
+            description={t("productsTable.emptyDescription")}
+            actionLabel={t("productsTable.emptyAction")}
             actionIcon={Package}
             onAction={() => navigate("/creator/products/new")}
           />
@@ -206,11 +208,11 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h2 className="text-2xl font-light text-foreground tracking-tight">
-            Mes Produits ({productsWithStats.length})
+            {t("productsTable.headingCount", { count: productsWithStats.length })}
           </h2>
           <Link to="/creator/products/new">
             <Button variant="primary" size="sm" icon={Package}>
-              Créer un produit
+              {t("productsTable.create")}
             </Button>
           </Link>
         </div>
@@ -248,8 +250,8 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                       <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                         <span className="bg-muted/20 px-2 py-1 rounded-full">
                           {product.type === "physical"
-                            ? "Physique"
-                            : "Numérique"}
+                            ? t("common.types.physical")
+                            : t("common.types.digital")}
                         </span>
                         <span className="bg-muted/20 px-2 py-1 rounded-full">
                           {getCategoryName(product.category_id)}
@@ -266,10 +268,10 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                                 : "bg-red-500/20 text-red-500"
                             }`}
                           >
-                            Stock total: {product.stock}
+                            {t("common.stockTotal")}: {product.stock}
                             {product.currently_in_carts > 0 && (
                               <span className="ml-1 opacity-70">
-                                ({product.currently_in_carts} en paniers)
+                                ({t("common.inCarts", { count: product.currently_in_carts })})
                               </span>
                             )}
                           </span>
@@ -285,7 +287,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                     <div className="text-xl font-light text-foreground">
                       ${product.price}
                     </div>
-                    <div className="text-xs text-muted-foreground">Prix</div>
+                    <div className="text-xs text-muted-foreground">{t("common.price")}</div>
                   </div>
                 </div>
 
@@ -307,16 +309,15 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                         {product.stock}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Stock total
+                        {t("common.stockTotal")}
                         {product.currently_in_carts > 0 && (
                           <div className="text-xs text-orange-500 mt-1">
-                            {product.currently_in_carts} en paniers
+                            {t("common.inCarts", { count: product.currently_in_carts })}
                           </div>
                         )}
                       </div>
                       <div className="text-xs text-muted-foreground mt-1">
-                        Disponible:{" "}
-                        {Math.max(
+                        {t("common.available")}: {Math.max(
                           0,
                           product.stock - product.currently_in_carts
                         )}
@@ -326,7 +327,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                     <div className="text-center">
                       <div className="text-sm text-muted-foreground">∞</div>
                       <div className="text-xs text-muted-foreground">
-                        Illimité
+                        {t("common.unlimited")}
                       </div>
                     </div>
                   )}
@@ -342,7 +343,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                           {product.total_views}
                         </span>
                       </div>
-                      <div className="text-xs text-muted-foreground">Vues</div>
+                      <div className="text-xs text-muted-foreground">{t("common.views")}</div>
                     </div>
                     <div>
                       <div className="flex items-center justify-center mb-1">
@@ -352,7 +353,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                         </span>
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Ventes
+                        {t("common.sales")}
                       </div>
                     </div>
                     <div>
@@ -363,7 +364,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                         </span>
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Revenus
+                        {t("common.revenue")}
                       </div>
                     </div>
                   </div>
@@ -373,7 +374,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                 <div className="lg:col-span-1 flex lg:flex-col gap-2 lg:items-center lg:justify-center">
                   <Link to={`/creator/products/${product.id}/edit`}>
                     <Button variant="outline" size="sm" icon={Edit3}>
-                      <span className="sr-only">Éditer</span>
+                      <span className="sr-only">{t("common.edit")}</span>
                     </Button>
                   </Link>
                   <Button
@@ -382,7 +383,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                     icon={ExternalLink}
                     onClick={() => navigate(`/product/${product.id}`)}
                   >
-                    <span className="sr-only">Voir</span>
+                    <span className="sr-only">{t("common.view")}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -391,7 +392,7 @@ export function ProductsTable({ shopId }: ProductsTableProps) {
                     onClick={() => deleteProduct(product.id, product.title)}
                     className="text-red-500 hover:text-red-600 hover:border-red-500/30"
                   >
-                    <span className="sr-only">Supprimer</span>
+                    <span className="sr-only">{t("common.delete")}</span>
                   </Button>
                 </div>
               </div>

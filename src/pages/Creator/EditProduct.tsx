@@ -16,6 +16,7 @@ import {
 import supabase from "../../lib/supabase";
 import { Save, ArrowLeft, Edit3 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function EditProduct() {
   const { user } = useAuth();
@@ -37,6 +38,7 @@ export function EditProduct() {
     status: "draft" as "draft" | "active" | "paused" | "sold_out",
     images: [] as string[],
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (productId) {
@@ -57,20 +59,20 @@ export function EditProduct() {
       ]);
 
       if (!shopResult.data) {
-        toast.error("Veuillez créer votre boutique d'abord");
+        toast.error(t("editProduct.needShop"));
         navigate("/creator/shop");
         return;
       }
 
       if (!productResult.data) {
-        toast.error("Produit non trouvé");
+        toast.error(t("editProduct.notFound"));
         navigate("/dashboard/creator");
         return;
       }
 
       // Vérifier que l'utilisateur est propriétaire du produit
       if (productResult.data.shop_id !== shopResult.data.id) {
-        toast.error("Accès non autorisé");
+        toast.error(t("editProduct.unauthorized"));
         navigate("/dashboard/creator");
         return;
       }
@@ -94,7 +96,7 @@ export function EditProduct() {
       });
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
-      toast.error("Erreur lors du chargement du produit");
+      toast.error(t("editProduct.loadError"));
     } finally {
       setLoading(false);
     }
@@ -133,11 +135,11 @@ export function EditProduct() {
 
       if (error) throw error;
 
-      toast.success("Produit mis à jour avec succès !");
+      toast.success(t("editProduct.success"));
       navigate("/dashboard/creator");
     } catch (error: any) {
       console.error("Erreur lors de la mise à jour du produit:", error);
-      toast.error(error.message || "Échec de la mise à jour du produit");
+      toast.error(error.message || t("editProduct.error"));
     } finally {
       setSaving(false);
     }

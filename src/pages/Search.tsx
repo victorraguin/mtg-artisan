@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Filter, X, Grid, List, Search as SearchIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import supabase from "../lib/supabase";
 import { useCategories } from "../hooks/useCategories";
 import { ProductCard } from "../components/Cards/ProductCard";
@@ -26,6 +27,8 @@ export function Search() {
     country: searchParams.get("country") || "",
     sortBy: searchParams.get("sortBy") || "created_at",
   });
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     searchItems();
@@ -215,15 +218,13 @@ export function Search() {
             <div>
               <h1 className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-2">
                 {filters.query
-                  ? `Résultats pour "${filters.query}"`
-                  : "Parcourir les Boutiques"}
+                  ? t("search.resultsFor", { query: filters.query })
+                  : t("search.browse")}
               </h1>
               <p className="text-muted-foreground/70 text-lg">
                 {loading
-                  ? "Recherche en cours..."
-                  : `${items.length} ${
-                      items.length === 1 ? "résultat" : "résultats"
-                    } trouvé${items.length > 1 ? "s" : ""}`}
+                  ? t("search.loading")
+                  : t("search.resultsCount", { count: items.length })}
               </p>
             </div>
 
@@ -234,7 +235,7 @@ export function Search() {
                 icon={Grid}
                 onClick={() => setViewMode("grid")}
               >
-                Grille
+                {t("search.view.grid")}
               </Button>
               <Button
                 variant={viewMode === "categories" ? "primary" : "outline"}
@@ -242,7 +243,7 @@ export function Search() {
                 icon={List}
                 onClick={() => setViewMode("categories")}
               >
-                Catégories
+                {t("search.view.categories")}
               </Button>
             </div>
           </div>
@@ -255,7 +256,7 @@ export function Search() {
             onClick={() => setShowFilters(!showFilters)}
             className="w-full lg:w-auto"
           >
-            {showFilters ? "Masquer les filtres" : "Afficher les filtres"}
+            {showFilters ? t("search.filters.hide") : t("search.filters.show")}
           </Button>
         </div>
 
@@ -263,14 +264,14 @@ export function Search() {
         {showFilters && (
           <div className="glass rounded-3xl p-6 md:p-8 border border-border/30 mb-8">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-light text-foreground">Filtres</h3>
+              <h3 className="text-xl font-light text-foreground">{t("search.filters.title")}</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
                 className="text-primary hover:text-primary/80"
               >
-                Effacer tout
+                {t("search.filters.clear")}
               </Button>
             </div>
 
@@ -278,30 +279,30 @@ export function Search() {
               {/* Item Type */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-3">
-                  Type
+                  {t("search.filters.type.label")}
                 </label>
                 <select
                   value={filters.type}
                   onChange={(e) => updateFilter("type", e.target.value)}
                   className="w-full bg-card/50 border border-border/50 rounded-2xl px-4 py-3 text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                 >
-                  <option value="all">Tous les éléments</option>
-                  <option value="product">Produits</option>
-                  <option value="service">Artisans</option>
+                  <option value="all">{t("search.filters.type.all")}</option>
+                  <option value="product">{t("search.filters.type.product")}</option>
+                  <option value="service">{t("search.filters.type.service")}</option>
                 </select>
               </div>
 
               {/* Category */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-3">
-                  Catégorie
+                  {t("search.filters.category.label")}
                 </label>
                 <select
                   value={filters.category}
                   onChange={(e) => updateFilter("category", e.target.value)}
                   className="w-full bg-card/50 border border-border/50 rounded-2xl px-4 py-3 text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                 >
-                  <option value="">Toutes les catégories</option>
+                  <option value="">{t("search.filters.category.all")}</option>
                   {categories?.map((category) => (
                     <option key={category.id} value={category.name}>
                       {category.name}
@@ -313,19 +314,19 @@ export function Search() {
               {/* Price Range */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-3">
-                  Fourchette de prix
+                  {t("search.filters.price.label")}
                 </label>
                 <div className="flex gap-3">
                   <Input
                     type="number"
-                    placeholder="Min"
+                    placeholder={t("search.filters.price.min")}
                     value={filters.minPrice}
                     onChange={(e) => updateFilter("minPrice", e.target.value)}
                     className="flex-1"
                   />
                   <Input
                     type="number"
-                    placeholder="Max"
+                    placeholder={t("search.filters.price.max")}
                     value={filters.maxPrice}
                     onChange={(e) => updateFilter("maxPrice", e.target.value)}
                     className="flex-1"
@@ -336,16 +337,16 @@ export function Search() {
               {/* Sort */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-3">
-                  Trier par
+                  {t("search.filters.sort.label")}
                 </label>
                 <select
                   value={filters.sortBy}
                   onChange={(e) => updateFilter("sortBy", e.target.value)}
                   className="w-full bg-card/50 border border-border/50 rounded-2xl px-4 py-3 text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                 >
-                  <option value="created_at">Plus récent</option>
-                  <option value="price_low">Prix : Croissant</option>
-                  <option value="price_high">Prix : Décroissant</option>
+                  <option value="created_at">{t("search.filters.sort.newest")}</option>
+                  <option value="price_low">{t("search.filters.sort.priceAsc")}</option>
+                  <option value="price_high">{t("search.filters.sort.priceDesc")}</option>
                 </select>
               </div>
             </div>
@@ -371,7 +372,7 @@ export function Search() {
                 <div className="glass rounded-3xl p-12 border border-border/30">
                   <SearchIcon className="h-16 w-16 text-muted-foreground/40 mx-auto mb-4" />
                   <p className="text-muted-foreground/70 text-lg">
-                    Aucun élément trouvé correspondant à vos critères.
+                    {t("search.noResults")}
                   </p>
                 </div>
               </div>
@@ -387,8 +388,7 @@ export function Search() {
                       {categoryName}
                     </h2>
                     <span className="text-muted-foreground/60 text-sm">
-                      {categoryItems.length} élément
-                      {categoryItems.length > 1 ? "s" : ""}
+                      {t("search.categoryCount", { count: categoryItems.length })}
                     </span>
                   </div>
 
@@ -410,7 +410,7 @@ export function Search() {
                 <div className="glass rounded-3xl p-12 border border-border/30">
                   <SearchIcon className="h-16 w-16 text-muted-foreground/40 mx-auto mb-4" />
                   <p className="text-muted-foreground/70 text-lg">
-                    Aucun élément trouvé correspondant à vos critères.
+                    {t("search.noResults")}
                   </p>
                 </div>
               </div>

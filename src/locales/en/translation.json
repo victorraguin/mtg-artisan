@@ -1,0 +1,579 @@
+{
+  "checkoutSummary": {
+    "title": "Order Summary",
+    "completeShipping": "Please complete the shipping address to continue.",
+    "noImage": "No Image"
+  },
+  "artistCard": {
+    "bannerAlt": "Banner of {{shopName}}",
+    "verified": "Verified",
+    "products": "{{count}} product",
+    "products_plural": "{{count}} products",
+    "services": "{{count}} service",
+    "services_plural": "{{count}} services"
+  },
+  "common": {
+    "noCategory": "No category",
+    "status": {
+      "active": "Active",
+      "draft": "Draft",
+      "paused": "Paused",
+      "sold_out": "Sold out"
+    },
+    "types": {
+      "physical": "Physical",
+      "digital": "Digital"
+    },
+    "price": "Price",
+    "stockTotal": "Total stock",
+    "available": "Available",
+    "unlimited": "Unlimited",
+    "views": "Views",
+    "sales": "Sales",
+    "revenue": "Revenue",
+    "edit": "Edit",
+    "view": "View",
+    "delete": "Delete",
+    "inCarts": "{{count}} in cart",
+    "inCarts_plural": "{{count}} in carts",
+    "days": "{{count}} day",
+    "days_plural": "{{count}} days",
+    "briefRequired": "Brief required",
+    "startingFrom": "Starting from",
+    "orders": "Orders",
+    "item": "Item",
+    "new": "New",
+    "orderStatus": {
+      "paid": "Paid",
+      "processing": "Processing",
+      "completed": "Completed",
+      "shipped": "Shipped"
+    }
+  },
+  "productsTable": {
+    "loadError": "Unable to load products",
+    "deleteSuccess": "Product deleted successfully",
+    "deleteError": "Unable to delete product",
+    "confirmDelete": "Are you sure you want to delete the product \"{{title}}\"? This action is irreversible.",
+    "heading": "My Products",
+    "headingCount": "My Products ({{count}})",
+    "create": "Create product",
+    "emptyTitle": "No product created",
+    "emptyDescription": "Create your first product to start selling your creations",
+    "emptyAction": "Create my first product"
+  },
+  "servicesTable": {
+    "loadError": "Unable to load services",
+    "deleteSuccess": "Service deleted successfully",
+    "deleteError": "Unable to delete service",
+    "confirmDelete": "Are you sure you want to delete the service \"{{title}}\"? This action is irreversible.",
+    "heading": "My Services",
+    "headingCount": "My Services ({{count}})",
+    "create": "Create service",
+    "emptyTitle": "No service created",
+    "emptyDescription": "Create your first service to offer your skills and services",
+    "emptyAction": "Create my first service",
+    "editComingSoon": "Service editing page coming soon"
+  },
+  "home": {
+    "featuredCategories": {
+      "cardAlters": {
+        "description": "Transform your favorite cards into unique works of art"
+      },
+      "customTokens": { "description": "Professional game tokens and pieces" },
+      "deckbuilding": {
+        "description": "Improve your gameplay with expert advice"
+      },
+      "playmats": {
+        "description": "Custom playmats, deck boxes, and accessories"
+      }
+    },
+    "hero": {
+      "tagline": "The Premier Magic Crafting Hub",
+      "title": { "part1": "Magic", "part2": "Art", "part3": "Shops" },
+      "description": "Discover unique card alters, tokens, and creations from talented artists worldwide",
+      "explore": "Explore Shops",
+      "becomeCreator": "Become a Creator",
+      "stats": {
+        "artists": "Active Artists",
+        "countries": "Countries",
+        "satisfaction": "Satisfaction"
+      }
+    },
+    "categories": {
+      "title": "Popular Categories",
+      "subtitle": "Discover the most requested creations by our customers",
+      "popular": "Popular"
+    },
+    "artists": {
+      "title": "Popular Artists",
+      "subtitle": "Discover our most talented artists and their unique creations"
+    },
+    "features": {
+      "title": "Why Choose ManaShop?",
+      "subtitle": "The trusted art shops for your magical creations",
+      "verified": {
+        "title": "Verified Artists",
+        "description": "All artists are verified professionals ensuring quality work for your cards."
+      },
+      "network": {
+        "title": "Global Network",
+        "description": "Connect with talented artists worldwide, each bringing unique skills and expertise."
+      },
+      "secure": {
+        "title": "Secure Transactions",
+        "description": "Secure payments with buyer protection and satisfaction guarantees."
+      }
+    },
+    "cta": {
+      "title": "Ready to Find Your Perfect Artist?",
+      "subtitle": "Join thousands of players who have discovered incredible magical artworks",
+      "explore": "Discover Shops"
+    }
+  },
+  "search": {
+    "resultsFor": "Results for \"{{query}}\"",
+    "browse": "Browse Shops",
+    "loading": "Searching...",
+    "resultsCount": "{{count}} result found",
+    "resultsCount_plural": "{{count}} results found",
+    "view": {
+      "grid": "Grid",
+      "categories": "Categories"
+    },
+    "filters": {
+      "show": "Show filters",
+      "hide": "Hide filters",
+      "title": "Filters",
+      "clear": "Clear all",
+      "type": {
+        "label": "Type",
+        "all": "All items",
+        "product": "Products",
+        "service": "Services"
+      },
+      "category": {
+        "label": "Category",
+        "all": "All categories"
+      },
+      "price": {
+        "label": "Price range",
+        "min": "Min",
+        "max": "Max"
+      },
+      "sort": {
+        "label": "Sort by",
+        "newest": "Newest",
+        "priceAsc": "Price: Low to High",
+        "priceDesc": "Price: High to Low"
+      }
+    },
+    "noResults": "No items found matching your criteria.",
+    "categoryCount": "{{count}} item",
+    "categoryCount_plural": "{{count}} items"
+  },
+  "checkout": {
+    "addressSaved": "Address saved to your profile",
+    "addressError": "Error saving address",
+    "orderSuccess": "Order placed successfully!",
+    "orderError": "Error creating order",
+    "empty": {
+      "title": "Your cart is empty",
+      "subtitle": "Add items to your cart before proceeding to checkout",
+      "action": "Browse shops"
+    },
+    "backToCart": "Back to cart",
+    "title": "Complete Checkout",
+    "shipping": {
+      "title": "Shipping Address",
+      "subtitle": "Where would you like to receive your order?",
+      "name": "Full name",
+      "namePlaceholder": "Your full name",
+      "phone": "Phone",
+      "phonePlaceholder": "Your phone number",
+      "address": "Address",
+      "addressPlaceholder": "Full address",
+      "city": "City",
+      "postalCode": "Postal Code",
+      "country": "Country",
+      "save": "Save to my profile"
+    },
+    "payment": {
+      "title": "Payment Method",
+      "securedBy": "Secured by PayPal"
+    }
+  },
+  "auth": {
+    "signUp": {
+      "success": "Account created successfully!",
+      "error": "Failed to create account",
+      "hero": {
+        "title": "Join our community",
+        "subtitle": "Create an account to start buying or selling"
+      },
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "displayNameLabel": "Display name",
+      "displayNamePlaceholder": "Your name",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create a strong password",
+      "choosePath": "Choose your path:",
+      "paths": {
+        "buyer": {
+          "title": "Collector",
+          "description": "Order legendary art"
+        },
+        "creator": {
+          "title": "Artist",
+          "description": "Create magical services"
+        }
+      },
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "signIn": {
+      "success": "Welcome!",
+      "invalidCredentials": "Invalid email or password. Please check your credentials.",
+      "error": "Failed to sign in",
+      "heroTitle": "Welcome back, Planeswalker",
+      "heroSubtitle": "Enter your guild credentials to access the multiverse",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Sign in",
+      "showTest": "Show test accounts",
+      "hideTest": "Hide test accounts",
+      "testAccounts": "Test accounts:",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    }
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": {
+      "title": "Your Cart is Empty",
+      "description": "Discover amazing artworks and professional services from talented creators",
+      "cta": "Start Shopping"
+    },
+    "itemCount": "{{count}} item",
+    "itemCount_plural": "{{count}} items",
+    "unitPrice": "${{price}} each",
+    "noImage": "No image",
+    "remove": "Remove",
+    "summary": {
+      "title": "Order Summary",
+      "total": "Total"
+    },
+    "checkout": "Proceed to Checkout",
+    "continue": "Continue Shopping",
+    "total": "Total: ${{total}}"
+  },
+  "footer": {
+    "description": "The reference art shops for custom Magic: The Gathering art, alters, tokens and unique creations. Discover talented artists from around the world.",
+    "sections": {
+      "shops": {
+        "title": "Shops",
+        "cardAlters": "Card Alters",
+        "customTokens": "Custom Tokens",
+        "playmats": "Playmats",
+        "deckbuilding": "Deckbuilding Artists"
+      },
+      "support": {
+        "title": "Support",
+        "helpCenter": "Help Center",
+        "sellerGuide": "Seller Guide",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy"
+      }
+    },
+    "rights": "All rights reserved.",
+    "trademark": "Magic: The Gathering is a trademark of Wizards of the Coast.",
+    "madeWith": "Made with",
+    "byFans": "by fans"
+  },
+  "userMenu": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "dashboard": "Dashboard",
+    "adminPanel": "Admin Panel",
+    "creatorStudio": "Creator Studio",
+    "manageShop": "Manage Shop",
+    "orders": "My Orders",
+    "profile": "Profile Settings",
+    "signOut": "Sign out",
+    "account": "Account"
+  },
+  "header": {
+    "shops": "Shops",
+    "artisans": "Creators",
+    "searchPlaceholder": "Search creations..."
+  },
+  "serviceCard": {
+    "requiresBrief": "Consultation required",
+    "quickOrder": "Quick order",
+    "requiresBriefShort": "Consult",
+    "quickOrderShort": "Quick"
+  },
+  "stockAlerts": {
+    "title": "Stock Alerts ({{count}})",
+    "outOfStock": "Out of stock",
+    "remaining": "Only {{count}} left",
+    "remaining_plural": "Only {{count}} left",
+    "inCarts": "({{count}} in cart)",
+    "inCarts_plural": "({{count}} in carts)",
+    "manage": "Manage"
+  },
+  "profile": {
+    "updateSuccess": "Profile updated successfully!",
+    "updateError": "Failed to update profile",
+    "title": "Profile Settings",
+    "subtitle": "Manage your personal information and preferences",
+    "anonymous": "Anonymous",
+    "roles": {
+      "creator": "creator",
+      "admin": "administrator",
+      "buyer": "buyer"
+    },
+    "delivery": {
+      "title": "Shipping Address",
+      "name": "Full Name",
+      "namePlaceholder": "John Doe",
+      "address": "Address",
+      "addressPlaceholder": "123 Main St, Apt 4B",
+      "city": "City",
+      "cityPlaceholder": "Paris",
+      "postalCode": "Postal Code",
+      "postalCodePlaceholder": "75001",
+      "country": "Country",
+      "selectCountry": "Select a country"
+    },
+    "countries": {
+      "france": "France",
+      "unitedStates": "United States",
+      "canada": "Canada",
+      "unitedKingdom": "United Kingdom",
+      "germany": "Germany",
+      "japan": "Japan",
+      "australia": "Australia"
+    },
+    "personal": {
+      "title": "Personal Information",
+      "displayName": "Display Name",
+      "displayNamePlaceholder": "Your display name",
+      "bio": "Biography",
+      "bioPlaceholder": "Tell us about yourself..."
+    },
+    "saving": "Saving...",
+    "save": "Save to profile"
+  },
+  "creatorDashboard": {
+    "welcome": {
+      "title": "Welcome to your Creator Studio",
+      "subtitle": "Set up your shop to start selling your amazing art and services",
+      "createShop": "Create your shop"
+    },
+    "header": {
+      "title": "Creator Studio",
+      "subtitle": "{{shopName}} • Manage your creations"
+    },
+    "actions": {
+      "addProduct": "Add a product",
+      "addService": "Add a service"
+    },
+    "stats": {
+      "products": "Products",
+      "services": "Services",
+      "orders": "Orders",
+      "revenue": "Revenue",
+      "inCarts": "including {{count}} in cart",
+      "inCarts_plural": "including {{count}} in carts"
+    },
+    "recent": {
+      "title": "Recent Activity",
+      "viewAll": "View all orders",
+      "emptyTitle": "No recent orders",
+      "emptySubtitle": "New orders will appear here",
+      "order": "Order #{{id}}",
+      "qty": "Qty: {{count}}"
+    }
+  },
+  "buyerDashboard": {
+    "title": "Dashboard",
+    "subtitle": "Track your orders and manage your purchases",
+    "stats": {
+      "total": "Total orders",
+      "completed": "Completed orders",
+      "inProgress": "In progress",
+      "pending": "Pending"
+    },
+    "tabs": {
+      "all": "All"
+    },
+    "empty": {
+      "title": "No orders found",
+      "all": "You haven't placed any orders yet.",
+      "status": "No orders with status \"{{status}}\"."
+    },
+    "order": {
+      "title": "Order #{{id}}",
+      "from": "From {{shopName}} • Qty: {{qty}}",
+      "contactSeller": "Contact seller",
+      "leaveReview": "Leave a review",
+      "tracking": "Tracking:",
+      "delivery": "Estimated delivery:"
+    }
+  },
+  "adminDashboard": {
+    "title": "Admin Panel",
+    "subtitle": "Manage ManaShop stores",
+    "totalUsers": "Total Users",
+    "creators": "Creators",
+    "productsServices": "Products & Services",
+    "totalRevenue": "Total Revenue",
+    "recentOrders": "Recent Orders",
+    "viewAll": "View all",
+    "noRecentOrders": "No recent orders",
+    "order": "Order #{{id}}",
+    "itemCount": "{{count}} item",
+    "itemCount_plural": "{{count}} items",
+    "quickActions": "Quick Actions",
+    "manageUsers": "Manage Users",
+    "manageUsersDesc": "View and edit user profiles",
+    "moderateContent": "Moderate Content",
+    "moderateContentDesc": "Review and approve products",
+    "reports": "Reports",
+    "reportsDesc": "Analyze performance"
+  },
+  "cart": {
+    "mustSignIn": "Please sign in to add items to the cart",
+    "stockInsufficient": "Insufficient stock. Only {{stock}} item(s) available",
+    "stockCheckError": "Unable to check stock",
+    "addSuccess": "Added to cart",
+    "addError": "Unable to add to cart",
+    "updateError": "Failed to update quantity",
+    "removeSuccess": "Removed from cart",
+    "removeError": "Unable to remove from cart",
+    "clearError": "Failed to clear cart",
+    "unknownItem": "Unknown item",
+    "unknownShop": "Unknown shop"
+  },
+  "notifications": {
+    "markError": "Error marking notifications",
+    "markSuccess": "All notifications marked as read"
+  },
+  "stock": {
+    "checkError": "Error checking stock"
+  },
+  "createProduct": {
+    "needShop": "Please create your shop first",
+    "success": "Product created successfully!",
+    "error": "Failed to create product"
+  },
+  "editProduct": {
+    "needShop": "Please create your shop first",
+    "notFound": "Product not found",
+    "unauthorized": "Unauthorized access",
+    "loadError": "Error loading product",
+    "success": "Product updated successfully!",
+    "error": "Failed to update product"
+  },
+  "productDetail": {
+    "notFound": "Product not found",
+    "addSuccess": "Product added to cart!",
+    "addError": "Failed to add to cart"
+  },
+  "notificationPreferences": {
+    "saveSuccess": "Preferences saved successfully",
+    "saveError": "Error saving preferences"
+  },
+  "imageUpload": {
+    "limit": "You can only add {{count}} more image",
+    "limit_plural": "You can only add {{count}} more images",
+    "invalidType": "{{file}} is not a valid image",
+    "tooLarge": "{{file}} is too large (max 5MB)",
+    "uploadSuccess": "{{count}} image added",
+    "uploadSuccess_plural": "{{count}} images added",
+    "uploadError": "Error uploading images"
+  },
+  "stockInfoCard": {
+    "title": "How does stock management work?",
+    "totalTitle": "Total Inventory Stock",
+    "totalDesc": "This is the total number of items you have in stock. You can modify it in the product edit page.",
+    "inCartsTitle": "Items in Carts",
+    "inCartsDesc": "Number of items currently in customers' carts (but not yet purchased).",
+    "calcTitle": "📊 Available Stock Calculation",
+    "total": "Total stock:",
+    "inCarts": "In carts:",
+    "available": "Available:",
+    "items": "{{count}} item",
+    "items_plural": "{{count}} items",
+    "tip": "💡 Tip: Available stock is displayed in real time to customers. If a customer adds an item to their cart, the available stock decreases immediately for others."
+  },
+  "shippingManager": {
+    "title": "Shipping Fees",
+    "newProfile": "New profile",
+    "newProfileTitle": "New shipping profile",
+    "nameLabel": "Profile name *",
+    "namePlaceholder": "e.g. Standard Shipping",
+    "baseCostLabel": "Base cost (€)",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Optional description",
+    "freeShippingLabel": "Free shipping from (€)",
+    "freeShippingPlaceholder": "Optional",
+    "defaultLabel": "Set as default profile",
+    "cancel": "Cancel",
+    "create": "Create profile",
+    "noProfiles": "No shipping profile configured",
+    "createFirst": "Create your first profile to set your shipping fees",
+    "defaultTag": "Default",
+    "baseCost": "Base cost:",
+    "freeFrom": "Free from:",
+    "setDefault": "Set default",
+    "errors": {
+      "load": "Unable to load shipping settings",
+      "nameRequired": "Profile name is required",
+      "create": "Failed to create profile",
+      "delete": "Failed to delete profile",
+      "update": "Failed to update profile"
+    },
+    "success": {
+      "create": "Shipping profile created",
+      "delete": "Profile deleted",
+      "updateDefault": "Default profile updated"
+    },
+    "confirmDelete": "Delete profile \"{{name}}\"?",
+    "howItWorks": {
+      "title": "How it works?",
+      "default": "• The default profile will apply to all new orders",
+      "calc": "• Shipping fees are calculated automatically at checkout",
+      "free": "• Free shipping applies if the amount exceeds the defined threshold",
+      "multiple": "• You can create multiple profiles for different product types"
+    }
+  },
+  "notificationPanel": {
+    "title": "Notifications",
+    "loading": "Loading...",
+    "markAllTitle": "Mark all as read",
+    "markAll": "Mark all",
+    "settings": "Notification settings",
+    "empty": "No notifications yet",
+    "viewAll": "View all notifications"
+  },
+  "creatorProfile": {
+    "notFound": "Shop not found",
+    "bannerAlt": "Banner of {{shopName}}",
+    "verified": "Verified",
+    "new": "New",
+    "memberSince": "Member since {{year}}",
+    "tabs": {
+      "products": "Products ({{count}})",
+      "services": "Services ({{count}})"
+    },
+    "productsEmptyTitle": "No products available",
+    "productsEmptySubtitle": "This shop has no products yet",
+    "servicesEmptyTitle": "No services available",
+    "servicesEmptySubtitle": "This shop has no services yet"
+  }
+}

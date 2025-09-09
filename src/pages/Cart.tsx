@@ -5,6 +5,7 @@ import { useCart } from "../contexts/CartContext";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
 import { Button } from "../components/UI/Button";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import { useTranslation } from "react-i18next";
 
 export function Cart() {
   const {
@@ -15,6 +16,7 @@ export function Cart() {
     getTotal,
     getItemCount,
   } = useCart();
+  const { t } = useTranslation();
 
   if (loading) {
     return (
@@ -32,15 +34,14 @@ export function Cart() {
             <ShoppingCart className="h-12 w-12 text-primary" />
           </div>
           <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
-            Votre Panier est Vide
+            {t("cart.empty.title")}
           </h1>
           <p className="text-muted-foreground/70 text-lg mb-8">
-            Découvrez des œuvres d'art incroyables et des services
-            professionnels de créateurs talentueux
+            {t("cart.empty.description")}
           </p>
           <Link to="/search">
             <Button variant="gradient" size="lg" icon={ArrowRight}>
-              Commencer les Achats
+              {t("cart.empty.cta")}
             </Button>
           </Link>
         </div>
@@ -66,11 +67,10 @@ export function Cart() {
     <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
       <div className="mb-8">
         <h1 className="text-4xl font-light text-foreground tracking-tight mb-2">
-          Panier d'Achats
+          {t("cart.title")}
         </h1>
         <p className="text-muted-foreground/70 text-lg">
-          {getItemCount()} article{getItemCount() > 1 ? "s" : ""} • Total: $
-          {getTotal().toFixed(2)}
+          {t("cart.itemCount", { count: getItemCount() })} • {t("cart.total", { total: getTotal().toFixed(2) })}
         </p>
       </div>
 
@@ -101,7 +101,7 @@ export function Cart() {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-muted-foreground/60 text-xs">
-                            Pas d'image
+                            {t("cart.noImage")}
                           </div>
                         )}
                       </div>
@@ -112,7 +112,7 @@ export function Cart() {
                           {item.title}
                         </h4>
                         <p className="text-muted-foreground/70 text-sm mb-2">
-                          ${item.unit_price} l'unité
+                          {t("cart.unitPrice", { price: item.unit_price })}
                         </p>
 
                         {/* Quantity Controls */}
@@ -153,7 +153,7 @@ export function Cart() {
                           onClick={() => removeFromCart(item.id)}
                           className="text-destructive/80 hover:text-destructive hover:bg-destructive/10"
                         >
-                          Supprimer
+                          {t("cart.remove")}
                         </Button>
                       </div>
                     </div>
@@ -169,7 +169,7 @@ export function Cart() {
           <Card className="sticky top-24">
             <CardHeader>
               <h2 className="text-2xl font-light text-foreground tracking-tight">
-                Résumé de la Commande
+                {t("cart.summary.title")}
               </h2>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -191,7 +191,7 @@ export function Cart() {
               <hr className="border-border/30" />
 
               <div className="flex justify-between text-lg font-medium">
-                <span className="text-foreground">Total</span>
+                <span className="text-foreground">{t("cart.summary.total")}</span>
                 <span className="text-primary">${getTotal().toFixed(2)}</span>
               </div>
 
@@ -202,13 +202,13 @@ export function Cart() {
                   icon={ArrowRight}
                   className="w-full"
                 >
-                  Passer la Commande
+                  {t("cart.checkout")}
                 </Button>
               </Link>
 
               <Link to="/search" className="block w-full">
                 <Button variant="outline" size="md" className="w-full">
-                  Continuer les Achats
+                  {t("cart.continue")}
                 </Button>
               </Link>
             </CardContent>

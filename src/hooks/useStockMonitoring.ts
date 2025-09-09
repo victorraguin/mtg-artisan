@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { StockInfo } from "../types";
 import analyticsService from "../services/analytics";
+import { useTranslation } from "react-i18next";
 
 /**
  * Hook pour surveiller le stock d'un produit en temps réel
@@ -9,6 +10,7 @@ export function useStockMonitoring(productId: string, enabled: boolean = true) {
   const [stockInfo, setStockInfo] = useState<StockInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const checkStock = async (quantity: number = 1) => {
     if (!productId || !enabled) return;
@@ -24,9 +26,7 @@ export function useStockMonitoring(productId: string, enabled: boolean = true) {
       setStockInfo(stock);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Erreur lors de la vérification du stock"
+        err instanceof Error ? err.message : t("stock.checkError")
       );
     } finally {
       setLoading(false);

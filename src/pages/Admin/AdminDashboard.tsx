@@ -6,14 +6,15 @@ import {
   Briefcase,
   DollarSign,
   TrendingUp,
-  AlertCircle,
   Shield,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { LoadingSpinner } from "../../components/UI/LoadingSpinner";
 import { Card, CardHeader, CardContent } from "../../components/UI/Card";
 import { Button } from "../../components/UI/Button";
 
 export function AdminDashboard() {
+  const { t, i18n } = useTranslation();
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalCreators: 0,
@@ -85,10 +86,10 @@ export function AdminDashboard() {
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl font-light text-foreground tracking-tight">
-              Admin Panel
+              {t("adminDashboard.title")}
             </h1>
             <p className="text-muted-foreground/70 text-lg">
-              Gestion des boutiques ManaShop
+              {t("adminDashboard.subtitle")}
             </p>
           </div>
         </div>
@@ -104,7 +105,7 @@ export function AdminDashboard() {
             {stats.totalUsers.toLocaleString()}
           </div>
           <div className="text-muted-foreground/70 text-sm">
-            Utilisateurs totaux
+            {t("adminDashboard.totalUsers")}
           </div>
         </Card>
 
@@ -115,7 +116,9 @@ export function AdminDashboard() {
           <div className="text-3xl font-light text-foreground mb-2">
             {stats.totalCreators.toLocaleString()}
           </div>
-          <div className="text-muted-foreground/70 text-sm">Créateurs</div>
+          <div className="text-muted-foreground/70 text-sm">
+            {t("adminDashboard.creators")}
+          </div>
         </Card>
 
         <Card className="text-center p-6">
@@ -126,7 +129,7 @@ export function AdminDashboard() {
             {(stats.totalProducts + stats.totalServices).toLocaleString()}
           </div>
           <div className="text-muted-foreground/70 text-sm">
-            Produits & Services
+            {t("adminDashboard.productsServices")}
           </div>
         </Card>
 
@@ -137,7 +140,9 @@ export function AdminDashboard() {
           <div className="text-3xl font-light text-foreground mb-2">
             ${stats.totalRevenue.toLocaleString()}
           </div>
-          <div className="text-muted-foreground/70 text-sm">Revenus totaux</div>
+          <div className="text-muted-foreground/70 text-sm">
+            {t("adminDashboard.totalRevenue")}
+          </div>
         </Card>
       </div>
 
@@ -145,10 +150,10 @@ export function AdminDashboard() {
       <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-light text-foreground tracking-tight">
-            Commandes Récentes
+            {t("adminDashboard.recentOrders")}
           </h2>
           <Button variant="outline" size="sm">
-            Voir toutes
+            {t("adminDashboard.viewAll")}
           </Button>
         </div>
 
@@ -157,7 +162,7 @@ export function AdminDashboard() {
             <Card className="text-center p-12">
               <Package className="h-16 w-16 text-muted-foreground/40 mx-auto mb-4" />
               <p className="text-muted-foreground/70">
-                Aucune commande récente
+                {t("adminDashboard.noRecentOrders")}
               </p>
             </Card>
           ) : (
@@ -166,20 +171,24 @@ export function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-light text-foreground">
-                      Commande #{order.id.slice(-8)}
+                      {t("adminDashboard.order", { id: order.id.slice(-8) })}
                     </h3>
                     <p className="text-muted-foreground/70 text-sm">
-                      {new Date(order.created_at).toLocaleDateString("fr-FR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {new Date(order.created_at).toLocaleDateString(
+                        i18n.language === "fr" ? "fr-FR" : "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
                     </p>
                     <p className="text-muted-foreground/70 text-sm">
-                      {order.order_items?.length || 0} article
-                      {order.order_items?.length > 1 ? "s" : ""}
+                      {t("adminDashboard.itemCount", {
+                        count: order.order_items?.length || 0,
+                      })}
                     </p>
                   </div>
                   <div className="text-right">
@@ -200,7 +209,7 @@ export function AdminDashboard() {
       {/* Quick Actions */}
       <div>
         <h2 className="text-2xl font-light text-foreground tracking-tight mb-6">
-          Actions Rapides
+          {t("adminDashboard.quickActions")}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -209,10 +218,10 @@ export function AdminDashboard() {
               <Users className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-lg font-light text-foreground mb-2">
-              Gérer les Utilisateurs
+              {t("adminDashboard.manageUsers")}
             </h3>
             <p className="text-muted-foreground/70 text-sm">
-              Voir et modifier les profils utilisateurs
+              {t("adminDashboard.manageUsersDesc")}
             </p>
           </Card>
 
@@ -221,10 +230,10 @@ export function AdminDashboard() {
               <Package className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-lg font-light text-foreground mb-2">
-              Modérer le Contenu
+              {t("adminDashboard.moderateContent")}
             </h3>
             <p className="text-muted-foreground/70 text-sm">
-              Examiner et approuver les produits
+              {t("adminDashboard.moderateContentDesc")}
             </p>
           </Card>
 
@@ -233,10 +242,10 @@ export function AdminDashboard() {
               <TrendingUp className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-lg font-light text-foreground mb-2">
-              Rapports
+              {t("adminDashboard.reports")}
             </h3>
             <p className="text-muted-foreground/70 text-sm">
-              Analyser les performances
+              {t("adminDashboard.reportsDesc")}
             </p>
           </Card>
         </div>

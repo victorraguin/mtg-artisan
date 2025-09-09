@@ -12,11 +12,13 @@ import toast from "react-hot-toast";
 import { Button } from "../components/UI/Button";
 import { Input } from "../components/UI/Input";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import { useTranslation } from "react-i18next";
 
 export function Checkout() {
   const { items, getTotal, clearCart } = useCart();
   const { profile, updateProfile } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [processing, setProcessing] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
   const [shippingAddress, setShippingAddress] = useState({
@@ -60,9 +62,9 @@ export function Checkout() {
       });
 
       if (error) throw error;
-      toast.success("Adresse sauvegardée dans votre profil");
+      toast.success(t("checkout.addressSaved"));
     } catch (error) {
-      toast.error("Erreur lors de la sauvegarde de l'adresse");
+      toast.error(t("checkout.addressError"));
     } finally {
       setSavingAddress(false);
     }
@@ -153,11 +155,11 @@ export function Checkout() {
 
       // Clear cart and redirect
       clearCart();
-      toast.success("Commande passée avec succès !");
+      toast.success(t("checkout.orderSuccess"));
       navigate(`/dashboard/buyer`);
     } catch (error) {
       console.error("Error creating order:", error);
-      toast.error("Erreur lors de la création de la commande");
+      toast.error(t("checkout.orderError"));
     } finally {
       setProcessing(false);
     }
@@ -169,17 +171,17 @@ export function Checkout() {
         <Card className="text-center p-16">
           <CreditCard className="h-16 w-16 text-muted-foreground/40 mx-auto mb-6" />
           <h1 className="text-2xl font-light text-foreground mb-4">
-            Votre panier est vide
+            {t("checkout.empty.title")}
           </h1>
           <p className="text-muted-foreground/70 mb-6">
-            Ajoutez des articles à votre panier avant de procéder au paiement
+            {t("checkout.empty.subtitle")}
           </p>
           <Button
             variant="primary"
             size="lg"
             onClick={() => navigate("/search")}
           >
-            Parcourir les boutiques
+            {t("checkout.empty.action")}
           </Button>
         </Card>
       </div>
@@ -195,10 +197,10 @@ export function Checkout() {
           className="inline-flex items-center text-muted-foreground/70 hover:text-primary transition-colors duration-300 mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Retour au panier
+          {t("checkout.backToCart")}
         </Link>
         <h1 className="text-4xl font-light text-foreground tracking-tight">
-          Finaliser la commande
+          {t("checkout.title")}
         </h1>
       </div>
 
@@ -215,10 +217,10 @@ export function Checkout() {
                   </div>
                   <div>
                     <h2 className="text-xl font-light text-foreground">
-                      Adresse de livraison
+                      {t("checkout.shipping.title")}
                     </h2>
                     <p className="text-muted-foreground/70">
-                      Où souhaitez-vous recevoir votre commande ?
+                      {t("checkout.shipping.subtitle")}
                     </p>
                   </div>
                 </div>
@@ -226,7 +228,7 @@ export function Checkout() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    label="Nom complet"
+                    label={t("checkout.shipping.name")}
                     value={shippingAddress.name}
                     onChange={(e) =>
                       setShippingAddress({
@@ -234,10 +236,10 @@ export function Checkout() {
                         name: e.target.value,
                       })
                     }
-                    placeholder="Votre nom complet"
+                    placeholder={t("checkout.shipping.namePlaceholder")}
                   />
                   <Input
-                    label="Téléphone"
+                    label={t("checkout.shipping.phone")}
                     value={shippingAddress.phone}
                     onChange={(e) =>
                       setShippingAddress({
@@ -245,12 +247,12 @@ export function Checkout() {
                         phone: e.target.value,
                       })
                     }
-                    placeholder="Votre numéro de téléphone"
+                    placeholder={t("checkout.shipping.phonePlaceholder")}
                   />
                 </div>
 
                 <Input
-                  label="Adresse"
+                  label={t("checkout.shipping.address")}
                   value={shippingAddress.address}
                   onChange={(e) =>
                     setShippingAddress({
@@ -258,12 +260,12 @@ export function Checkout() {
                       address: e.target.value,
                     })
                   }
-                  placeholder="Adresse complète"
+                  placeholder={t("checkout.shipping.addressPlaceholder")}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Input
-                    label="Ville"
+                    label={t("checkout.shipping.city")}
                     value={shippingAddress.city}
                     onChange={(e) =>
                       setShippingAddress({
@@ -271,10 +273,10 @@ export function Checkout() {
                         city: e.target.value,
                       })
                     }
-                    placeholder="Ville"
+                    placeholder={t("checkout.shipping.city")}
                   />
                   <Input
-                    label="Code postal"
+                    label={t("checkout.shipping.postalCode")}
                     value={shippingAddress.postal_code}
                     onChange={(e) =>
                       setShippingAddress({
@@ -282,10 +284,10 @@ export function Checkout() {
                         postal_code: e.target.value,
                       })
                     }
-                    placeholder="Code postal"
+                    placeholder={t("checkout.shipping.postalCode")}
                   />
                   <Input
-                    label="Pays"
+                    label={t("checkout.shipping.country")}
                     value={shippingAddress.country}
                     onChange={(e) =>
                       setShippingAddress({
@@ -293,7 +295,7 @@ export function Checkout() {
                         country: e.target.value,
                       })
                     }
-                    placeholder="Pays"
+                    placeholder={t("checkout.shipping.country")}
                   />
                 </div>
 
@@ -306,7 +308,7 @@ export function Checkout() {
                     onClick={saveAddressToProfile}
                     className="w-full md:w-auto"
                   >
-                    Sauvegarder dans mon profil
+                    {t("checkout.shipping.save")}
                   </Button>
                 )}
               </CardContent>
@@ -322,10 +324,10 @@ export function Checkout() {
                 </div>
                 <div>
                   <h2 className="text-xl font-light text-foreground">
-                    Méthode de paiement
+                    {t("checkout.payment.title")}
                   </h2>
                   <p className="text-muted-foreground/70">
-                    Sécurisé par PayPal
+                    {t("checkout.payment.securedBy")}
                   </p>
                 </div>
               </div>

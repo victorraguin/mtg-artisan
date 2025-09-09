@@ -8,6 +8,7 @@ import {
   NotificationChannel,
 } from "../types/notifications";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const categories = [
   {
@@ -61,6 +62,7 @@ export function NotificationPreferences() {
   const queryClient = useQueryClient();
   const [preferences, setPreferences] = useState<Record<string, boolean>>({});
   const [hasChanges, setHasChanges] = useState(false);
+  const { t } = useTranslation();
 
   // Récupérer les préférences actuelles
   const { data: currentPreferences = [], isLoading } = useQuery({
@@ -80,10 +82,10 @@ export function NotificationPreferences() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification-preferences"] });
       setHasChanges(false);
-      toast.success("Préférences sauvegardées avec succès");
+      toast.success(t("notificationPreferences.saveSuccess"));
     },
     onError: (error) => {
-      toast.error("Erreur lors de la sauvegarde des préférences");
+      toast.error(t("notificationPreferences.saveError"));
       console.error("Error saving preferences:", error);
     },
   });

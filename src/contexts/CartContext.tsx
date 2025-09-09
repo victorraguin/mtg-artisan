@@ -4,6 +4,7 @@ import { useAuth } from "./AuthContext";
 import analyticsService from "../services/analytics";
 import { StockNotificationService } from "../services/stockNotificationService";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export interface CartItem {
   id: string;
@@ -80,6 +81,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     loading: false,
   });
   const { user, authStable } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Attendre que l'auth soit stable avant de récupérer le panier
@@ -126,9 +128,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         unit_price: item.unit_price,
         currency: item.currency,
         metadata: item.metadata,
-        title: item.metadata?.title || "Article inconnu",
+        title: item.metadata?.title || t("cart.unknownItem"),
         image_url: item.metadata?.image_url || "",
-        shop_name: item.metadata?.shop_name || "Boutique inconnue",
+        shop_name: item.metadata?.shop_name || t("cart.unknownShop"),
         shop_id: item.metadata?.shop_id || "",
       }));
 
@@ -142,9 +144,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = async (item: Omit<CartItem, "id">) => {
     if (!user) {
-      toast.error(
-        "Veuillez vous connecter pour ajouter des articles au panier"
-      );
+      toast.error(t("cart.mustSignIn"));
       return;
     }
 
@@ -158,13 +158,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
         if (!stockInfo.available) {
           toast.error(
-            `Stock insuffisant. Seulement ${stockInfo.availableStock} article(s) disponible(s)`
+            t("cart.stockInsufficient", {
+              stock: stockInfo.availableStock,
+            })
           );
           return;
         }
       } catch (error) {
         console.error("Erreur lors de la vérification du stock:", error);
-        toast.error("Impossible de vérifier le stock");
+        toast.error(t("cart.stockCheckError"));
         return;
       }
     }
@@ -209,10 +211,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         StockNotificationService.checkStockAfterCartAction(item.item_id);
       }
 
-      toast.success("Ajouté au panier");
+      toast.success(t("cart.addSuccess"));
     } catch (error) {
       console.error("Erreur lors de l'ajout au panier:", error);
-      toast.error("Impossible d'ajouter au panier");
+      toast.error(t("cart.addError"));
     }
   };
 
@@ -233,7 +235,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "UPDATE_ITEM", payload: { id: itemId, qty } });
     } catch (error) {
       console.error("Error updating quantity:", error);
-      toast.error("Failed to update quantity");
+      toast.error(t("cart.updateError"));
     }
   };
 
@@ -256,10 +258,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         analyticsService.trackCartRemoval(itemToRemove.item_id, user?.id);
       }
 
-      toast.success("Supprimé du panier");
+      toast.success(t("cart.removeSuccess"));
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
-      toast.error("Impossible de supprimer du panier");
+      toast.error(t("cart.removeError"));
     }
   };
 
@@ -277,7 +279,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "CLEAR_CART" });
     } catch (error) {
       console.error("Error clearing cart:", error);
-      toast.error("Failed to clear cart");
+      toast.error(t("cart.clearError"));
     }
   };
 

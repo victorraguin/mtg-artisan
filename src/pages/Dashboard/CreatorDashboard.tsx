@@ -21,6 +21,7 @@ import { ShippingManager } from "../../components/Creator/ShippingManager";
 import { StockAlerts } from "../../components/Creator/StockAlerts";
 import { SalesAnalytics } from "../../components/Creator/SalesAnalytics";
 import { StockInfoCard } from "../../components/Creator/StockInfoCard";
+import { useTranslation } from "react-i18next";
 
 export function CreatorDashboard() {
   const { user, profile } = useAuth();
@@ -34,6 +35,7 @@ export function CreatorDashboard() {
   });
   const [recentOrders, setRecentOrders] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user) {
@@ -110,15 +112,14 @@ export function CreatorDashboard() {
             <Store className="h-12 w-12 text-primary" />
           </div>
           <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
-            Bienvenue dans votre Studio Créateur
+            {t("creatorDashboard.welcome.title")}
           </h1>
           <p className="text-muted-foreground/70 text-lg mb-8">
-            Configurez votre boutique pour commencer à vendre vos œuvres d'art
-            et services incroyables
+            {t("creatorDashboard.welcome.subtitle")}
           </p>
           <Link to="/creator/shop">
             <Button variant="gradient" size="lg" icon={Plus}>
-              Créer votre boutique
+              {t("creatorDashboard.welcome.createShop")}
             </Button>
           </Link>
         </div>
@@ -136,10 +137,10 @@ export function CreatorDashboard() {
           </div>
           <div>
             <h1 className="text-3xl md:text-4xl font-light text-foreground tracking-tight">
-              Studio Créateur
+              {t("creatorDashboard.header.title")}
             </h1>
             <p className="text-muted-foreground/70 text-base md:text-lg">
-              {shop.name} • Gérez vos créations
+              {t("creatorDashboard.header.subtitle", { shopName: shop.name })}
             </p>
           </div>
         </div>
@@ -151,7 +152,7 @@ export function CreatorDashboard() {
               icon={Plus}
               className="w-full sm:w-auto"
             >
-              Ajouter un produit
+              {t("creatorDashboard.actions.addProduct")}
             </Button>
           </Link>
           <Link to="/creator/services/new">
@@ -161,7 +162,7 @@ export function CreatorDashboard() {
               icon={Plus}
               className="w-full sm:w-auto"
             >
-              Ajouter un service
+              {t("creatorDashboard.actions.addService")}
             </Button>
           </Link>
         </div>
@@ -180,11 +181,13 @@ export function CreatorDashboard() {
             {stats.products.toLocaleString()}
           </div>
           <div className="text-muted-foreground/70 text-xs md:text-sm">
-            Produits
+            {t("creatorDashboard.stats.products")}
           </div>
           {stats.productsInCarts > 0 && (
             <div className="text-xs text-orange-500 mt-1">
-              dont {stats.productsInCarts} en paniers
+              {t("creatorDashboard.stats.inCarts", {
+                count: stats.productsInCarts,
+              })}
             </div>
           )}
         </Card>
@@ -197,7 +200,7 @@ export function CreatorDashboard() {
             {stats.services.toLocaleString()}
           </div>
           <div className="text-muted-foreground/70 text-xs md:text-sm">
-            Services
+            {t("creatorDashboard.stats.services")}
           </div>
         </Card>
 
@@ -209,7 +212,7 @@ export function CreatorDashboard() {
             {stats.orders.toLocaleString()}
           </div>
           <div className="text-muted-foreground/70 text-xs md:text-sm">
-            Commandes
+            {t("creatorDashboard.stats.orders")}
           </div>
         </Card>
 
@@ -221,7 +224,7 @@ export function CreatorDashboard() {
             ${stats.revenue.toLocaleString()}
           </div>
           <div className="text-muted-foreground/70 text-xs md:text-sm">
-            Revenus
+            {t("creatorDashboard.stats.revenue")}
           </div>
         </Card>
       </div>
@@ -250,10 +253,10 @@ export function CreatorDashboard() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-light text-foreground tracking-tight">
-              Activité Récente
+              {t("creatorDashboard.recent.title")}
             </h2>
             <Button variant="ghost" size="sm">
-              Voir toutes les commandes
+              {t("creatorDashboard.recent.viewAll")}
             </Button>
           </div>
         </CardHeader>
@@ -262,10 +265,10 @@ export function CreatorDashboard() {
             <div className="text-center py-8">
               <TrendingUp className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
               <p className="text-muted-foreground/70">
-                Aucune commande récente
+                {t("creatorDashboard.recent.emptyTitle")}
               </p>
               <p className="text-muted-foreground/60 text-sm mt-1">
-                Les nouvelles commandes apparaîtront ici
+                {t("creatorDashboard.recent.emptySubtitle")}
               </p>
             </div>
           ) : (
@@ -277,7 +280,9 @@ export function CreatorDashboard() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-foreground font-medium text-sm">
-                      Commande #{item.id.slice(-6)}
+                      {t("creatorDashboard.recent.order", {
+                        id: item.id.slice(-6),
+                      })}
                     </h3>
                     <div
                       className={`text-xs font-medium px-2 py-1 rounded-full ${
@@ -289,10 +294,10 @@ export function CreatorDashboard() {
                       }`}
                     >
                       {item.status === "completed"
-                        ? "Complétée"
+                        ? t("common.orderStatus.completed")
                         : item.status === "shipped"
-                        ? "Expédiée"
-                        : "En cours"}
+                        ? t("common.orderStatus.shipped")
+                        : t("common.orderStatus.processing")}
                     </div>
                   </div>
                   <div className="text-right">
@@ -300,7 +305,7 @@ export function CreatorDashboard() {
                       ${(item.unit_price * item.qty).toFixed(2)}
                     </div>
                     <p className="text-muted-foreground/70 text-xs">
-                      Qté: {item.qty}
+                      {t("creatorDashboard.recent.qty", { count: item.qty })}
                     </p>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { Button } from "./Button";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface ImageUploadProps {
   label?: string;
@@ -20,6 +21,7 @@ export function ImageUpload({
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -30,7 +32,9 @@ export function ImageUpload({
     const remainingSlots = maxImages - images.length;
     if (files.length > remainingSlots) {
       toast.error(
-        `Vous ne pouvez ajouter que ${remainingSlots} image(s) supplémentaire(s)`
+        t("imageUpload.limit", {
+          count: remainingSlots,
+        })
       );
       return;
     }
@@ -44,13 +48,17 @@ export function ImageUpload({
 
         // Validation du type de fichier
         if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} n'est pas une image valide`);
+          toast.error(
+            t("imageUpload.invalidType", { file: file.name })
+          );
           continue;
         }
 
         // Validation de la taille (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(`${file.name} est trop volumineux (max 5MB)`);
+          toast.error(
+            t("imageUpload.tooLarge", { file: file.name })
+          );
           continue;
         }
 
@@ -68,7 +76,11 @@ export function ImageUpload({
       }
 
       onImagesChange([...images, ...newImageUrls]);
-      toast.success(`${newImageUrls.length} image(s) ajoutée(s)`);
+      toast.success(
+        t("imageUpload.uploadSuccess", {
+          count: newImageUrls.length,
+        })
+      );
 
       // Reset file input
       if (fileInputRef.current) {
@@ -76,7 +88,7 @@ export function ImageUpload({
       }
     } catch (error) {
       console.error("Erreur lors de l'upload:", error);
-      toast.error("Erreur lors de l'upload des images");
+      toast.error(t("imageUpload.uploadError"));
     } finally {
       setUploading(false);
     }
