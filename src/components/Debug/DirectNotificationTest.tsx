@@ -2,9 +2,11 @@ import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import supabase from "../../lib/supabase";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function DirectNotificationTest() {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   if (!user) return null;
 
@@ -30,9 +32,9 @@ export function DirectNotificationTest() {
       );
 
       if (error) throw error;
-      toast.success("Notification créée directement !");
+      toast.success(t("debug.directNotificationTest.createSuccess"));
     } catch (error) {
-      toast.error("Erreur lors de la création");
+      toast.error(t("debug.directNotificationTest.createError"));
       console.error(error);
     }
   };

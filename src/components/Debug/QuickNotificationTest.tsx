@@ -3,10 +3,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { NotificationService } from "../../services/notificationService";
 import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function QuickNotificationTest() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   if (!user) return null;
 
@@ -46,7 +48,10 @@ export function QuickNotificationTest() {
     try {
       await NotificationService.emitEvent(eventName, targetUserIds, payload);
       toast.success(
-        `Notification "${eventName}" envoyée à ${targetUserIds.length} utilisateur(s) !`
+        t("debug.quickNotificationTest.sendSuccess", {
+          eventName,
+          count: targetUserIds.length,
+        })
       );
 
       // Forcer la mise à jour des données après un délai
@@ -61,7 +66,7 @@ export function QuickNotificationTest() {
         });
       }, 1000);
     } catch (error) {
-      toast.error("Erreur lors de l'envoi");
+      toast.error(t("debug.quickNotificationTest.sendError"));
       console.error(error);
     }
   };
@@ -89,9 +94,9 @@ export function QuickNotificationTest() {
         "../../services/notificationService"
       );
       await NotificationService.markAllAsRead();
-      toast.success("Test 'Tout lire' terminé ! Vérifiez la console.");
+      toast.success(t("debug.quickNotificationTest.markAllSuccess"));
     } catch (error) {
-      toast.error("Erreur lors du test 'Tout lire'");
+      toast.error(t("debug.quickNotificationTest.markAllError"));
       console.error(error);
     }
   };
