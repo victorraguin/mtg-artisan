@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Bell, Mail, Save, Check } from "lucide-react";
+import { Bell, Mail, Save } from "lucide-react";
 import { NotificationService } from "../services/notificationService";
 import {
   NotificationPreference,
@@ -13,32 +13,32 @@ import { useTranslation } from "react-i18next";
 const categories = [
   {
     key: "orders",
-    label: "Commandes",
-    description: "Nouvelles commandes, mises à jour de statut, livraisons",
+    label: "notificationPreferences.categories.orders.label",
+    description: "notificationPreferences.categories.orders.description",
     icon: "📦",
   },
   {
     key: "messages",
-    label: "Messages",
-    description: "Messages de clients et conversations",
+    label: "notificationPreferences.categories.messages.label",
+    description: "notificationPreferences.categories.messages.description",
     icon: "💬",
   },
   {
     key: "reviews",
-    label: "Avis",
-    description: "Nouveaux avis et évaluations",
+    label: "notificationPreferences.categories.reviews.label",
+    description: "notificationPreferences.categories.reviews.description",
     icon: "⭐",
   },
   {
     key: "shop",
-    label: "Boutique",
-    description: "Gestion de boutique, devis, paiements",
+    label: "notificationPreferences.categories.shop.label",
+    description: "notificationPreferences.categories.shop.description",
     icon: "🏪",
   },
   {
     key: "system",
-    label: "Système",
-    description: "Mises à jour importantes et maintenance",
+    label: "notificationPreferences.categories.system.label",
+    description: "notificationPreferences.categories.system.description",
     icon: "⚙️",
   },
 ] as const;
@@ -46,14 +46,14 @@ const categories = [
 const channels = [
   {
     key: "inapp",
-    label: "Dans l'app",
-    description: "Notifications dans l'interface",
+    label: "notificationPreferences.channels.inapp.label",
+    description: "notificationPreferences.channels.inapp.description",
     icon: Bell,
   },
   {
     key: "email",
-    label: "Email",
-    description: "Notifications par email",
+    label: "notificationPreferences.channels.email.label",
+    description: "notificationPreferences.channels.email.description",
     icon: Mail,
   },
 ] as const;
@@ -149,11 +149,10 @@ export function NotificationPreferences() {
       <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-            Préférences de notifications
+            {t("notificationPreferences.title")}
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base">
-            Gérez comment vous souhaitez recevoir les notifications pour chaque
-            type d'événement.
+            {t("notificationPreferences.subtitle")}
           </p>
         </div>
 
@@ -169,10 +168,10 @@ export function NotificationPreferences() {
                   <span className="text-xl">{category.icon}</span>
                   <div>
                     <h3 className="font-medium text-foreground">
-                      {category.label}
+                      {t(category.label)}
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      {category.description}
+                      {t(category.description)}
                     </p>
                   </div>
                 </div>
@@ -192,10 +191,10 @@ export function NotificationPreferences() {
                         <channel.icon className="w-4 h-4 text-muted-foreground" />
                         <div>
                           <span className="font-medium text-foreground text-sm">
-                            {channel.label}
+                            {t(channel.label)}
                           </span>
                           <p className="text-xs text-muted-foreground">
-                            {channel.description}
+                            {t(channel.description)}
                           </p>
                         </div>
                       </div>
@@ -207,9 +206,14 @@ export function NotificationPreferences() {
                         className={`relative w-12 h-6 rounded-full transition-colors ${
                           isEnabled ? "bg-primary" : "bg-muted"
                         }`}
-                        title={`${
-                          isEnabled ? "Désactiver" : "Activer"
-                        } les notifications ${channel.label.toLowerCase()}`}
+                        title={t("notificationPreferences.toggle", {
+                          action: t(
+                            isEnabled
+                              ? "notificationPreferences.disable"
+                              : "notificationPreferences.enable"
+                          ),
+                          channel: t(channel.label).toLowerCase(),
+                        })}
                       >
                         <div
                           className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
@@ -231,18 +235,18 @@ export function NotificationPreferences() {
           <div className="bg-card/50 border-b border-border p-4 lg:p-6">
             <div className="grid grid-cols-3 gap-4 lg:gap-8">
               <div className="font-semibold text-foreground text-base lg:text-lg">
-                Catégorie
+                {t("notificationPreferences.categoryColumn")}
               </div>
               {channels.map((channel) => (
                 <div key={channel.key} className="text-center">
                   <div className="flex items-center justify-center space-x-2 lg:space-x-3 mb-1 lg:mb-2">
                     <channel.icon className="w-4 h-4 lg:w-5 lg:h-5" />
                     <span className="font-semibold text-foreground text-base lg:text-lg">
-                      {channel.label}
+                      {t(channel.label)}
                     </span>
                   </div>
                   <p className="text-xs lg:text-sm text-muted-foreground">
-                    {channel.description}
+                    {t(channel.description)}
                   </p>
                 </div>
               ))}
@@ -264,10 +268,10 @@ export function NotificationPreferences() {
                       </span>
                       <div>
                         <h3 className="font-semibold text-foreground text-base lg:text-lg">
-                          {category.label}
+                          {t(category.label)}
                         </h3>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {category.description}
+                          {t(category.description)}
                         </p>
                       </div>
                     </div>
@@ -286,9 +290,15 @@ export function NotificationPreferences() {
                           className={`relative w-12 h-6 lg:w-14 lg:h-7 rounded-full transition-colors ${
                             isEnabled ? "bg-primary" : "bg-muted"
                           }`}
-                          title={`${
-                            isEnabled ? "Désactiver" : "Activer"
-                          } les notifications ${channel.label.toLowerCase()} pour ${category.label.toLowerCase()}`}
+                          title={t("notificationPreferences.toggleForCategory", {
+                            action: t(
+                              isEnabled
+                                ? "notificationPreferences.disable"
+                                : "notificationPreferences.enable"
+                            ),
+                            channel: t(channel.label).toLowerCase(),
+                            category: t(category.label).toLowerCase(),
+                          })}
                         >
                           <div
                             className={`absolute top-1 w-4 h-4 lg:w-5 lg:h-5 bg-white rounded-full transition-transform shadow-sm ${
@@ -318,12 +328,12 @@ export function NotificationPreferences() {
               {savePreferencesMutation.isPending ? (
                 <>
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  <span>Sauvegarde...</span>
+                  <span>{t("notificationPreferences.saving")}</span>
                 </>
               ) : (
                 <>
                   <Save className="w-4 h-4" />
-                  <span>Sauvegarder les préférences</span>
+                  <span>{t("notificationPreferences.save")}</span>
                 </>
               )}
             </button>
@@ -333,16 +343,18 @@ export function NotificationPreferences() {
         {/* Note informative */}
         <div className="mt-8 p-4 bg-muted/30 border border-border rounded-lg">
           <h3 className="font-medium text-foreground mb-2">
-            💡 À propos des notifications
+            {t("notificationPreferences.about")}
           </h3>
           <ul className="text-sm text-muted-foreground space-y-1">
             <li>
-              • <strong>Dans l'app</strong> : Notifications visibles dans
-              l'interface utilisateur
+              • <strong>{t("notificationPreferences.channels.inapp.label")}</strong> :
+              {" "}
+              {t("notificationPreferences.aboutInapp")}
             </li>
             <li>
-              • <strong>Email</strong> : Notifications envoyées à votre adresse
-              email
+              • <strong>{t("notificationPreferences.channels.email.label")}</strong> :
+              {" "}
+              {t("notificationPreferences.aboutEmail")}
             </li>
           </ul>
         </div>
