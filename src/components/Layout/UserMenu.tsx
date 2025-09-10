@@ -24,28 +24,21 @@ export function UserMenu() {
   const [hasShop, setHasShop] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Gestion d'erreur pour useAuth
-  let user, profile, signOut;
-  let getItemCount;
+  // 🔧 CORRECTION : Utilisation directe des hooks sans try/catch
+  const { user, profile, signOut, loading, authStable } = useAuth();
+  const { getItemCount } = useCart();
 
-  try {
-    const auth = useAuth();
-    user = auth.user;
-    profile = auth.profile;
-    signOut = auth.signOut;
-  } catch (error) {
-    // Si useAuth n'est pas disponible, on utilise des valeurs par défaut
-    user = null;
-    profile = null;
-    signOut = () => Promise.resolve();
-  }
-
-  try {
-    const cart = useCart();
-    getItemCount = cart.getItemCount;
-  } catch (error) {
-    getItemCount = () => 0;
-  }
+  // 🔧 CORRECTION : Debug pour voir les changements d'état
+  useEffect(() => {
+    console.log("👤 UserMenu render - Auth state:", {
+      hasUser: !!user,
+      hasProfile: !!profile,
+      userEmail: user?.email,
+      profileRole: profile?.role,
+      loading,
+      authStable,
+    });
+  }, [user, profile, loading, authStable]);
 
   // Vérifier si l'utilisateur a une boutique
   useEffect(() => {
@@ -87,7 +80,7 @@ export function UserMenu() {
     };
   }, []);
 
-  const getDashboardRoute = () => {
+  const getDashboardRoute = (): string => {
     if (!profile) return "/dashboard/buyer";
 
     switch (profile.role) {
@@ -101,7 +94,7 @@ export function UserMenu() {
     }
   };
 
-  const getDashboardLabel = () => {
+  const getDashboardLabel = (): string => {
     if (!profile) return t("userMenu.dashboard");
 
     switch (profile.role) {
@@ -129,7 +122,7 @@ export function UserMenu() {
     }
   };
 
-  const handleSignOut = async () => {
+  const handleSignOut = async (): Promise<void> => {
     try {
       setIsDropdownOpen(false);
       await signOut();
@@ -139,6 +132,21 @@ export function UserMenu() {
     }
   };
 
+  // 🔧 CORRECTION : Skeleton loading avec même taille que le contenu final
+  if (loading || !authStable) {
+    return (
+      <div className="flex items-center space-x-2">
+        {/* Skeleton pour notifications */}
+        <div className="w-11 h-11 bg-muted/50 rounded-xl animate-pulse" />
+        {/* Skeleton pour cart */}
+        <div className="w-11 h-11 bg-muted/50 rounded-xl animate-pulse" />
+        {/* Skeleton pour user menu */}
+        <div className="w-11 h-11 bg-muted/50 rounded-xl animate-pulse" />
+      </div>
+    );
+  }
+
+  // Utilisateur non connecté
   if (!user) {
     return (
       <div className="flex items-center space-x-2 sm:space-x-3">
@@ -167,8 +175,8 @@ export function UserMenu() {
   return (
     <div className="flex items-center space-x-2">
       {/* Notifications Bell - only for authenticated users */}
-      {user && <NotificationsBell />}
-      
+      <NotificationsBell />
+
       {/* Cart */}
       <Link
         to="/cart"

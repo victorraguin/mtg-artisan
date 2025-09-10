@@ -1,5 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../lib/supabase";
+import { Database } from "../lib/database.types";
+
+type ServiceInsert = Database["public"]["Tables"]["services"]["Insert"];
+
+const createService = async (serviceData: ServiceInsert) => {
+  const { data, error } = await supabase
+    .from("services")
+    .insert(serviceData)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const useCreateService = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["services"] });
+    },
+  });
+};
 
 export function useServices(filters: any = {}) {
   return useQuery({

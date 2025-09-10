@@ -126,15 +126,15 @@ export function CreateProduct() {
             onClick={() => navigate("/dashboard/creator")}
             className="self-start"
           >
-            Retour
+            {t("createProduct.back")}
           </Button>
         </div>
         <div className="space-y-2">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-foreground">
-            Nouveau produit
+            {t("createProduct.title")}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
-            Créez un nouveau produit pour votre boutique
+            {t("createProduct.description")}
           </p>
         </div>
       </div>
@@ -144,7 +144,7 @@ export function CreateProduct() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4 md:mb-6">
             <Plus className="h-5 w-5 md:h-6 md:w-6 text-primary" />
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-foreground">
-              Informations du produit
+              {t("createProduct.productInfo")}
             </h2>
           </div>
         </CardHeader>
@@ -153,7 +153,7 @@ export function CreateProduct() {
           <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
             {/* Type de produit */}
             <RadioGroup
-              label="Type de produit *"
+              label={t("createProduct.productType")}
               value={formData.type}
               onChange={(value) =>
                 setFormData({
@@ -164,13 +164,13 @@ export function CreateProduct() {
               options={[
                 {
                   value: "physical",
-                  label: "Physique",
-                  description: "Expédition au client",
+                  label: t("createProduct.physical"),
+                  description: t("createProduct.physicalDescription"),
                 },
                 {
                   value: "digital",
-                  label: "Numérique",
-                  description: "Livraison par téléchargement",
+                  label: t("createProduct.digital"),
+                  description: t("createProduct.digitalDescription"),
                 },
               ]}
             />
@@ -178,18 +178,18 @@ export function CreateProduct() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {/* Titre */}
               <Input
-                label="Titre du produit *"
+                label={t("createProduct.productTitle")}
                 required
                 value={formData.title}
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
-                placeholder="ex: Lightning Bolt Alter"
+                placeholder={t("createProduct.productTitlePlaceholder")}
               />
 
               {/* Prix */}
               <Input
-                label="Prix (USD) *"
+                label={t("createProduct.price")}
                 type="number"
                 required
                 min="0"
@@ -205,7 +205,7 @@ export function CreateProduct() {
               {formData.type === "physical" && (
                 <div>
                   <Input
-                    label="Stock total en inventaire"
+                    label={t("createProduct.stock")}
                     type="number"
                     min="0"
                     value={formData.stock}
@@ -215,16 +215,14 @@ export function CreateProduct() {
                     placeholder="1"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    💡 Le stock disponible affiché aux clients sera
-                    automatiquement calculé (stock total - articles actuellement
-                    dans des paniers)
+                    {t("createProduct.stockHint")}
                   </p>
                 </div>
               )}
 
               {/* Délai de livraison */}
               <Input
-                label="Délai de livraison (jours)"
+                label={t("createProduct.leadTime")}
                 type="number"
                 min="0"
                 value={formData.lead_time_days}
@@ -236,7 +234,7 @@ export function CreateProduct() {
 
               {/* Catégorie */}
               <Select
-                label="Catégorie"
+                label={t("createProduct.category")}
                 value={formData.category_id}
                 onChange={(value) =>
                   setFormData({ ...formData, category_id: value })
@@ -245,12 +243,12 @@ export function CreateProduct() {
                   value: category.id,
                   label: category.name,
                 }))}
-                placeholder="Sélectionner une catégorie"
+                placeholder={t("createProduct.selectCategory")}
               />
 
               {/* Statut */}
               <Select
-                label="Statut"
+                label={t("createProduct.status")}
                 value={formData.status}
                 onChange={(value) =>
                   setFormData({
@@ -259,27 +257,27 @@ export function CreateProduct() {
                   })
                 }
                 options={[
-                  { value: "draft", label: "Brouillon" },
-                  { value: "active", label: "Actif" },
+                  { value: "draft", label: t("createProduct.draft") },
+                  { value: "active", label: t("createProduct.active") },
                 ]}
               />
             </div>
 
             {/* Description */}
             <Textarea
-              label="Description *"
+              label={t("createProduct.productDescription")}
               required
               rows={4}
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              placeholder="Décrivez votre produit en détail..."
+              placeholder={t("createProduct.productDescriptionPlaceholder")}
             />
 
             {/* Images */}
             <ImageUpload
-              label="Images du produit"
+              label={t("createProduct.images")}
               images={formData.images}
               onImagesChange={(images) => setFormData({ ...formData, images })}
               maxImages={3}
@@ -287,10 +285,10 @@ export function CreateProduct() {
 
             {/* Tags */}
             <TagInput
-              label="Tags"
+              label={t("createProduct.tags")}
               tags={formData.tags}
               onTagsChange={(tags) => setFormData({ ...formData, tags })}
-              placeholder="Ajouter un tag..."
+              placeholder={t("createProduct.addTagPlaceholder")}
             />
 
             {/* Boutons d'action */}
@@ -302,7 +300,7 @@ export function CreateProduct() {
                 size="lg"
                 className="order-2 sm:order-1"
               >
-                Annuler
+                {t("createProduct.cancel")}
               </Button>
               <Button
                 type="submit"
@@ -311,7 +309,9 @@ export function CreateProduct() {
                 size="lg"
                 className="order-1 sm:order-2"
               >
-                {saving ? "Création..." : "Créer le produit"}
+                {saving
+                  ? t("createProduct.creating")
+                  : t("createProduct.create")}
               </Button>
             </div>
           </form>

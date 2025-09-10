@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
@@ -6,7 +5,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { Layout } from "./components/Layout/Layout";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute";
-import { DebugAuth } from "./components/UI";
 
 // Pages
 import { Home } from "./pages/Home";
@@ -37,7 +35,6 @@ import { NotificationTest } from "./pages/NotificationTest";
 
 // Debug components
 import { QuickNotificationTest } from "./components/Debug/QuickNotificationTest";
-import { DirectNotificationTest } from "./components/Debug/DirectNotificationTest";
 
 const queryClient = new QueryClient({
   defaultOptions: {

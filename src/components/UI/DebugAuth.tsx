@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import React from "react";
 
-const DebugAuth: React.FC = () => {
-  const { user, profile, loading, authStable } = useAuth();
+interface DebugAuthProps {
+  authData: any;
+}
+
+export function DebugAuth({ authData }: DebugAuthProps) {
+  const { user, profile, loading, authStable } = authData;
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
   useEffect(() => {
@@ -49,6 +52,4 @@ const DebugAuth: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default DebugAuth;
+}

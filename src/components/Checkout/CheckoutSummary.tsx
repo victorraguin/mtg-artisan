@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardHeader, CardContent } from "../UI/Card";
+import { useCart } from "../../contexts/CartContext";
 
 interface CheckoutSummaryProps {
   items: any[];
@@ -15,6 +16,7 @@ export function CheckoutSummary({
   shippingRequired,
   isShippingComplete,
 }: CheckoutSummaryProps) {
+  const { cart } = useCart();
   const { t } = useTranslation();
   // Group items by shop
   const itemsByShop = items.reduce((acc, item) => {
@@ -27,6 +29,11 @@ export function CheckoutSummary({
     acc[item.shop_id].items.push(item);
     return acc;
   }, {} as Record<string, any>);
+
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.unit_price * item.qty,
+    0
+  );
 
   return (
     <Card className="sticky top-24">
@@ -45,10 +52,7 @@ export function CheckoutSummary({
 
               <div className="space-y-4">
                 {shop.items.map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center space-x-4"
-                  >
+                  <div key={item.id} className="flex items-center space-x-4">
                     <div className="w-16 h-16 bg-muted rounded-xl overflow-hidden flex-shrink-0">
                       {item.image_url ? (
                         <img
@@ -67,7 +71,9 @@ export function CheckoutSummary({
                       <h4 className="text-sm font-medium text-foreground truncate">
                         {item.title}
                       </h4>
-                      <p className="text-xs text-muted-foreground">Qty: {item.qty}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("checkoutSummary.qty")} {item.qty}
+                      </p>
                     </div>
 
                     <div className="text-right">
@@ -87,9 +93,9 @@ export function CheckoutSummary({
 
         <hr className="border-border/30" />
 
-        <div className="flex justify-between text-lg font-medium">
-          <span className="text-foreground">Total</span>
-          <span className="text-primary">${total.toFixed(2)}</span>
+        <div className="flex justify-between items-center text-lg font-bold">
+          <span className="text-foreground">{t("checkoutSummary.total")}</span>
+          <span className="text-foreground">${subtotal.toFixed(2)}</span>
         </div>
 
         {shippingRequired && !isShippingComplete && (

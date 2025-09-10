@@ -4,12 +4,17 @@ import { useAuth } from "../../contexts/AuthContext";
 import supabase from "../../lib/supabase";
 import { Save, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+import { useCategories } from "../../hooks/useCategories";
+import { useCreateService } from "../../hooks/useServices";
 
 export function CreateService() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [shop, setShop] = useState<any>(null);
-  const [categories, setCategories] = useState<any[]>([]);
+  const { categories, isLoading: isLoadingCategories } = useCategories();
+  const { mutate: createService, isPending } = useCreateService();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -38,7 +43,7 @@ export function CreateService() {
       ]);
 
       setShop(shopResult.data);
-      setCategories(categoriesResult.data || []);
+      // setCategories(categoriesResult.data || []); // This line is now handled by useCategories
 
       if (!shopResult.data) {
         toast.error("Please create your shop first");
@@ -90,8 +95,10 @@ export function CreateService() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-white mb-8">Create New Service</h1>
+    <div className="max-w-2xl mx-auto p-8">
+      <h1 className="text-3xl font-bold text-white mb-8">
+        {t("createService.title")}
+      </h1>
 
       <form
         onSubmit={handleSubmit}
@@ -170,7 +177,7 @@ export function CreateService() {
               htmlFor="category_id"
               className="block text-sm font-medium text-gray-300 mb-2"
             >
-              Category
+              Catégorie
             </label>
             <select
               id="category_id"
@@ -179,9 +186,10 @@ export function CreateService() {
                 setFormData({ ...formData, category_id: e.target.value })
               }
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
+              disabled={isLoadingCategories}
             >
-              <option value="">Select Category</option>
-              {categories.map((category) => (
+              <option value="">{t("createService.selectCategory")}</option>
+              {categories?.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
@@ -195,7 +203,7 @@ export function CreateService() {
               htmlFor="status"
               className="block text-sm font-medium text-gray-300 mb-2"
             >
-              Status
+              Statut
             </label>
             <select
               id="status"
@@ -208,8 +216,8 @@ export function CreateService() {
               }
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
             >
-              <option value="draft">Draft</option>
-              <option value="active">Active</option>
+              <option value="draft">{t("createService.draft")}</option>
+              <option value="active">{t("createService.active")}</option>
             </select>
           </div>
         </div>

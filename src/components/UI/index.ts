@@ -9,4 +9,4 @@ export { EmptyState } from "./EmptyState";
 export { ImageUpload } from "./ImageUpload";
 export { LoadingSpinner } from "./LoadingSpinner";
 export { ArtistCarousel } from "./ArtistCarousel";
-export { default as DebugAuth } from "./DebugAuth";
+export { DebugAuth } from "./DebugAuth";

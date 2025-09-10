@@ -34,14 +34,14 @@ export function Cart() {
             <ShoppingCart className="h-12 w-12 text-primary" />
           </div>
           <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
-            {t("cart.empty.title")}
+            {t("cartPage.emptyCartTitle")}
           </h1>
           <p className="text-muted-foreground/70 text-lg mb-8">
-            {t("cart.empty.description")}
+            {t("cartPage.emptyCartSubtitle")}
           </p>
           <Link to="/search">
             <Button variant="gradient" size="lg" icon={ArrowRight}>
-              {t("cart.empty.cta")}
+              {t("cartPage.startShopping")}
             </Button>
           </Link>
         </div>
@@ -67,10 +67,10 @@ export function Cart() {
     <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
       <div className="mb-8">
         <h1 className="text-4xl font-light text-foreground tracking-tight mb-2">
-          {t("cart.title")}
+          {t("cartPage.shoppingCart")}
         </h1>
         <p className="text-muted-foreground/70 text-lg">
-          {t("cart.itemCount", { count: getItemCount() })} • {t("cart.total", { total: getTotal().toFixed(2) })}
+          {t("cartPage.items", { count: getItemCount() })} • ${getTotal().toFixed(2)}
         </p>
       </div>
 
@@ -112,7 +112,9 @@ export function Cart() {
                           {item.title}
                         </h4>
                         <p className="text-muted-foreground/70 text-sm mb-2">
-                          {t("cart.unitPrice", { price: item.unit_price })}
+                          {t("cartPage.unitPrice", {
+                            price: item.unit_price,
+                          })}
                         </p>
 
                         {/* Quantity Controls */}
@@ -153,7 +155,7 @@ export function Cart() {
                           onClick={() => removeFromCart(item.id)}
                           className="text-destructive/80 hover:text-destructive hover:bg-destructive/10"
                         >
-                          {t("cart.remove")}
+                          {t("cartPage.remove")}
                         </Button>
                       </div>
                     </div>
@@ -169,7 +171,7 @@ export function Cart() {
           <Card className="sticky top-24">
             <CardHeader>
               <h2 className="text-2xl font-light text-foreground tracking-tight">
-                {t("cart.summary.title")}
+                {t("cartPage.summaryTitle")}
               </h2>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -191,7 +193,7 @@ export function Cart() {
               <hr className="border-border/30" />
 
               <div className="flex justify-between text-lg font-medium">
-                <span className="text-foreground">{t("cart.summary.total")}</span>
+                <span className="text-foreground">{t("cartPage.total")}</span>
                 <span className="text-primary">${getTotal().toFixed(2)}</span>
               </div>
 
@@ -202,13 +204,13 @@ export function Cart() {
                   icon={ArrowRight}
                   className="w-full"
                 >
-                  {t("cart.checkout")}
+                  {t("cartPage.checkout")}
                 </Button>
               </Link>
 
               <Link to="/search" className="block w-full">
                 <Button variant="outline" size="md" className="w-full">
-                  {t("cart.continue")}
+                  {t("cartPage.continueShopping")}
                 </Button>
               </Link>
             </CardContent>

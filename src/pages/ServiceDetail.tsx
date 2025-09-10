@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import supabase from "../lib/supabase";
 import { MessageSquare, Clock, MapPin, Star, CheckCircle } from "lucide-react";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
@@ -9,6 +10,7 @@ export function ServiceDetail() {
   const { id } = useParams<{ id: string }>();
   const [service, setService] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (id) {
@@ -34,7 +36,7 @@ export function ServiceDetail() {
       setService(data);
     } catch (error) {
       console.error("Error fetching service:", error);
-      toast.error("Service not found");
+      toast.error(t("serviceDetail.fetchError"));
     } finally {
       setLoading(false);
     }
@@ -52,10 +54,10 @@ export function ServiceDetail() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 text-center">
         <h1 className="text-2xl font-bold text-white mb-4">
-          Service Not Found
+          {t("serviceDetail.notFoundTitle")}
         </h1>
         <Link to="/search" className="text-purple-400 hover:text-purple-300">
-          ← Back to Search
+          {t("serviceDetail.backToSearch")}
         </Link>
       </div>
     );
@@ -66,11 +68,11 @@ export function ServiceDetail() {
       {/* Breadcrumb */}
       <div className="flex items-center text-sm text-gray-400 mb-6">
         <Link to="/" className="hover:text-white">
-          Home
+          {t("serviceDetail.home")}
         </Link>
         <span className="mx-2">/</span>
         <Link to="/search" className="hover:text-white">
-          Search
+          {t("serviceDetail.search")}
         </Link>
         <span className="mx-2">/</span>
         <span className="text-white">{service.title}</span>
@@ -112,7 +114,7 @@ export function ServiceDetail() {
                     <span className="mx-2">•</span>
                     <Star className="h-4 w-4 mr-1 text-yellow-500" />
                     {service.shop.rating_avg} ({service.shop.reviews_count || 0}{" "}
-                    reviews)
+                    {t("serviceDetail.reviews")})
                   </>
                 )}
               </div>
@@ -126,7 +128,7 @@ export function ServiceDetail() {
           <div className="flex items-center space-x-6 text-sm text-gray-300">
             <div className="flex items-center">
               <Clock className="h-4 w-4 mr-2" />
-              {service.delivery_days} day delivery
+              {t("serviceDetail.delivery", { count: service.delivery_days })}
             </div>
             {service.category?.name && (
               <span className="bg-purple-600/20 text-purple-300 px-3 py-1 rounded-full">
@@ -143,7 +145,7 @@ export function ServiceDetail() {
             <div className="lg:col-span-2 space-y-6">
               <div>
                 <h2 className="text-xl font-semibold text-white mb-4">
-                  About This Service
+                  {t("serviceDetail.aboutTitle")}
                 </h2>
                 <p className="text-gray-300 leading-relaxed whitespace-pre-line">
                   {service.description}
@@ -153,21 +155,21 @@ export function ServiceDetail() {
               {/* What's Included */}
               <div>
                 <h3 className="text-lg font-semibold text-white mb-3">
-                  What's Included
+                  {t("serviceDetail.includedTitle")}
                 </h3>
                 <div className="space-y-2">
                   <div className="flex items-center text-gray-300">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                    Professional service delivery
+                    {t("serviceDetail.includedProfessional")}
                   </div>
                   <div className="flex items-center text-gray-300">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                    Direct communication throughout the process
+                    {t("serviceDetail.includedCommunication")}
                   </div>
                   {service.requires_brief && (
                     <div className="flex items-center text-gray-300">
                       <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                      Detailed consultation and brief review
+                      {t("serviceDetail.includedConsultation")}
                     </div>
                   )}
                 </div>
@@ -180,24 +182,24 @@ export function ServiceDetail() {
                 <div className="text-3xl font-bold text-white mb-2">
                   ${service.base_price}
                 </div>
-                <div className="text-gray-400 mb-6">Starting price</div>
+                <div className="text-gray-400 mb-6">
+                  {t("serviceDetail.startingPrice")}
+                </div>
 
                 {service.requires_brief ? (
                   <div className="space-y-4">
                     <div className="bg-purple-600/10 border border-purple-500/30 rounded-lg p-4">
                       <div className="flex items-center text-purple-400 mb-2">
                         <MessageSquare className="h-5 w-5 mr-2" />
-                        Consultation Required
+                        {t("serviceDetail.consultationRequired")}
                       </div>
                       <p className="text-sm text-gray-300">
-                        This service requires a detailed brief. You'll work with
-                        the creator to define your exact needs and receive a
-                        custom quote.
+                        {t("serviceDetail.consultationDescription")}
                       </p>
                     </div>
 
                     <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
-                      Request Quote
+                      {t("serviceDetail.requestQuote")}
                     </button>
                   </div>
                 ) : (
@@ -206,7 +208,7 @@ export function ServiceDetail() {
                       onClick={() => toast.success("Service added to cart!")}
                       className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors"
                     >
-                      Order Now
+                      {t("serviceDetail.orderNow")}
                     </button>
                   </div>
                 )}
@@ -214,7 +216,9 @@ export function ServiceDetail() {
                 <div className="mt-6 pt-6 border-t border-gray-700">
                   <div className="flex items-center text-sm text-gray-400 mb-2">
                     <Clock className="h-4 w-4 mr-2" />
-                    Delivery time: {service.delivery_days} days
+                    {t("serviceDetail.deliveryTime", {
+                      count: service.delivery_days,
+                    })}
                   </div>
                 </div>
               </div>

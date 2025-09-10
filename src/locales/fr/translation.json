@@ -2,7 +2,9 @@
   "checkoutSummary": {
     "title": "Résumé de la commande",
     "completeShipping": "Veuillez compléter l'adresse de livraison pour continuer.",
-    "noImage": "Pas d'image"
+    "noImage": "Pas d'image",
+    "qty": "Qté:",
+    "total": "Total"
   },
   "artistCard": {
     "bannerAlt": "Bannière de {{shopName}}",
@@ -418,14 +420,14 @@
       "all": "Vous n'avez pas encore passé de commande.",
       "status": "Aucune commande avec le statut \"{{status}}\"."
     },
-  "order": {
-    "title": "Commande #{{id}}",
-    "from": "De {{shopName}} • Qté: {{qty}}",
-    "contactSeller": "Contacter le vendeur",
-    "leaveReview": "Laisser un avis",
-    "tracking": "Suivi :",
-    "delivery": "Livraison prévue :"
-  }
+    "order": {
+      "title": "Commande #{{id}}",
+      "from": "De {{shopName}} • Qté: {{qty}}",
+      "contactSeller": "Contacter le vendeur",
+      "leaveReview": "Laisser un avis",
+      "tracking": "Suivi :",
+      "delivery": "Livraison prévue :"
+    }
   },
   "adminDashboard": {
     "title": "Panneau d'administration",
@@ -463,7 +465,11 @@
   },
   "notifications": {
     "markError": "Erreur lors du marquage des notifications",
-    "markSuccess": "Toutes les notifications ont été marquées comme lues"
+    "markSuccess": "Toutes les notifications ont été marquées comme lues",
+    "category": "Catégorie",
+    "open": "Ouvrir",
+    "markRead": "Marquer comme lu",
+    "testerTitle": "Testeur de Notifications MTG Artisan"
   },
   "stock": {
     "checkError": "Erreur lors de la vérification du stock"
@@ -484,7 +490,98 @@
   "productDetail": {
     "notFound": "Produit non trouvé",
     "addSuccess": "Produit ajouté au panier !",
-    "addError": "Échec de l'ajout au panier"
+    "addError": "Échec de l'ajout au panier",
+    "notFoundTitle": "Produit Non Trouvé",
+    "notFoundSubtitle": "Le produit que vous recherchez n'existe pas ou a été supprimé",
+    "backToSearch": "Retour à la Recherche",
+    "breadcrumbHome": "Accueil",
+    "breadcrumbSearch": "Recherche",
+    "digital": "Numérique",
+    "viewShop": "Voir la Boutique",
+    "currency": "Devise: {{currency}}",
+    "reviews": "{{count}} avis",
+    "reviews_plural": "{{count}} avis",
+    "availableStock": "Stock disponible",
+    "stockAvailable": "{{count}} disponible",
+    "stockAvailable_plural": "{{count}} disponibles",
+    "inCarts": "({{count}} dans des paniers)",
+    "lowStockWarning": "⚠️ Stock limité ! Plus que {{count}} article disponible",
+    "lowStockWarning_plural": "⚠️ Stock limité ! Plus que {{count}} articles disponibles",
+    "outOfStock": "❌ Rupture de stock",
+    "quantity": "Quantité:",
+    "addToCart": "Ajouter au Panier",
+    "addToCartWithPrice": "Ajouter au Panier - {{price}}",
+    "outOfStockButton": "Rupture de stock",
+    "leadTime": "Délai de livraison: {{count}} jour",
+    "leadTime_plural": "Délai de livraison: {{count}} jours"
+  },
+  "manageShop": {
+    "imageTooLarge": "L'image est trop grande (max 5MB)",
+    "invalidImage": "Fichier invalide, veuillez sélectionner une image",
+    "bannerUploadSuccess": "Bannière mise à jour !",
+    "bannerUploadConsoleError": "Erreur d'upload de la bannière:",
+    "bannerUploadError": "Échec de l'upload de la bannière",
+    "bannerDeleteConsoleError": "Erreur de suppression de la bannière:",
+    "bannerDeleteError": "Échec de la suppression de la bannière",
+    "bannerDeleteSuccess": "Bannière supprimée",
+    "noChanges": "Aucun changement à sauvegarder",
+    "shopUpdated": "Boutique mise à jour avec succès !",
+    "shopCreated": "Boutique créée avec succès !",
+    "saveError": "Échec de la sauvegarde de la boutique",
+    "manageYourShop": "Gérer votre boutique",
+    "createYourShop": "Créer votre boutique",
+    "modifyShopInfo": "Modifiez les informations de votre boutique et les paramètres de paiement",
+    "configureCreatorSpace": "Configurez votre espace créateur pour commencer à vendre",
+    "unsavedChanges": "Vous avez des changements non sauvegardés.",
+    "shopInfo": "Informations de la boutique",
+    "shopBanner": "Bannière de la boutique",
+    "changeBanner": "Changer la bannière",
+    "addBanner": "Ajouter une bannière",
+    "uploading": "Téléchargement...",
+    "chooseImage": "Choisir une image",
+    "bannerRequirements": "Recommandé: 1500x500px, max 5MB",
+    "bannerPreview": "Prévisualiser la boutique",
+    "bannerPreviewHint": "Votre page boutique s'ouvrira dans un nouvel onglet.",
+    "basicInfo": "Informations de base",
+    "shopNameLabel": "Nom de la boutique",
+    "shopNamePlaceholder": "Ex: L'Atelier d'Alters",
+    "shopUrlLabel": "URL de la boutique",
+    "slugPlaceholder": "votre-nom-de-boutique",
+    "shopUrlWarning": "Attention: changer l'URL de votre boutique peut casser les liens existants.",
+    "locationPayment": "Localisation & Paiement",
+    "countryLabel": "Pays",
+    "selectCountry": "Sélectionner un pays...",
+    "usa": "États-Unis",
+    "canada": "Canada",
+    "uk": "Royaume-Uni",
+    "germany": "Allemagne",
+    "france": "France",
+    "japan": "Japon",
+    "australia": "Australie",
+    "paypalEmailLabel": "Email PayPal",
+    "paypalEmailPlaceholder": "vous@exemple.com",
+    "descriptionPolicies": "Description & Politiques",
+    "shopBioLabel": "Bio de la boutique",
+    "shopBioPlaceholder": "Décrivez votre boutique, votre art et ce qui vous rend unique.",
+    "shopPoliciesLabel": "Politiques de la boutique",
+    "shopPoliciesPlaceholder": "Informations sur la livraison, les retours, etc.",
+    "saving": "Sauvegarde...",
+    "updateShop": "Mettre à jour la boutique",
+    "createShop": "Créer ma boutique"
+  },
+  "cartPage": {
+    "shoppingCart": "Panier d'achat",
+    "emptyCartTitle": "Votre panier est vide",
+    "emptyCartSubtitle": "Découvrez des œuvres d'art incroyables et des services professionnels de créateurs talentueux.",
+    "startShopping": "Commencer les achats",
+    "items": "{{count}} article",
+    "items_plural": "{{count}} articles",
+    "unitPrice": "{{price}} l'unité",
+    "remove": "Supprimer",
+    "summaryTitle": "Résumé de la commande",
+    "total": "Total",
+    "checkout": "Passer la commande",
+    "continueShopping": "Continuer les achats"
   },
   "notificationPreferences": {
     "saveSuccess": "Préférences sauvegardées avec succès",
@@ -497,7 +594,8 @@
     "tooLarge": "{{file}} est trop volumineux (max 5MB)",
     "uploadSuccess": "{{count}} image ajoutée",
     "uploadSuccess_plural": "{{count}} images ajoutées",
-    "uploadError": "Erreur lors de l'upload des images"
+    "uploadError": "Erreur lors de l'upload des images",
+    "noImage": "Aucune image ajoutée"
   },
   "stockInfoCard": {
     "title": "Comment fonctionne la gestion du stock ?",
@@ -577,6 +675,69 @@
     "productsEmptySubtitle": "Cette boutique n'a pas encore de produits",
     "servicesEmptyTitle": "Aucun service disponible",
     "servicesEmptySubtitle": "Cette boutique n'a pas encore de services"
+  },
+  "serviceDetail": {
+    "fetchError": "Service non trouvé",
+    "notFoundTitle": "Service non trouvé",
+    "backToSearch": "← Retour à la recherche",
+    "home": "Accueil",
+    "search": "Recherche",
+    "reviews": "avis",
+    "delivery": "{{count}} jour de livraison",
+    "delivery_plural": "{{count}} jours de livraison",
+    "aboutTitle": "À propos de ce service",
+    "includedTitle": "Ce qui est inclus",
+    "includedProfessional": "Prestation de service professionnelle",
+    "includedCommunication": "Communication directe tout au long du processus",
+    "includedConsultation": "Consultation détaillée et examen du brief",
+    "startingPrice": "Prix de départ",
+    "consultationRequired": "Consultation requise",
+    "consultationDescription": "Ce service nécessite un brief détaillé. Vous travaillerez avec le créateur pour définir vos besoins exacts et recevoir un devis personnalisé.",
+    "requestQuote": "Demander un devis",
+    "orderNow": "Commander maintenant",
+    "deliveryTime": "Délai de livraison : {{count}} jours"
+  },
+  "notificationTest": {
+    "title": "Test des Notifications",
+    "subtitle": "Page de développement pour tester le système de notifications de MTG Artisan.",
+    "architectureTitle": "Architecture du Système",
+    "dbTablesTitle": "📊 Tables de Base de Données",
+    "dbEvents": "notification_events - Queue d'événements entrants",
+    "dbNotifications": "notifications - Notifications créées pour les utilisateurs",
+    "dbPreferences": "notification_preferences - Préférences utilisateur",
+    "dbDeliveries": "notification_deliveries - Tâches de livraison (email, push, etc.)",
+    "dbTemplates": "notification_templates - Templates de messages",
+    "supabaseFunctionsTitle": "⚙️ Fonctions Supabase",
+    "sfEmit": "events-emit - Émet un événement",
+    "sfFanout": "events-fanout - Traite les événements en notifications",
+    "sfRead": "notifications-read - Marque comme lu",
+    "sfSeen": "notifications-seen - Marque comme vu",
+    "sfPreferences": "preferences - Gère les préférences",
+    "dataFlowTitle": "🔄 Flux de Données",
+    "flow1": "1. L'application émet un événement via NotificationService.emitEvent()",
+    "flow2": "2. L'événement est stocké dans notification_events",
+    "flow3": "3. La fonction events-fanout traite les événements",
+    "flow4": "4. Les notifications sont créées dans notifications",
+    "flow5": "5. Les tâches de livraison sont créées dans notification_deliveries",
+    "flow6": "6. L'interface React s'abonne aux changements en temps réel",
+    "flow7": "7. Les notifications apparaissent dans la cloche et comme toasts"
+  },
+  "checkoutSummary": {
+    "qty": "Qté:",
+    "total": "Total"
+  },
+  "salesAnalytics": {
+    "orders": "Commandes",
+    "averageBasket": "Panier Moyen"
+  },
+  "productCard": {
+    "noImage": "Aucune image"
+  },
+  "createService": {
+    "title": "Créer un nouveau service",
+    "selectCategory": "Sélectionner une catégorie",
+    "draft": "Brouillon",
+    "active": "Actif"
   },
   "notificationPreferences": {
     "title": "Préférences de notifications",

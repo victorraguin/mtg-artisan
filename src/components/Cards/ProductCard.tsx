@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, Clock, MapPin } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface ProductCardProps {
   product: any;
@@ -10,6 +11,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { t } = useTranslation();
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,7 +52,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 <div className="w-16 h-16 border-2 border-dashed border-muted-foreground/30 rounded-full flex items-center justify-center mb-2">
                   <span className="text-2xl">📷</span>
                 </div>
-                <p className="text-sm">Aucune image</p>
+                <p className="text-sm">{t("productCard.noImage")}</p>
               </div>
             </div>
           )}

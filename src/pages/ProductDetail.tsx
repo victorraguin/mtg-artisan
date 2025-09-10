@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ProductWithShop, StockInfo } from "../types";
+import { ProductWithShop } from "../types";
 import supabase from "../lib/supabase";
 import {
   ShoppingCart,
@@ -8,16 +8,15 @@ import {
   MapPin,
   Star,
   ArrowLeft,
-  Share,
   Package,
   User,
 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
-import { useAnalytics, useStockCheck } from "../hooks/useAnalytics";
+import { useStockCheck } from "../hooks/useAnalytics";
 import { useStockMonitoring } from "../hooks/useStockMonitoring";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
 import { Button } from "../components/UI/Button";
-import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import { Card, CardContent } from "../components/UI/Card";
 import { ProductViewTracker } from "../components/Analytics";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -123,14 +122,14 @@ export function ProductDetail() {
             <Package className="h-12 w-12 text-primary" />
           </div>
           <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
-            Produit Non Trouvé
+            {t("productDetail.notFoundTitle")}
           </h1>
           <p className="text-muted-foreground/70 text-lg mb-8">
-            Le produit que vous recherchez n'existe pas ou a été supprimé
+            {t("productDetail.notFoundSubtitle")}
           </p>
           <Link to="/search">
             <Button variant="gradient" size="lg" icon={ArrowLeft}>
-              Retour à la Recherche
+              {t("productDetail.backToSearch")}
             </Button>
           </Link>
         </div>
@@ -148,14 +147,14 @@ export function ProductDetail() {
           to="/"
           className="hover:text-primary transition-colors duration-300"
         >
-          Accueil
+          {t("productDetail.breadcrumbHome")}
         </Link>
         <span className="mx-2">/</span>
         <Link
           to="/search"
           className="hover:text-primary transition-colors duration-300"
         >
-          Recherche
+          {t("productDetail.breadcrumbSearch")}
         </Link>
         <span className="mx-2">/</span>
         <span className="text-foreground truncate">{product.title}</span>
@@ -215,7 +214,7 @@ export function ProductDetail() {
               )}
               {product.is_digital && (
                 <span className="px-3 py-1 bg-blue-500/10 text-blue-400 text-sm rounded-full border border-blue-500/20">
-                  Numérique
+                  {t("productDetail.digital")}
                 </span>
               )}
             </div>
@@ -258,7 +257,7 @@ export function ProductDetail() {
                   </div>
                   <Link to={`/creator/${product.shop.slug}`}>
                     <Button variant="outline" size="sm">
-                      Voir la Boutique
+                      {t("productDetail.viewShop")}
                     </Button>
                   </Link>
                 </div>
@@ -276,7 +275,9 @@ export function ProductDetail() {
                   </div>
                   {product.currency !== "USD" && (
                     <div className="text-sm text-muted-foreground/70">
-                      Devise: {product.currency}
+                      {t("productDetail.currency", {
+                        currency: product.currency,
+                      })}
                     </div>
                   )}
                 </div>
@@ -295,7 +296,11 @@ export function ProductDetail() {
                     ))}
                   </div>
                   <div className="text-sm text-muted-foreground/70">
-                    {product.rating || 0}/5 ({product.review_count || 0} avis)
+                    {product.rating || 0}/5 (
+                    {t("productDetail.reviews", {
+                      count: product.review_count || 0,
+                    })}
+                    )
                   </div>
                 </div>
               </div>
@@ -307,7 +312,7 @@ export function ProductDetail() {
                     <div className="flex items-center gap-2">
                       <Package className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm font-medium text-foreground">
-                        Stock disponible
+                        {t("productDetail.availableStock")}
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -320,12 +325,15 @@ export function ProductDetail() {
                             : "text-red-500"
                         }`}
                       >
-                        {stockInfo.availableStock} disponible
-                        {stockInfo.availableStock > 1 ? "s" : ""}
+                        {t("productDetail.stockAvailable", {
+                          count: stockInfo.availableStock,
+                        })}
                       </span>
                       {stockInfo.inCartsCount > 0 && (
                         <span className="text-xs text-muted-foreground">
-                          ({stockInfo.inCartsCount} dans des paniers)
+                          {t("productDetail.inCarts", {
+                            count: stockInfo.inCartsCount,
+                          })}
                         </span>
                       )}
                     </div>
@@ -333,14 +341,14 @@ export function ProductDetail() {
                   {stockInfo.availableStock <= 5 &&
                     stockInfo.availableStock > 0 && (
                       <p className="text-xs text-orange-500 mt-2">
-                        ⚠️ Stock limité ! Plus que {stockInfo.availableStock}{" "}
-                        article{stockInfo.availableStock > 1 ? "s" : ""}{" "}
-                        disponible{stockInfo.availableStock > 1 ? "s" : ""}
+                        {t("productDetail.lowStockWarning", {
+                          count: stockInfo.availableStock,
+                        })}
                       </p>
                     )}
                   {stockInfo.availableStock === 0 && (
                     <p className="text-xs text-red-500 mt-2">
-                      ❌ Rupture de stock
+                      {t("productDetail.outOfStock")}
                     </p>
                   )}
                 </div>
@@ -350,7 +358,7 @@ export function ProductDetail() {
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
                   <label className="text-sm font-medium text-foreground">
-                    Quantité:
+                    {t("productDetail.quantity")}
                   </label>
                   <div className="flex items-center space-x-3">
                     <Button
@@ -390,10 +398,10 @@ export function ProductDetail() {
                   className="w-full"
                 >
                   {stockInfo?.availableStock === 0
-                    ? "Rupture de stock"
-                    : `Ajouter au Panier - ${(product.price * quantity).toFixed(
-                        2
-                      )}`}
+                    ? t("productDetail.outOfStockButton")
+                    : t("productDetail.addToCartWithPrice", {
+                        price: (product.price * quantity).toFixed(2),
+                      })}
                 </Button>
               </div>
 
@@ -402,7 +410,7 @@ export function ProductDetail() {
                 {product.lead_time && (
                   <div className="flex items-center text-sm text-muted-foreground/70">
                     <Clock className="h-4 w-4 mr-2" />
-                    Délai de livraison: {product.lead_time} jours
+                    {t("productDetail.leadTime", { count: product.lead_time })}
                   </div>
                 )}
 

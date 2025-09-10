@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "../UI";
 import { TrendingUp, DollarSign, Package, ShoppingCart } from "lucide-react";
 import conversionTrackingService from "../../services/conversionTracking";
+import { useTranslation } from "react-i18next";
 
 interface SalesPerformance {
   totalRevenue: number;
@@ -24,6 +25,7 @@ export function SalesAnalytics({ shopId }: SalesAnalyticsProps) {
   const [performance, setPerformance] = useState<SalesPerformance | null>(null);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState(30); // Période en jours
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchSalesData();
@@ -124,7 +126,9 @@ export function SalesAnalytics({ shopId }: SalesAnalyticsProps) {
                   {performance.totalOrders}
                 </span>
               </div>
-              <div className="text-xs text-muted-foreground">Commandes</div>
+              <div className="text-xs text-muted-foreground">
+                {t("salesAnalytics.orders")}
+              </div>
             </div>
 
             <div className="text-center">
@@ -146,7 +150,9 @@ export function SalesAnalytics({ shopId }: SalesAnalyticsProps) {
                   ${performance.averageOrderValue.toFixed(2)}
                 </span>
               </div>
-              <div className="text-xs text-muted-foreground">Panier Moyen</div>
+              <div className="text-xs text-muted-foreground">
+                {t("salesAnalytics.averageBasket")}
+              </div>
             </div>
           </div>
         </CardContent>

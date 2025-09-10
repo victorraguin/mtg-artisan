@@ -2,7 +2,9 @@
   "checkoutSummary": {
     "title": "Order Summary",
     "completeShipping": "Please complete the shipping address to continue.",
-    "noImage": "No Image"
+    "noImage": "No Image",
+    "qty": "Qty:",
+    "total": "Total"
   },
   "artistCard": {
     "bannerAlt": "Banner of {{shopName}}",
@@ -461,7 +463,11 @@
   },
   "notifications": {
     "markError": "Error marking notifications",
-    "markSuccess": "All notifications marked as read"
+    "markSuccess": "All notifications marked as read",
+    "category": "Category",
+    "open": "Open",
+    "markRead": "Mark read",
+    "testerTitle": "MTG Artisan Notification Tester"
   },
   "stock": {
     "checkError": "Error checking stock"
@@ -482,7 +488,98 @@
   "productDetail": {
     "notFound": "Product not found",
     "addSuccess": "Product added to cart!",
-    "addError": "Failed to add to cart"
+    "addError": "Failed to add to cart",
+    "notFoundTitle": "Product Not Found",
+    "notFoundSubtitle": "The product you are looking for does not exist or has been deleted",
+    "backToSearch": "Back to Search",
+    "breadcrumbHome": "Home",
+    "breadcrumbSearch": "Search",
+    "digital": "Digital",
+    "viewShop": "View Shop",
+    "currency": "Currency: {{currency}}",
+    "reviews": "{{count}} review",
+    "reviews_plural": "{{count}} reviews",
+    "availableStock": "Available stock",
+    "stockAvailable": "{{count}} available",
+    "stockAvailable_plural": "{{count}} available",
+    "inCarts": "({{count}} in carts)",
+    "lowStockWarning": "⚠️ Limited stock! Only {{count}} item left",
+    "lowStockWarning_plural": "⚠️ Limited stock! Only {{count}} items left",
+    "outOfStock": "❌ Out of stock",
+    "quantity": "Quantity:",
+    "addToCart": "Add to Cart",
+    "addToCartWithPrice": "Add to Cart - {{price}}",
+    "outOfStockButton": "Out of stock",
+    "leadTime": "Lead time: {{count}} day",
+    "leadTime_plural": "Lead time: {{count}} days"
+  },
+  "manageShop": {
+    "imageTooLarge": "Image is too large (max 5MB)",
+    "invalidImage": "Invalid file, please select an image",
+    "bannerUploadSuccess": "Banner updated!",
+    "bannerUploadConsoleError": "Error uploading banner:",
+    "bannerUploadError": "Failed to upload banner",
+    "bannerDeleteConsoleError": "Error deleting banner:",
+    "bannerDeleteError": "Failed to delete banner",
+    "bannerDeleteSuccess": "Banner removed",
+    "noChanges": "No changes to save",
+    "shopUpdated": "Shop updated successfully!",
+    "shopCreated": "Shop created successfully!",
+    "saveError": "Failed to save shop",
+    "manageYourShop": "Manage Your Shop",
+    "createYourShop": "Create Your Shop",
+    "modifyShopInfo": "Modify your shop information and payment settings",
+    "configureCreatorSpace": "Configure your creator space to start selling",
+    "unsavedChanges": "You have unsaved changes.",
+    "shopInfo": "Shop Information",
+    "shopBanner": "Shop Banner",
+    "changeBanner": "Change banner",
+    "addBanner": "Add banner",
+    "uploading": "Uploading...",
+    "chooseImage": "Choose Image",
+    "bannerRequirements": "Recommended: 1500x500px, max 5MB",
+    "bannerPreview": "Preview Shop",
+    "bannerPreviewHint": "Your shop page will open in a new tab.",
+    "basicInfo": "Basic Information",
+    "shopNameLabel": "Shop Name",
+    "shopNamePlaceholder": "e.g., The Alter Studio",
+    "shopUrlLabel": "Shop URL",
+    "slugPlaceholder": "your-shop-name",
+    "shopUrlWarning": "Warning: changing your shop URL can break existing links.",
+    "locationPayment": "Location & Payment",
+    "countryLabel": "Country",
+    "selectCountry": "Select a country...",
+    "usa": "United States",
+    "canada": "Canada",
+    "uk": "United Kingdom",
+    "germany": "Germany",
+    "france": "France",
+    "japan": "Japan",
+    "australia": "Australia",
+    "paypalEmailLabel": "PayPal Email",
+    "paypalEmailPlaceholder": "you@example.com",
+    "descriptionPolicies": "Description & Policies",
+    "shopBioLabel": "Shop Bio",
+    "shopBioPlaceholder": "Describe your shop, your art, and what makes you unique.",
+    "shopPoliciesLabel": "Shop Policies",
+    "shopPoliciesPlaceholder": "Information about shipping, returns, etc.",
+    "saving": "Saving...",
+    "updateShop": "Update Shop",
+    "createShop": "Create My Shop"
+  },
+  "cartPage": {
+    "shoppingCart": "Shopping Cart",
+    "emptyCartTitle": "Your Cart is Empty",
+    "emptyCartSubtitle": "Discover amazing artworks and professional services from talented creators.",
+    "startShopping": "Start Shopping",
+    "items": "{{count}} item",
+    "items_plural": "{{count}} items",
+    "unitPrice": "{{price}} each",
+    "remove": "Remove",
+    "summaryTitle": "Order Summary",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "continueShopping": "Continue Shopping"
   },
   "notificationPreferences": {
     "saveSuccess": "Preferences saved successfully",
@@ -495,7 +592,8 @@
     "tooLarge": "{{file}} is too large (max 5MB)",
     "uploadSuccess": "{{count}} image added",
     "uploadSuccess_plural": "{{count}} images added",
-    "uploadError": "Error uploading images"
+    "uploadError": "Error uploading images",
+    "noImage": "No image added"
   },
   "stockInfoCard": {
     "title": "How does stock management work?",
@@ -575,6 +673,72 @@
     "productsEmptySubtitle": "This shop has no products yet",
     "servicesEmptyTitle": "No services available",
     "servicesEmptySubtitle": "This shop has no services yet"
+  },
+  "serviceDetail": {
+    "fetchError": "Service not found",
+    "notFoundTitle": "Service Not Found",
+    "backToSearch": "← Back to Search",
+    "home": "Home",
+    "search": "Search",
+    "reviews": "reviews",
+    "delivery": "{{count}} day delivery",
+    "delivery_plural": "{{count}} day delivery",
+    "aboutTitle": "About This Service",
+    "includedTitle": "What's Included",
+    "includedProfessional": "Professional service delivery",
+    "includedCommunication": "Direct communication throughout the process",
+    "includedConsultation": "Detailed consultation and brief review",
+    "startingPrice": "Starting price",
+    "consultationRequired": "Consultation Required",
+    "consultationDescription": "This service requires a detailed brief. You'll work with the creator to define your exact needs and receive a custom quote.",
+    "requestQuote": "Request Quote",
+    "orderNow": "Order Now",
+    "deliveryTime": "Delivery time: {{count}} days"
+  },
+  "notificationTest": {
+    "title": "Notification Test",
+    "subtitle": "Development page to test the MTG Artisan notification system.",
+    "architectureTitle": "System Architecture",
+    "dbTablesTitle": "📊 Database Tables",
+    "dbEvents": "notification_events - Incoming event queue",
+    "dbNotifications": "notifications - Notifications created for users",
+    "dbPreferences": "notification_preferences - User preferences",
+    "dbDeliveries": "notification_deliveries - Delivery tasks (email, push, etc.)",
+    "dbTemplates": "notification_templates - Message templates",
+    "supabaseFunctionsTitle": "⚙️ Supabase Functions",
+    "sfEmit": "events-emit - Emits an event",
+    "sfFanout": "events-fanout - Processes events into notifications",
+    "sfRead": "notifications-read - Marks as read",
+    "sfSeen": "notifications-seen - Marks as seen",
+    "sfPreferences": "preferences - Manages preferences",
+    "dataFlowTitle": "🔄 Data Flow",
+    "flow1": "1. The application emits an event via NotificationService.emitEvent()",
+    "flow2": "2. The event is stored in notification_events",
+    "flow3": "3. The events-fanout function processes events",
+    "flow4": "4. Notifications are created in notifications",
+    "flow5": "5. Delivery tasks are created in notification_deliveries",
+    "flow6": "6. The React interface subscribes to real-time changes",
+    "flow7": "7. Notifications appear in the bell and as toasts"
+  },
+  "checkoutSummary": {
+    "qty": "Qty:",
+    "total": "Total"
+  },
+  "imageUpload": {
+    "noImage": "No image added"
+  },
+  "salesAnalytics": {
+    "orders": "Orders",
+    "averageBasket": "Average Basket"
+  },
+  "productCard": {
+    "noImage": "No image"
+  },
+  "createService": {
+    "title": "Create New Service",
+    "selectCategory": "Select Category",
+    "draft": "Draft",
+    "active": "Active"
   },
   "notificationPreferences": {
     "title": "Notification preferences",

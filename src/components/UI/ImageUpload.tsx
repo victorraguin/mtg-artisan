@@ -48,17 +48,13 @@ export function ImageUpload({
 
         // Validation du type de fichier
         if (!file.type.startsWith("image/")) {
-          toast.error(
-            t("imageUpload.invalidType", { file: file.name })
-          );
+          toast.error(t("imageUpload.invalidType", { file: file.name }));
           continue;
         }
 
         // Validation de la taille (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(
-            t("imageUpload.tooLarge", { file: file.name })
-          );
+          toast.error(t("imageUpload.tooLarge", { file: file.name }));
           continue;
         }
 
@@ -190,7 +186,9 @@ export function ImageUpload({
       {images.length === 0 && (
         <div className="text-center py-8 border border-border/30 rounded-2xl bg-card/30">
           <ImageIcon className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
-          <p className="text-muted-foreground text-sm">Aucune image ajoutée</p>
+          <p className="text-muted-foreground text-sm">
+            {t("imageUpload.noImage")}
+          </p>
         </div>
       )}
 

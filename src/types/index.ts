@@ -178,10 +178,14 @@ export interface ProductWithStats extends Product {
 }
 
 // Types pour les produits avec détails de boutique
-export interface ProductWithShop extends Product {
-  shop: Shop;
-  category: Category | null;
-}
+export type ProductWithShop = Product & {
+  shop: Shop | null;
+  category: { name: string } | null;
+  is_digital?: boolean;
+  rating?: number;
+  review_count?: number;
+  lead_time?: number;
+};
 
 // Types pour les services avec détails de boutique
 export interface ServiceWithShop extends Service {

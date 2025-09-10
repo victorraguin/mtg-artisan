@@ -3,11 +3,27 @@ import { Link } from "react-router-dom";
 import { Search, Sparkles, Menu, X } from "lucide-react";
 import { UserMenu } from "./UserMenu";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../contexts/AuthContext"; // 👈 CORRECTION DU PATH
 
 export function Header() {
   const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // 👈 AJOUT : Utiliser useAuth pour réagir aux changements
+  const { user, profile, loading, authStable } = useAuth();
+
+  // 👈 AJOUT : Debug pour voir les changements en temps réel
+  useEffect(() => {
+    console.log("🎯 Header re-render - Auth state:", {
+      hasUser: !!user,
+      hasProfile: !!profile,
+      userEmail: user?.email,
+      profileRole: profile?.role,
+      loading,
+      authStable,
+    });
+  }, [user, profile, loading, authStable]);
 
   // Fermer le menu mobile au clic extérieur
   useEffect(() => {
@@ -60,6 +76,28 @@ export function Header() {
             >
               {t("header.artisans")}
             </Link>
+
+            {/* 👈 AJOUT : Navigation conditionnelle basée sur l'auth */}
+            {user && profile && (
+              <>
+                {profile.role === "creator" && (
+                  <Link
+                    to="/dashboard/creator"
+                    className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                  >
+                    {t("header.creatorDashboard", "Dashboard")}
+                  </Link>
+                )}
+                {profile.role === "admin" && (
+                  <Link
+                    to="/admin"
+                    className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                  >
+                    {t("header.admin", "Admin")}
+                  </Link>
+                )}
+              </>
+            )}
           </nav>
 
           {/* Search Bar */}
@@ -76,8 +114,10 @@ export function Header() {
 
           {/* User Menu & Actions */}
           <div className="flex items-center space-x-4">
-            {/* User Menu - avec gestion d'erreur */}
-            <UserMenu />
+            {/* 👈 CORRECTION : UserMenu avec taille fixe pour éviter le décalage */}
+            <div className="min-w-[120px] flex justify-end">
+              <UserMenu />
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -114,6 +154,38 @@ export function Header() {
               >
                 {t("header.artisans")}
               </Link>
+
+              {/* 👈 AJOUT : Menu mobile pour utilisateurs connectés */}
+              {user && profile && (
+                <>
+                  <div className="border-t border-border/30 my-2" />
+                  <Link
+                    to="/profile"
+                    className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-card/50"
+                    onClick={handleMobileMenuClose}
+                  >
+                    {t("header.profile", "Profil")}
+                  </Link>
+                  {profile.role === "creator" && (
+                    <Link
+                      to="/dashboard/creator"
+                      className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-card/50"
+                      onClick={handleMobileMenuClose}
+                    >
+                      {t("header.creatorDashboard", "Dashboard")}
+                    </Link>
+                  )}
+                  {profile.role === "admin" && (
+                    <Link
+                      to="/admin"
+                      className="text-foreground/80 hover:text-primary transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-card/50"
+                      onClick={handleMobileMenuClose}
+                    >
+                      {t("header.admin", "Admin")}
+                    </Link>
+                  )}
+                </>
+              )}
             </nav>
           </div>
         )}

@@ -1,3 +1,10 @@
+import {
+  NOTIFICATION_TEMPLATES,
+  NOTIFICATION_TEMPLATES_EN,
+  formatNotificationMessage,
+  NotificationTemplate,
+} from "../../../src/services/notificationTemplates.ts";
+
 export type NotificationCategory =
   | "orders"
   | "messages"
@@ -161,59 +168,52 @@ export function fanoutEvent(
   return { notifications, deliveries };
 }
 
+function getTemplate(
+  templateKey: string,
+  lang: "fr" | "en" = "fr"
+): NotificationTemplate | null {
+  const templates =
+    lang === "en" ? NOTIFICATION_TEMPLATES_EN : NOTIFICATION_TEMPLATES;
+  return (templates[templateKey] as NotificationTemplate) || null;
+}
+
 function generateNotificationContent(
   eventName: string,
-  payload: any
+  payload: any,
+  lang: "fr" | "en" = "fr"
 ): {
   title: string;
   body: string;
   icon: string;
   actionUrl?: string;
 } {
-  switch (eventName) {
-    case "order.paid":
-      return {
-        title: "💳 Commande payée",
-        body: `Votre commande ${payload?.orderId || "N/A"} a été payée (${
-          payload?.total || 0
-        }${payload?.currency || "€"})`,
-        icon: "💳",
-      };
-    case "alter.commissioned":
-      return {
-        title: "🎨 Alter commandé",
-        body: `Votre alter ${payload?.cardName || "N/A"} a été commandé par ${
-          payload?.artistName || "un artiste"
-        }`,
-        icon: "🎨",
-      };
-    case "product.low_stock":
-      return {
-        title: "⚠️ Stock faible",
-        body: `Plus que ${payload?.stock || 0} exemplaires de ${
-          payload?.productName || "ce produit"
-        }`,
-        icon: "⚠️",
-      };
-    case "shop.verified":
-      return {
-        title: "✅ Boutique vérifiée",
-        body: `Votre boutique ${
-          payload?.shopName || "N/A"
-        } est maintenant vérifiée`,
-        icon: "✅",
-      };
-    case "message.new":
-      return {
-        title: "💬 Nouveau message",
-        body: `${payload?.senderName || "Quelqu'un"} vous a envoyé un message`,
-        icon: "💬",
-      };
-    default:
-      return {
-        title: `📢 ${eventName}`,
-        body: "Vous avez une nouvelle notification",
-        icon: "📢",
-      };
+  const templateKey = EVENT_MAP[eventName]?.template;
+  if (!templateKey) {
+    return {
+      title: `📢 ${eventName}`,
+      body: "Vous avez une nouvelle notification",
+      icon: "📢",
+    };
   }
+
+  const template = getTemplate(templateKey, lang);
+  if (!template) {
+    return {
+      title: `📢 ${eventName}`,
+      body: "Notification non configurée",
+      icon: "⚠️",
+    };
+  }
+
+  const { title, body, icon, actionUrl } = formatNotificationMessage(
+    template,
+    payload
+  );
+
+  return {
+    title,
+    body,
+    icon: icon || "📢",
+    actionUrl,
+  };
 }
