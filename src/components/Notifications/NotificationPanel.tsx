@@ -5,6 +5,7 @@ import { fr } from "date-fns/locale";
 import { ExternalLink, Bell, Settings, CheckCheck } from "lucide-react";
 import { useNotifications } from "../../hooks/useNotifications";
 import { Notification } from "../../types/notifications";
+import { useTranslation } from "react-i18next";
 
 const getCategoryIcon = (category: string) => {
   switch (category) {
@@ -132,16 +133,21 @@ export function NotificationPanel() {
     markAllAsRead,
     isMarkingAllAsRead,
   } = useNotifications();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
       <div className="w-80 sm:w-96 bg-card border border-border rounded-lg shadow-xl">
         <div className="p-4 border-b border-border/30">
-          <h3 className="font-medium text-foreground">Notifications</h3>
+          <h3 className="font-medium text-foreground">
+            {t("notificationPanel.title")}
+          </h3>
         </div>
         <div className="p-8 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground mt-2">Chargement...</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            {t("notificationPanel.loading")}
+          </p>
         </div>
       </div>
     );
@@ -153,7 +159,7 @@ export function NotificationPanel() {
       <div className="p-4 border-b border-border/30 bg-card/50">
         <div className="flex items-center justify-between">
           <h3 className="font-medium text-foreground">
-            Notifications
+            {t("notificationPanel.title")}
             {unreadCount > 0 && (
               <span className="ml-2 text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full">
                 {unreadCount}
@@ -166,24 +172,26 @@ export function NotificationPanel() {
                 onClick={() => {
                   console.log(
                     '🔄 Bouton "Tout lire" cliqué, unreadCount:',
-                    unreadCount
+                    unreadCount,
                   );
                   markAllAsRead();
                 }}
                 disabled={isMarkingAllAsRead}
                 className="text-xs text-primary hover:text-primary/80 flex items-center space-x-1"
-                title="Tout marquer comme lu"
+                title={t("notificationPanel.markAllTitle")}
               >
                 <CheckCheck className="w-3 h-3" />
                 <span>
-                  {isMarkingAllAsRead ? "Chargement..." : "Tout lire"}
+                  {isMarkingAllAsRead
+                    ? t("notificationPanel.loading")
+                    : t("notificationPanel.markAll")}
                 </span>
               </button>
             )}
             <Link
               to="/notifications/preferences"
               className="text-muted-foreground hover:text-foreground"
-              title="Paramètres de notifications"
+              title={t("notificationPanel.settings")}
             >
               <Settings className="w-4 h-4" />
             </Link>
@@ -197,7 +205,7 @@ export function NotificationPanel() {
           <div className="p-8 text-center">
             <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">
-              Aucune notification pour le moment
+              {t("notificationPanel.empty")}
             </p>
           </div>
         ) : (
@@ -218,7 +226,7 @@ export function NotificationPanel() {
       {notifications.length > 0 && (
         <div className="p-3 border-t border-border/30 bg-card/50">
           <button className="w-full text-xs text-center text-primary hover:text-primary/80">
-            Voir toutes les notifications
+            {t("notificationPanel.viewAll")}
           </button>
         </div>
       )}

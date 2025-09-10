@@ -3,6 +3,7 @@ import { Button, Card, CardContent, CardHeader, Input, Select } from "../UI";
 import supabase from "../../lib/supabase";
 import { Truck, Plus, Edit3, Trash2, Globe } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface ShippingProfile {
   id: string;
@@ -33,9 +34,11 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
   const [zones, setZones] = useState<ShippingZone[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProfile, setEditingProfile] = useState<ShippingProfile | null>(
-    null
+    null,
   );
   const [showNewProfile, setShowNewProfile] = useState(false);
+
+  const { t } = useTranslation();
 
   const [newProfile, setNewProfile] = useState({
     name: "",
@@ -69,11 +72,8 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
       setProfiles(profilesResult.data || []);
       setZones(zonesResult.data || []);
     } catch (error) {
-      console.error(
-        "Erreur lors du chargement des données de livraison:",
-        error
-      );
-      toast.error("Impossible de charger les paramètres de livraison");
+      console.error(t("shippingManager.errors.load"), error);
+      toast.error(t("shippingManager.errors.load"));
     } finally {
       setLoading(false);
     }
@@ -81,7 +81,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
 
   const createProfile = async () => {
     if (!newProfile.name.trim()) {
-      toast.error("Le nom du profil est requis");
+      toast.error(t("shippingManager.errors.nameRequired"));
       return;
     }
 
@@ -97,7 +97,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
 
       if (error) throw error;
 
-      toast.success("Profil de livraison créé");
+      toast.success(t("shippingManager.success.create"));
       setShowNewProfile(false);
       setNewProfile({
         name: "",
@@ -108,13 +108,16 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
       });
       fetchShippingData();
     } catch (error: any) {
-      console.error("Erreur lors de la création:", error);
-      toast.error(error.message || "Impossible de créer le profil");
+      console.error(t("shippingManager.errors.create"), error);
+      toast.error(error.message || t("shippingManager.errors.create"));
     }
   };
 
   const deleteProfile = async (profileId: string, profileName: string) => {
-    if (!window.confirm(`Supprimer le profil "${profileName}" ?`)) return;
+    if (
+      !window.confirm(t("shippingManager.confirmDelete", { name: profileName }))
+    )
+      return;
 
     try {
       const { error } = await supabase
@@ -124,11 +127,11 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
 
       if (error) throw error;
 
-      toast.success("Profil supprimé");
+      toast.success(t("shippingManager.success.delete"));
       fetchShippingData();
     } catch (error: any) {
-      console.error("Erreur lors de la suppression:", error);
-      toast.error(error.message || "Impossible de supprimer le profil");
+      console.error(t("shippingManager.errors.delete"), error);
+      toast.error(error.message || t("shippingManager.errors.delete"));
     }
   };
 
@@ -148,11 +151,11 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
 
       if (error) throw error;
 
-      toast.success("Profil par défaut mis à jour");
+      toast.success(t("shippingManager.success.updateDefault"));
       fetchShippingData();
     } catch (error: any) {
-      console.error("Erreur lors de la mise à jour:", error);
-      toast.error(error.message || "Impossible de mettre à jour le profil");
+      console.error(t("shippingManager.errors.update"), error);
+      toast.error(error.message || t("shippingManager.errors.update"));
     }
   };
 
@@ -176,7 +179,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
             <div className="flex items-center gap-3">
               <Truck className="h-6 w-6 text-primary" />
               <h2 className="text-2xl font-light text-foreground tracking-tight">
-                Frais de Livraison
+                {t("shippingManager.title")}
               </h2>
             </div>
             <Button
@@ -185,7 +188,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
               icon={Plus}
               onClick={() => setShowNewProfile(true)}
             >
-              Nouveau profil
+              {t("shippingManager.newProfile")}
             </Button>
           </div>
         </CardHeader>
@@ -195,19 +198,19 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
           {showNewProfile && (
             <div className="mb-6 p-4 border border-border/30 rounded-2xl bg-card/30">
               <h3 className="text-lg font-medium text-foreground mb-4">
-                Nouveau profil de livraison
+                {t("shippingManager.newProfileTitle")}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
-                  label="Nom du profil *"
+                  label={t("shippingManager.nameLabel")}
                   value={newProfile.name}
                   onChange={(e) =>
                     setNewProfile({ ...newProfile, name: e.target.value })
                   }
-                  placeholder="ex: Livraison Standard"
+                  placeholder={t("shippingManager.namePlaceholder")}
                 />
                 <Input
-                  label="Coût de base (€)"
+                  label={t("shippingManager.baseCostLabel")}
                   type="number"
                   min="0"
                   step="0.01"
@@ -220,7 +223,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                   }
                 />
                 <Input
-                  label="Description"
+                  label={t("shippingManager.descriptionLabel")}
                   value={newProfile.description}
                   onChange={(e) =>
                     setNewProfile({
@@ -228,10 +231,10 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                       description: e.target.value,
                     })
                   }
-                  placeholder="Description optionnelle"
+                  placeholder={t("shippingManager.descriptionPlaceholder")}
                 />
                 <Input
-                  label="Livraison gratuite à partir de (€)"
+                  label={t("shippingManager.freeShippingLabel")}
                   type="number"
                   min="0"
                   step="0.01"
@@ -244,7 +247,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                         : null,
                     })
                   }
-                  placeholder="Optionnel"
+                  placeholder={t("shippingManager.freeShippingPlaceholder")}
                 />
               </div>
               <div className="flex items-center gap-2 mt-4">
@@ -261,7 +264,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                   className="rounded border-border/50 text-primary focus:ring-primary/20"
                 />
                 <label htmlFor="is_default" className="text-sm text-foreground">
-                  Définir comme profil par défaut
+                  {t("shippingManager.defaultLabel")}
                 </label>
               </div>
               <div className="flex justify-end gap-3 mt-4">
@@ -269,10 +272,10 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                   variant="ghost"
                   onClick={() => setShowNewProfile(false)}
                 >
-                  Annuler
+                  {t("shippingManager.cancel")}
                 </Button>
                 <Button variant="primary" onClick={createProfile}>
-                  Créer le profil
+                  {t("shippingManager.create")}
                 </Button>
               </div>
             </div>
@@ -283,10 +286,10 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
             <div className="text-center py-8">
               <Truck className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
               <p className="text-muted-foreground">
-                Aucun profil de livraison configuré
+                {t("shippingManager.noProfiles")}
               </p>
               <p className="text-sm text-muted-foreground/70 mt-1">
-                Créez votre premier profil pour définir vos frais de livraison
+                {t("shippingManager.createFirst")}
               </p>
             </div>
           ) : (
@@ -308,7 +311,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                         </h3>
                         {profile.is_default && (
                           <span className="bg-primary/20 text-primary text-xs px-2 py-1 rounded-full border border-primary/30">
-                            Par défaut
+                            {t("shippingManager.defaultTag")}
                           </span>
                         )}
                       </div>
@@ -318,10 +321,12 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                         </p>
                       )}
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        <span>Coût de base: {profile.base_cost}€</span>
+                        <span>
+                          {t("shippingManager.baseCost")} {profile.base_cost}€
+                        </span>
                         {profile.free_shipping_threshold && (
                           <span>
-                            Gratuit à partir de:{" "}
+                            {t("shippingManager.freeFrom")}{" "}
                             {profile.free_shipping_threshold}€
                           </span>
                         )}
@@ -334,7 +339,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                           size="sm"
                           onClick={() => setDefaultProfile(profile.id)}
                         >
-                          Par défaut
+                          {t("shippingManager.setDefault")}
                         </Button>
                       )}
                       <Button
@@ -344,7 +349,7 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
                         onClick={() => deleteProfile(profile.id, profile.name)}
                         className="text-red-500 hover:text-red-600"
                       >
-                        <span className="sr-only">Supprimer</span>
+                        <span className="sr-only">{t("common.delete")}</span>
                       </Button>
                     </div>
                   </div>
@@ -362,25 +367,13 @@ export function ShippingManager({ shopId }: ShippingManagerProps) {
             <Globe className="h-5 w-5 text-primary mt-0.5" />
             <div>
               <h3 className="font-medium text-foreground mb-2">
-                Comment ça marche ?
+                {t("shippingManager.howItWorks.title")}
               </h3>
               <div className="text-sm text-muted-foreground space-y-1">
-                <p>
-                  • Le profil par défaut sera appliqué à toutes les nouvelles
-                  commandes
-                </p>
-                <p>
-                  • Les frais de livraison sont calculés automatiquement lors du
-                  checkout
-                </p>
-                <p>
-                  • La livraison gratuite s'applique si le montant dépasse le
-                  seuil défini
-                </p>
-                <p>
-                  • Vous pouvez créer plusieurs profils pour différents types de
-                  produits
-                </p>
+                <p>{t("shippingManager.howItWorks.default")}</p>
+                <p>{t("shippingManager.howItWorks.calc")}</p>
+                <p>{t("shippingManager.howItWorks.free")}</p>
+                <p>{t("shippingManager.howItWorks.multiple")}</p>
               </div>
             </div>
           </div>

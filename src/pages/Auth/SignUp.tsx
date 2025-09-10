@@ -5,6 +5,7 @@ import { Eye, EyeOff, Sparkles, Palette, Package } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "../../components/UI/Button";
 import { Input } from "../../components/UI/Input";
+import { useTranslation } from "react-i18next";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ export function SignUp() {
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,10 +26,10 @@ export function SignUp() {
       const { error } = await signUp(email, password, displayName);
       if (error) throw error;
 
-      toast.success("Compte créé avec succès !");
+      toast.success(t("auth.signUp.success"));
       navigate("/");
     } catch (error: any) {
-      toast.error(error.message || "Échec de la création du compte");
+      toast.error(error.message || t("auth.signUp.error"));
     } finally {
       setLoading(false);
     }
@@ -60,30 +62,30 @@ export function SignUp() {
             </span>
           </Link>
           <h2 className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-3">
-            Rejoignez notre communauté
+            {t("auth.signUp.hero.title")}
           </h2>
           <p className="text-muted-foreground/80 text-lg">
-            Créez un compte pour commencer à acheter ou vendre
+            {t("auth.signUp.hero.subtitle")}
           </p>
         </div>
 
         <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit}>
           <Input
-            label="Adresse email"
+            label={t("auth.signUp.emailLabel")}
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="vous@exemple.com"
+            placeholder={t("auth.signUp.emailPlaceholder")}
             id="email"
           />
 
           <Input
-            label="Nom d'affichage"
+            label={t("auth.signUp.displayNameLabel")}
             type="text"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Votre nom"
+            placeholder={t("auth.signUp.displayNamePlaceholder")}
             id="displayName"
           />
 
@@ -92,7 +94,7 @@ export function SignUp() {
               htmlFor="password"
               className="block text-sm font-medium text-foreground mb-3"
             >
-              Mot de passe
+              {t("auth.signUp.passwordLabel")}
             </label>
             <div className="relative">
               <Input
@@ -100,7 +102,7 @@ export function SignUp() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Créez un mot de passe fort"
+                placeholder={t("auth.signUp.passwordPlaceholder")}
                 id="password"
                 className="pr-12"
               />
@@ -120,7 +122,7 @@ export function SignUp() {
 
           <div>
             <label className="block text-sm font-medium text-foreground mb-4">
-              Choisissez votre voie :
+              {t("auth.signUp.choosePath")}
             </label>
             <div className="grid grid-cols-2 gap-4">
               <label
@@ -141,10 +143,10 @@ export function SignUp() {
                 <div className="text-center">
                   <Package className="h-8 w-8 text-primary mx-auto mb-3" />
                   <div className="text-lg font-medium text-foreground">
-                    Collectionneur
+                    {t("auth.signUp.paths.buyer.title")}
                   </div>
                   <div className="text-sm text-muted-foreground/70">
-                    Commandez de l'art légendaire
+                    {t("auth.signUp.paths.buyer.description")}
                   </div>
                 </div>
               </label>
@@ -167,10 +169,10 @@ export function SignUp() {
                 <div className="text-center">
                   <Palette className="h-8 w-8 text-primary mx-auto mb-3" />
                   <div className="text-lg font-medium text-foreground">
-                    Artisan
+                    {t("auth.signUp.paths.creator.title")}
                   </div>
                   <div className="text-sm text-muted-foreground/70">
-                    Créez des services magiques
+                    {t("auth.signUp.paths.creator.description")}
                   </div>
                 </div>
               </label>
@@ -184,17 +186,17 @@ export function SignUp() {
             loading={loading}
             className="w-full"
           >
-            Créer le compte
+            {t("auth.signUp.submit")}
           </Button>
 
           <div className="text-center">
             <p className="text-muted-foreground/70">
-              Vous avez déjà un compte ?{" "}
+              {t("auth.signUp.haveAccount")} {" "}
               <Link
                 to="/auth/signin"
                 className="text-primary hover:text-primary/80 font-medium transition-colors duration-300"
               >
-                Se connecter
+                {t("auth.signUp.signIn")}
               </Link>
             </p>
           </div>

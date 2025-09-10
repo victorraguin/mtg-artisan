@@ -59,10 +59,10 @@ const channels = [
 ] as const;
 
 export function NotificationPreferences() {
-  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [preferences, setPreferences] = useState<Record<string, boolean>>({});
   const [hasChanges, setHasChanges] = useState(false);
+  const { t } = useTranslation();
 
   // Récupérer les préférences actuelles
   const { data: currentPreferences = [], isLoading } = useQuery({
@@ -82,10 +82,10 @@ export function NotificationPreferences() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification-preferences"] });
       setHasChanges(false);
-      toast.success(t("notificationPreferences.toast.success"));
+      toast.success(t("notificationPreferences.saveSuccess"));
     },
     onError: (error) => {
-      toast.error(t("notificationPreferences.toast.error"));
+      toast.error(t("notificationPreferences.saveError"));
       console.error("Error saving preferences:", error);
     },
   });

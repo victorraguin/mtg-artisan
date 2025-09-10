@@ -14,9 +14,11 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import { useCart } from "../../contexts/CartContext";
 import { NotificationsBell } from "../Notifications";
+import { useTranslation } from "react-i18next";
 import supabase from "../../lib/supabase";
 
 export function UserMenu() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasShop, setHasShop] = useState(false);
@@ -100,16 +102,16 @@ export function UserMenu() {
   };
 
   const getDashboardLabel = () => {
-    if (!profile) return "Dashboard";
+    if (!profile) return t("userMenu.dashboard");
 
     switch (profile.role) {
       case "admin":
-        return "Admin Panel";
+        return t("userMenu.adminPanel");
       case "creator":
-        return hasShop ? "Creator Studio" : "Studio Créateur";
+        return t("userMenu.creatorStudio");
       case "buyer":
       default:
-        return "Mes Commandes";
+        return t("userMenu.orders");
     }
   };
 
@@ -145,7 +147,7 @@ export function UserMenu() {
           className="flex items-center space-x-2 text-muted-foreground hover:text-primary transition-colors duration-300 px-3 sm:px-4 py-2 text-sm font-light rounded-xl hover:bg-card/50"
         >
           <LogIn className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="hidden sm:inline">Se connecter</span>
+          <span className="hidden sm:inline">{t("userMenu.signIn")}</span>
         </Link>
         <Link
           to="/auth/signup"
@@ -153,7 +155,7 @@ export function UserMenu() {
         >
           <span className="block px-4 sm:px-6 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-300 flex items-center space-x-2">
             <UserPlus className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="hidden sm:inline">S'inscrire</span>
+            <span className="hidden sm:inline">{t("userMenu.signUp")}</span>
           </span>
         </Link>
       </div>
@@ -188,7 +190,7 @@ export function UserMenu() {
         >
           <User className="h-5 w-5" />
           <span className="hidden xl:inline text-sm font-light">
-            {profile?.display_name || "Compte"}
+            {profile?.display_name || t("userMenu.account")}
           </span>
         </button>
 
@@ -203,7 +205,7 @@ export function UserMenu() {
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   <Shield className="w-4 h-4 mr-3 text-primary" />
-                  Admin Panel
+                  {t("userMenu.adminPanel")}
                 </Link>
               )}
 
@@ -225,7 +227,7 @@ export function UserMenu() {
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <Package className="w-4 h-4 mr-3 text-primary" />
-                      Gérer la Boutique
+                      {t("userMenu.manageShop")}
                     </Link>
                   )}
                 </>
@@ -238,7 +240,7 @@ export function UserMenu() {
                 onClick={() => setIsDropdownOpen(false)}
               >
                 <Package className="w-4 h-4 mr-3 text-primary" />
-                Mes Commandes
+                {t("userMenu.orders")}
               </Link>
 
               <hr className="border-border/30 my-2" />
@@ -248,7 +250,7 @@ export function UserMenu() {
                 onClick={() => setIsDropdownOpen(false)}
               >
                 <User className="w-4 h-4 mr-3" />
-                Paramètres du Profil
+                {t("userMenu.profile")}
               </Link>
               <hr className="border-border/30 my-2" />
               <button
@@ -256,7 +258,7 @@ export function UserMenu() {
                 className="block w-full text-left px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
               >
                 <LogOut className="w-4 h-4 mr-3 inline" />
-                Se déconnecter
+                {t("userMenu.signOut")}
               </button>
             </div>
           </div>

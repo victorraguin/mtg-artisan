@@ -20,6 +20,7 @@ import { Button } from "../components/UI/Button";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
 import { ProductViewTracker } from "../components/Analytics";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,7 @@ export function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const { checkStock } = useStockCheck();
+  const { t } = useTranslation();
 
   // Utiliser le hook de monitoring du stock
   const { stockInfo, refetchStock } = useStockMonitoring(
@@ -60,7 +62,7 @@ export function ProductDetail() {
       setProduct(data);
     } catch (error) {
       console.error("Erreur lors de la récupération du produit:", error);
-      toast.error("Produit non trouvé");
+      toast.error(t("productDetail.notFound"));
     } finally {
       setLoading(false);
     }
@@ -74,7 +76,7 @@ export function ProductDetail() {
       const stock = await checkStock(product.id, quantity);
       if (!stock.available) {
         toast.error(
-          `Stock insuffisant. Seulement ${stock.availableStock} article(s) disponible(s)`
+          t("cart.stockInsufficient", { stock: stock.availableStock })
         );
         return;
       }
@@ -99,9 +101,9 @@ export function ProductDetail() {
         refetchStock();
       }
 
-      toast.success("Produit ajouté au panier !");
+      toast.success(t("productDetail.addSuccess"));
     } catch (error) {
-      toast.error("Échec de l'ajout au panier");
+      toast.error(t("productDetail.addError"));
     }
   };
 

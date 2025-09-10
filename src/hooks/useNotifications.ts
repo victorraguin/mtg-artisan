@@ -4,11 +4,13 @@ import { NotificationService } from "../services/notificationService";
 import { Notification } from "../types/notifications";
 import { useAuth } from "../contexts/AuthContext";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function useNotifications() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   // Récupérer les notifications
   const {
@@ -160,10 +162,10 @@ export function useNotifications() {
         );
       }
       console.error("Erreur lors du marquage de toutes comme lues:", err);
-      toast.error("Erreur lors du marquage des notifications");
+      toast.error(t("notifications.markError"));
     },
     onSuccess: () => {
-      toast.success("Toutes les notifications ont été marquées comme lues");
+      toast.success(t("notifications.markSuccess"));
     },
     onSettled: () => {
       // Refetch pour s'assurer que les données sont à jour

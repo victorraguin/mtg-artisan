@@ -13,12 +13,14 @@ import {
 import { LoadingSpinner } from "../../components/UI/LoadingSpinner";
 import { Button } from "../../components/UI/Button";
 import { Card, CardHeader, CardContent } from "../../components/UI/Card";
+import { useTranslation } from "react-i18next";
 
 export function BuyerDashboard() {
   const { user } = useAuth();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (user) {
@@ -82,13 +84,13 @@ export function BuyerDashboard() {
   const getStatusText = (status: string) => {
     switch (status) {
       case "paid":
-        return "Payé";
+        return t("common.orderStatus.paid");
       case "processing":
-        return "En traitement";
+        return t("common.orderStatus.processing");
       case "completed":
-        return "Terminé";
+        return t("common.orderStatus.completed");
       case "shipped":
-        return "Expédié";
+        return t("common.orderStatus.shipped");
       default:
         return status.replace("_", " ");
     }
@@ -112,10 +114,10 @@ export function BuyerDashboard() {
       {/* Header */}
       <div className="mb-12">
         <h1 className="text-4xl md:text-5xl font-light text-foreground tracking-tight mb-4">
-          Tableau de Bord
+          {t("buyerDashboard.title")}
         </h1>
         <p className="text-muted-foreground/70 text-lg">
-          Suivez vos commandes et gérez vos achats
+          {t("buyerDashboard.subtitle")}
         </p>
       </div>
 
@@ -126,7 +128,7 @@ export function BuyerDashboard() {
             {orders.length}
           </div>
           <div className="text-muted-foreground/70 text-sm">
-            Total des commandes
+            {t("buyerDashboard.stats.total")}
           </div>
         </Card>
 
@@ -135,7 +137,7 @@ export function BuyerDashboard() {
             {orders.filter((o) => o.status === "completed").length}
           </div>
           <div className="text-muted-foreground/70 text-sm">
-            Commandes terminées
+            {t("buyerDashboard.stats.completed")}
           </div>
         </Card>
 
@@ -147,14 +149,18 @@ export function BuyerDashboard() {
               ).length
             }
           </div>
-          <div className="text-muted-foreground/70 text-sm">En cours</div>
+          <div className="text-muted-foreground/70 text-sm">
+            {t("buyerDashboard.stats.inProgress")}
+          </div>
         </Card>
 
         <Card className="text-center p-6">
           <div className="text-3xl font-light text-foreground mb-2">
             {orders.filter((o) => o.status === "paid").length}
           </div>
-          <div className="text-muted-foreground/70 text-sm">En attente</div>
+          <div className="text-muted-foreground/70 text-sm">
+            {t("buyerDashboard.stats.pending")}
+          </div>
         </Card>
       </div>
 
@@ -167,7 +173,7 @@ export function BuyerDashboard() {
             size="sm"
             onClick={() => setActiveTab(tab)}
           >
-            {tab === "all" ? "Toutes" : getStatusText(tab)}
+            {tab === "all" ? t("buyerDashboard.tabs.all") : t(`common.orderStatus.${tab}`)}
           </Button>
         ))}
       </div>
@@ -178,14 +184,14 @@ export function BuyerDashboard() {
           <Card className="text-center p-16">
             <Package className="h-16 w-16 text-muted-foreground/40 mx-auto mb-6" />
             <h3 className="text-xl font-light text-foreground mb-2">
-              Aucune commande trouvée
+              {t("buyerDashboard.empty.title")}
             </h3>
             <p className="text-muted-foreground/70">
               {activeTab === "all"
-                ? "Vous n'avez pas encore passé de commande."
-                : `Aucune commande avec le statut "${getStatusText(
-                    activeTab
-                  )}".`}
+                ? t("buyerDashboard.empty.all")
+                : t("buyerDashboard.empty.status", {
+                    status: t(`common.orderStatus.${activeTab}`),
+                  })}
             </p>
           </Card>
         ) : (
@@ -195,14 +201,19 @@ export function BuyerDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-light text-foreground">
-                      Commande #{order.id.slice(-8)}
+                      {t("buyerDashboard.order.title", {
+                        id: order.id.slice(-8),
+                      })}
                     </h3>
                     <p className="text-muted-foreground/70 text-sm">
-                      {new Date(order.created_at).toLocaleDateString("fr-FR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                      {new Date(order.created_at).toLocaleDateString(
+                        i18n.language === "fr" ? "fr-FR" : "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
                     </p>
                   </div>
                   <div className="text-right">
@@ -234,10 +245,13 @@ export function BuyerDashboard() {
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="text-foreground font-medium">
-                            {item.title || "Article"}
+                            {item.title || t("common.item")}
                           </h4>
                           <p className="text-muted-foreground/70 text-sm">
-                            De {item.shop?.name} • Qté: {item.qty}
+                            {t("buyerDashboard.order.from", {
+                              shopName: item.shop?.name,
+                              qty: item.qty,
+                            })}
                           </p>
                         </div>
                         <div className="flex items-center space-x-4">
@@ -261,7 +275,7 @@ export function BuyerDashboard() {
                             icon={MessageSquare}
                             className="text-primary hover:text-primary/80"
                           >
-                            Contacter le vendeur
+                            {t("buyerDashboard.order.contactSeller")}
                           </Button>
                           <Button
                             variant="ghost"
@@ -269,7 +283,7 @@ export function BuyerDashboard() {
                             icon={Star}
                             className="text-primary hover:text-primary/80"
                           >
-                            Laisser un avis
+                            {t("buyerDashboard.order.leaveReview")}
                           </Button>
                         </div>
                       )}
@@ -278,7 +292,7 @@ export function BuyerDashboard() {
                       {item.tracking && (
                         <div className="mt-3 p-3 glass rounded-xl border border-border/30">
                           <p className="text-sm text-foreground">
-                            <strong>Suivi :</strong> {item.tracking}
+                            <strong>{t("buyerDashboard.order.tracking")}</strong> {item.tracking}
                           </p>
                         </div>
                       )}
@@ -287,9 +301,9 @@ export function BuyerDashboard() {
                       {item.delivery_date && (
                         <div className="mt-3 p-3 glass rounded-xl border border-border/30">
                           <p className="text-sm text-foreground">
-                            <strong>Livraison prévue :</strong>{" "}
+                            <strong>{t("buyerDashboard.order.delivery")}</strong>{" "}
                             {new Date(item.delivery_date).toLocaleDateString(
-                              "fr-FR"
+                              i18n.language === "fr" ? "fr-FR" : "en-US"
                             )}
                           </p>
                         </div>

@@ -7,6 +7,7 @@ import { ServiceCard } from "../components/Cards/ServiceCard";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
 import { Button } from "../components/UI/Button";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import { useTranslation } from "react-i18next";
 
 export function CreatorProfile() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,6 +16,7 @@ export function CreatorProfile() {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("products");
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (slug) {
@@ -48,10 +50,10 @@ export function CreatorProfile() {
       ]);
 
       setProducts(
-        productsResult.data?.map((p) => ({ ...p, shop: shopData })) || []
+        productsResult.data?.map((p) => ({ ...p, shop: shopData })) || [],
       );
       setServices(
-        servicesResult.data?.map((s) => ({ ...s, shop: shopData })) || []
+        servicesResult.data?.map((s) => ({ ...s, shop: shopData })) || [],
       );
     } catch (error) {
       console.error("Error fetching creator data:", error);
@@ -72,7 +74,7 @@ export function CreatorProfile() {
     return (
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 text-center">
         <h1 className="text-2xl font-light text-foreground">
-          Boutique introuvable
+          {t("creatorProfile.notFound")}
         </h1>
       </div>
     );
@@ -87,7 +89,7 @@ export function CreatorProfile() {
           {shop.banner_url ? (
             <img
               src={shop.banner_url}
-              alt={`Bannière de ${shop.name}`}
+              alt={t("creatorProfile.bannerAlt", { shopName: shop.name })}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -126,7 +128,7 @@ export function CreatorProfile() {
                   {shop.is_verified && (
                     <div className="bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium flex items-center">
                       <Star className="h-3 w-3 mr-1" />
-                      Vérifié
+                      {t("creatorProfile.verified")}
                     </div>
                   )}
                 </div>
@@ -142,11 +144,13 @@ export function CreatorProfile() {
                     <Star className="h-4 w-4 mr-2 text-primary" />
                     {shop.rating_avg
                       ? `${shop.rating_avg.toFixed(1)}/5`
-                      : "Nouveau"}
+                      : t("creatorProfile.new")}
                   </div>
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-2 text-primary" />
-                    Membre depuis {new Date(shop.created_at).getFullYear()}
+                    {t("creatorProfile.memberSince", {
+                      year: new Date(shop.created_at).getFullYear(),
+                    })}
                   </div>
                 </div>
 
@@ -170,7 +174,9 @@ export function CreatorProfile() {
           className="flex items-center space-x-2"
         >
           <Package className="h-5 w-5" />
-          <span>Produits ({products.length})</span>
+          <span>
+            {t("creatorProfile.tabs.products", { count: products.length })}
+          </span>
         </Button>
         <Button
           variant={activeTab === "services" ? "primary" : "ghost"}
@@ -179,7 +185,9 @@ export function CreatorProfile() {
           className="flex items-center space-x-2"
         >
           <Briefcase className="h-5 w-5" />
-          <span>Services ({services.length})</span>
+          <span>
+            {t("creatorProfile.tabs.services", { count: services.length })}
+          </span>
         </Button>
       </div>
 
@@ -196,10 +204,10 @@ export function CreatorProfile() {
                 <Package className="h-10 w-10 text-muted-foreground" />
               </div>
               <h3 className="text-xl font-light text-foreground mb-2">
-                Aucun produit disponible
+                {t("creatorProfile.productsEmptyTitle")}
               </h3>
               <p className="text-muted-foreground/70">
-                Cette boutique n'a pas encore de produits
+                {t("creatorProfile.productsEmptySubtitle")}
               </p>
             </div>
           )
@@ -213,10 +221,10 @@ export function CreatorProfile() {
               <Briefcase className="h-10 w-10 text-muted-foreground" />
             </div>
             <h3 className="text-xl font-light text-foreground mb-2">
-              Aucun service disponible
+              {t("creatorProfile.servicesEmptyTitle")}
             </h3>
             <p className="text-muted-foreground/70">
-              Cette boutique n'a pas encore de services
+              {t("creatorProfile.servicesEmptySubtitle")}
             </p>
           </div>
         )}

@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MessageSquare, Clock, MapPin, Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ServiceCardProps {
   service: any;
 }
 
 export function ServiceCard({ service }: ServiceCardProps) {
+  const { t } = useTranslation();
   return (
     <Link to={`/service/${service.id}`} className="group">
       <div className="bg-card rounded-3xl border border-border/30 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 p-6">
@@ -40,11 +42,11 @@ export function ServiceCard({ service }: ServiceCardProps) {
           </div>
           <div className="text-right">
             <div className="text-xl font-light text-card-foreground">
-              À partir de ${service.base_price}
+              {t("common.startingFrom")} ${service.base_price}
             </div>
             <div className="flex items-center text-xs text-muted-foreground/60 mt-1">
               <Clock className="h-3 w-3 mr-1" />
-              {service.delivery_days} jours
+              {t("common.days", { count: service.delivery_days })}
             </div>
           </div>
         </div>
@@ -64,17 +66,19 @@ export function ServiceCard({ service }: ServiceCardProps) {
             <MessageSquare className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">
               {service.requires_brief
-                ? "Consultation requise"
-                : "Commande rapide"}
+                ? t("serviceCard.requiresBrief")
+                : t("serviceCard.quickOrder")}
             </span>
             <span className="sm:hidden">
-              {service.requires_brief ? "Consult" : "Rapide"}
+              {service.requires_brief
+                ? t("serviceCard.requiresBriefShort")
+                : t("serviceCard.quickOrderShort")}
             </span>
           </div>
 
           <div className="flex items-center text-sm text-muted-foreground/70">
             <Star className="h-4 w-4 mr-2 text-primary/60" />
-            {service.shop?.rating_avg || "Nouveau"}
+            {service.shop?.rating_avg || t("common.new")}
           </div>
         </div>
 

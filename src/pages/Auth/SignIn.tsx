@@ -5,6 +5,7 @@ import { Eye, EyeOff, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "../../components/UI/Button";
 import { Input } from "../../components/UI/Input";
+import { useTranslation } from "react-i18next";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,7 @@ export function SignIn() {
   const [showTestAccounts, setShowTestAccounts] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const testAccounts = [
     { email: "admin@manashop.com", password: "admin123!", role: "Admin" },
@@ -30,15 +32,13 @@ export function SignIn() {
       const { error } = await signIn(email, password);
       if (error) throw error;
 
-      toast.success("Bienvenue !");
+      toast.success(t("auth.signIn.success"));
       navigate("/");
     } catch (error: any) {
       if (error.message?.includes("Invalid login credentials")) {
-        toast.error(
-          "Email ou mot de passe invalide. Veuillez vérifier vos identifiants."
-        );
+        toast.error(t("auth.signIn.invalidCredentials"));
       } else {
-        toast.error(error.message || "Échec de la connexion");
+        toast.error(error.message || t("auth.signIn.error"));
       }
     } finally {
       setLoading(false);
@@ -77,21 +77,21 @@ export function SignIn() {
             </span>
           </Link>
           <h2 className="text-3xl md:text-4xl font-light text-foreground tracking-tight mb-3">
-            Bon retour, Planeswalker
+            {t("auth.signIn.heroTitle")}
           </h2>
           <p className="text-muted-foreground/80 text-lg">
-            Entrez vos identifiants de guilde pour accéder au multivers
+            {t("auth.signIn.heroSubtitle")}
           </p>
         </div>
 
         <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit}>
           <Input
-            label="Adresse email"
+            label={t("auth.signIn.emailLabel")}
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="vous@exemple.com"
+            placeholder={t("auth.signIn.emailPlaceholder")}
             id="email"
           />
 
@@ -100,7 +100,7 @@ export function SignIn() {
               htmlFor="password"
               className="block text-sm font-medium text-foreground mb-3"
             >
-              Mot de passe
+              {t("auth.signIn.passwordLabel")}
             </label>
             <div className="relative">
               <Input
@@ -108,7 +108,7 @@ export function SignIn() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Entrez votre mot de passe"
+                placeholder={t("auth.signIn.passwordPlaceholder")}
                 id="password"
                 className="pr-12"
               />
@@ -133,7 +133,7 @@ export function SignIn() {
             loading={loading}
             className="w-full"
           >
-            Se connecter
+            {t("auth.signIn.submit")}
           </Button>
 
           <div className="text-center">
@@ -144,13 +144,17 @@ export function SignIn() {
               onClick={() => setShowTestAccounts(!showTestAccounts)}
               className="text-muted-foreground/70 hover:text-primary"
             >
-              {showTestAccounts ? "Masquer" : "Afficher"} les comptes de test
+              {showTestAccounts
+                ? t("auth.signIn.hideTest")
+                : t("auth.signIn.showTest")}
             </Button>
           </div>
 
           {showTestAccounts && (
             <div className="glass rounded-3xl p-6 space-y-3 border border-border/30">
-              <p className="text-sm text-foreground mb-4">Comptes de test :</p>
+              <p className="text-sm text-foreground mb-4">
+                {t("auth.signIn.testAccounts")}
+              </p>
               {testAccounts.map((account, index) => (
                 <button
                   key={index}
@@ -173,12 +177,12 @@ export function SignIn() {
 
           <div className="text-center">
             <p className="text-muted-foreground/70">
-              Vous n'avez pas de compte ?{" "}
+              {t("auth.signIn.noAccount")} {" "}
               <Link
                 to="/auth/signup"
                 className="text-primary hover:text-primary/80 font-medium transition-colors duration-300"
               >
-                S'inscrire
+                {t("auth.signIn.signUp")}
               </Link>
             </p>
           </div>

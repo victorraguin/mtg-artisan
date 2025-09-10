@@ -1,4 +1,583 @@
 {
+  "checkoutSummary": {
+    "title": "Résumé de la commande",
+    "completeShipping": "Veuillez compléter l'adresse de livraison pour continuer.",
+    "noImage": "Pas d'image"
+  },
+  "artistCard": {
+    "bannerAlt": "Bannière de {{shopName}}",
+    "verified": "Vérifié",
+    "products": "{{count}} produit",
+    "products_plural": "{{count}} produits",
+    "services": "{{count}} service",
+    "services_plural": "{{count}} services"
+  },
+  "common": {
+    "noCategory": "Sans catégorie",
+    "status": {
+      "active": "Actif",
+      "draft": "Brouillon",
+      "paused": "En pause",
+      "sold_out": "Épuisé"
+    },
+    "types": {
+      "physical": "Physique",
+      "digital": "Numérique"
+    },
+    "price": "Prix",
+    "stockTotal": "Stock total",
+    "available": "Disponible",
+    "unlimited": "Illimité",
+    "views": "Vues",
+    "sales": "Ventes",
+    "revenue": "Revenus",
+    "edit": "Éditer",
+    "view": "Voir",
+    "delete": "Supprimer",
+    "inCarts": "{{count}} en panier",
+    "inCarts_plural": "{{count}} en paniers",
+    "days": "{{count}} jour",
+    "days_plural": "{{count}} jours",
+    "briefRequired": "Brief requis",
+    "startingFrom": "À partir de",
+    "orders": "Commandes",
+    "item": "Article",
+    "new": "Nouveau",
+    "orderStatus": {
+      "paid": "Payé",
+      "processing": "En traitement",
+      "completed": "Terminé",
+      "shipped": "Expédié"
+    }
+  },
+  "productsTable": {
+    "loadError": "Impossible de charger les produits",
+    "deleteSuccess": "Produit supprimé avec succès",
+    "deleteError": "Impossible de supprimer le produit",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer le produit \"{{title}}\" ? Cette action est irréversible.",
+    "heading": "Mes Produits",
+    "headingCount": "Mes Produits ({{count}})",
+    "create": "Créer un produit",
+    "emptyTitle": "Aucun produit créé",
+    "emptyDescription": "Créez votre premier produit pour commencer à vendre vos créations",
+    "emptyAction": "Créer mon premier produit"
+  },
+  "servicesTable": {
+    "loadError": "Impossible de charger les services",
+    "deleteSuccess": "Service supprimé avec succès",
+    "deleteError": "Impossible de supprimer le service",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer le service \"{{title}}\" ? Cette action est irréversible.",
+    "heading": "Mes Services",
+    "headingCount": "Mes Services ({{count}})",
+    "create": "Créer un service",
+    "emptyTitle": "Aucun service créé",
+    "emptyDescription": "Créez votre premier service pour proposer vos compétences et services",
+    "emptyAction": "Créer mon premier service",
+    "editComingSoon": "Page d'édition de service à venir"
+  },
+  "home": {
+    "featuredCategories": {
+      "cardAlters": {
+        "description": "Transformez vos cartes préférées en œuvres d'art uniques"
+      },
+      "customTokens": {
+        "description": "Jetons et pièces de jeu professionnels"
+      },
+      "deckbuilding": {
+        "description": "Améliorez votre gameplay avec des conseils d'experts"
+      },
+      "playmats": {
+        "description": "Tapis de jeu, boîtes de deck et accessoires personnalisés"
+      }
+    },
+    "hero": {
+      "tagline": "L'Artisanat Magique de Référence",
+      "title": { "part1": "Boutiques", "part2": "d'Art", "part3": "Magique" },
+      "description": "Découvrez des alters de cartes uniques, des jetons et des créations magiques d'artistes talentueux du monde entier",
+      "explore": "Explorer les Boutiques",
+      "becomeCreator": "Devenir Créateur",
+      "stats": {
+        "artists": "Artistes Actifs",
+        "countries": "Pays",
+        "satisfaction": "Satisfaction"
+      }
+    },
+    "categories": {
+      "title": "Catégories Populaires",
+      "subtitle": "Découvrez les créations les plus demandées par nos clients",
+      "popular": "Populaire"
+    },
+    "artists": {
+      "title": "Artistes Populaires",
+      "subtitle": "Découvrez nos artistes les plus talentueux et leurs créations uniques"
+    },
+    "features": {
+      "title": "Pourquoi Choisir ManaShop ?",
+      "subtitle": "Les boutiques d'art de confiance pour vos créations magiques de qualité",
+      "verified": {
+        "title": "Artistes Vérifiés",
+        "description": "Tous les artistes sont des professionnels vérifiés garantissant un travail de qualité pour vos cartes."
+      },
+      "network": {
+        "title": "Réseau Mondial",
+        "description": "Connectez-vous avec des artistes talentueux du monde entier, chacun apportant des compétences et une expertise uniques."
+      },
+      "secure": {
+        "title": "Transactions Sécurisées",
+        "description": "Paiements sécurisés avec protection de l'acheteur et garanties de satisfaction."
+      }
+    },
+    "cta": {
+      "title": "Prêt à Trouver Votre Artiste Parfait ?",
+      "subtitle": "Rejoignez des milliers de joueurs qui ont découvert des œuvres d'art magiques incroyables",
+      "explore": "Découvrir les Boutiques"
+    }
+  },
+  "search": {
+    "resultsFor": "Résultats pour \"{{query}}\"",
+    "browse": "Parcourir les Boutiques",
+    "loading": "Recherche en cours...",
+    "resultsCount": "{{count}} résultat trouvé",
+    "resultsCount_plural": "{{count}} résultats trouvés",
+    "view": {
+      "grid": "Grille",
+      "categories": "Catégories"
+    },
+    "filters": {
+      "show": "Afficher les filtres",
+      "hide": "Masquer les filtres",
+      "title": "Filtres",
+      "clear": "Effacer tout",
+      "type": {
+        "label": "Type",
+        "all": "Tous les éléments",
+        "product": "Produits",
+        "service": "Artisans"
+      },
+      "category": {
+        "label": "Catégorie",
+        "all": "Toutes les catégories"
+      },
+      "price": {
+        "label": "Fourchette de prix",
+        "min": "Min",
+        "max": "Max"
+      },
+      "sort": {
+        "label": "Trier par",
+        "newest": "Plus récent",
+        "priceAsc": "Prix : Croissant",
+        "priceDesc": "Prix : Décroissant"
+      }
+    },
+    "noResults": "Aucun élément trouvé correspondant à vos critères.",
+    "categoryCount": "{{count}} élément",
+    "categoryCount_plural": "{{count}} éléments"
+  },
+  "checkout": {
+    "addressSaved": "Adresse sauvegardée dans votre profil",
+    "addressError": "Erreur lors de la sauvegarde de l'adresse",
+    "orderSuccess": "Commande passée avec succès !",
+    "orderError": "Erreur lors de la création de la commande",
+    "empty": {
+      "title": "Votre panier est vide",
+      "subtitle": "Ajoutez des articles à votre panier avant de procéder au paiement",
+      "action": "Parcourir les boutiques"
+    },
+    "backToCart": "Retour au panier",
+    "title": "Finaliser la commande",
+    "shipping": {
+      "title": "Adresse de livraison",
+      "subtitle": "Où souhaitez-vous recevoir votre commande ?",
+      "name": "Nom complet",
+      "namePlaceholder": "Votre nom complet",
+      "phone": "Téléphone",
+      "phonePlaceholder": "Votre numéro de téléphone",
+      "address": "Adresse",
+      "addressPlaceholder": "Adresse complète",
+      "city": "Ville",
+      "postalCode": "Code postal",
+      "country": "Pays",
+      "save": "Sauvegarder dans mon profil"
+    },
+    "payment": {
+      "title": "Méthode de paiement",
+      "securedBy": "Sécurisé par PayPal"
+    }
+  },
+  "auth": {
+    "signUp": {
+      "success": "Compte créé avec succès !",
+      "error": "Échec de la création du compte",
+      "hero": {
+        "title": "Rejoignez notre communauté",
+        "subtitle": "Créez un compte pour commencer à acheter ou vendre"
+      },
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "displayNameLabel": "Nom d'affichage",
+      "displayNamePlaceholder": "Votre nom",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Créez un mot de passe fort",
+      "choosePath": "Choisissez votre voie :",
+      "paths": {
+        "buyer": {
+          "title": "Collectionneur",
+          "description": "Commandez de l'art légendaire"
+        },
+        "creator": {
+          "title": "Artisan",
+          "description": "Créez des services magiques"
+        }
+      },
+      "submit": "Créer le compte",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter"
+    },
+    "signIn": {
+      "success": "Bienvenue !",
+      "invalidCredentials": "Email ou mot de passe invalide. Veuillez vérifier vos identifiants.",
+      "error": "Échec de la connexion",
+      "heroTitle": "Bon retour, Planeswalker",
+      "heroSubtitle": "Entrez vos identifiants de guilde pour accéder au multivers",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Entrez votre mot de passe",
+      "submit": "Se connecter",
+      "showTest": "Afficher les comptes de test",
+      "hideTest": "Masquer les comptes de test",
+      "testAccounts": "Comptes de test :",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signUp": "S'inscrire"
+    }
+  },
+  "cart": {
+    "title": "Panier d'Achats",
+    "empty": {
+      "title": "Votre Panier est Vide",
+      "description": "Découvrez des œuvres d'art incroyables et des services professionnels de créateurs talentueux",
+      "cta": "Commencer les Achats"
+    },
+    "itemCount": "{{count}} article",
+    "itemCount_plural": "{{count}} articles",
+    "unitPrice": "${{price}} l'unité",
+    "noImage": "Pas d'image",
+    "remove": "Supprimer",
+    "summary": {
+      "title": "Résumé de la Commande",
+      "total": "Total"
+    },
+    "checkout": "Passer la Commande",
+    "continue": "Continuer les Achats",
+    "total": "Total : ${{total}}"
+  },
+  "footer": {
+    "description": "Les boutiques d'art de référence pour l'art personnalisé Magic: The Gathering, les alters, tokens et créations uniques. Découvrez des artistes talentueux du monde entier.",
+    "sections": {
+      "shops": {
+        "title": "Boutiques",
+        "cardAlters": "Alters de cartes",
+        "customTokens": "Jetons personnalisés",
+        "playmats": "Playmats",
+        "deckbuilding": "Artisans de Deckbuilding"
+      },
+      "support": {
+        "title": "Support",
+        "helpCenter": "Centre d'aide",
+        "sellerGuide": "Guide du vendeur",
+        "terms": "Conditions d'utilisation",
+        "privacy": "Politique de confidentialité"
+      }
+    },
+    "rights": "Tous droits réservés.",
+    "trademark": "Magic: The Gathering est une marque déposée de Wizards of the Coast.",
+    "madeWith": "Fait avec",
+    "byFans": "par des passionnés"
+  },
+  "userMenu": {
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "adminPanel": "Admin Panel",
+    "creatorStudio": "Studio Créateur",
+    "manageShop": "Gérer la Boutique",
+    "orders": "Mes Commandes",
+    "profile": "Paramètres du Profil",
+    "signOut": "Se déconnecter",
+    "account": "Compte"
+  },
+  "header": {
+    "shops": "Boutiques",
+    "artisans": "Artisans",
+    "searchPlaceholder": "Rechercher des créations..."
+  },
+  "serviceCard": {
+    "requiresBrief": "Consultation requise",
+    "quickOrder": "Commande rapide",
+    "requiresBriefShort": "Consult",
+    "quickOrderShort": "Rapide"
+  },
+  "stockAlerts": {
+    "title": "Alertes Stock ({{count}})",
+    "outOfStock": "Rupture de stock",
+    "remaining": "Plus que {{count}} disponible",
+    "remaining_plural": "Plus que {{count}} disponibles",
+    "inCarts": "({{count}} en panier)",
+    "inCarts_plural": "({{count}} en paniers)",
+    "manage": "Gérer"
+  },
+  "profile": {
+    "updateSuccess": "Profil mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du profil",
+    "title": "Paramètres du Profil",
+    "subtitle": "Gérez vos informations personnelles et vos préférences",
+    "anonymous": "Anonyme",
+    "roles": {
+      "creator": "créateur",
+      "admin": "administrateur",
+      "buyer": "acheteur"
+    },
+    "delivery": {
+      "title": "Adresse de livraison",
+      "name": "Nom complet",
+      "namePlaceholder": "Jean Dupont",
+      "address": "Adresse",
+      "addressPlaceholder": "123 Rue Principale, Appt 4B",
+      "city": "Ville",
+      "cityPlaceholder": "Paris",
+      "postalCode": "Code postal",
+      "postalCodePlaceholder": "75001",
+      "country": "Pays",
+      "selectCountry": "Sélectionner un pays"
+    },
+    "countries": {
+      "france": "France",
+      "unitedStates": "États-Unis",
+      "canada": "Canada",
+      "unitedKingdom": "Royaume-Uni",
+      "germany": "Allemagne",
+      "japan": "Japon",
+      "australia": "Australie"
+    },
+    "personal": {
+      "title": "Informations personnelles",
+      "displayName": "Nom d'affichage",
+      "displayNamePlaceholder": "Votre nom d'affichage",
+      "bio": "Biographie",
+      "bioPlaceholder": "Parlez-nous de vous..."
+    },
+    "saving": "Sauvegarde...",
+    "save": "Sauvegarder dans mon profil"
+  },
+  "creatorDashboard": {
+    "welcome": {
+      "title": "Bienvenue dans votre Studio Créateur",
+      "subtitle": "Configurez votre boutique pour commencer à vendre vos œuvres d'art et services incroyables",
+      "createShop": "Créer votre boutique"
+    },
+    "header": {
+      "title": "Studio Créateur",
+      "subtitle": "{{shopName}} • Gérez vos créations"
+    },
+    "actions": {
+      "addProduct": "Ajouter un produit",
+      "addService": "Ajouter un service"
+    },
+    "stats": {
+      "products": "Produits",
+      "services": "Services",
+      "orders": "Commandes",
+      "revenue": "Revenus",
+      "inCarts": "dont {{count}} en panier",
+      "inCarts_plural": "dont {{count}} en paniers"
+    },
+    "recent": {
+      "title": "Activité Récente",
+      "viewAll": "Voir toutes les commandes",
+      "emptyTitle": "Aucune commande récente",
+      "emptySubtitle": "Les nouvelles commandes apparaîtront ici",
+      "order": "Commande #{{id}}",
+      "qty": "Qté: {{count}}"
+    }
+  },
+  "buyerDashboard": {
+    "title": "Tableau de Bord",
+    "subtitle": "Suivez vos commandes et gérez vos achats",
+    "stats": {
+      "total": "Total des commandes",
+      "completed": "Commandes terminées",
+      "inProgress": "En cours",
+      "pending": "En attente"
+    },
+    "tabs": {
+      "all": "Toutes"
+    },
+    "empty": {
+      "title": "Aucune commande trouvée",
+      "all": "Vous n'avez pas encore passé de commande.",
+      "status": "Aucune commande avec le statut \"{{status}}\"."
+    },
+  "order": {
+    "title": "Commande #{{id}}",
+    "from": "De {{shopName}} • Qté: {{qty}}",
+    "contactSeller": "Contacter le vendeur",
+    "leaveReview": "Laisser un avis",
+    "tracking": "Suivi :",
+    "delivery": "Livraison prévue :"
+  }
+  },
+  "adminDashboard": {
+    "title": "Panneau d'administration",
+    "subtitle": "Gestion des boutiques ManaShop",
+    "totalUsers": "Utilisateurs totaux",
+    "creators": "Créateurs",
+    "productsServices": "Produits & Services",
+    "totalRevenue": "Revenus totaux",
+    "recentOrders": "Commandes Récentes",
+    "viewAll": "Voir toutes",
+    "noRecentOrders": "Aucune commande récente",
+    "order": "Commande #{{id}}",
+    "itemCount": "{{count}} article",
+    "itemCount_plural": "{{count}} articles",
+    "quickActions": "Actions Rapides",
+    "manageUsers": "Gérer les Utilisateurs",
+    "manageUsersDesc": "Voir et modifier les profils utilisateurs",
+    "moderateContent": "Modérer le Contenu",
+    "moderateContentDesc": "Examiner et approuver les produits",
+    "reports": "Rapports",
+    "reportsDesc": "Analyser les performances"
+  },
+  "cart": {
+    "mustSignIn": "Veuillez vous connecter pour ajouter des articles au panier",
+    "stockInsufficient": "Stock insuffisant. Seulement {{stock}} article(s) disponible(s)",
+    "stockCheckError": "Impossible de vérifier le stock",
+    "addSuccess": "Ajouté au panier",
+    "addError": "Impossible d'ajouter au panier",
+    "updateError": "Impossible de mettre à jour la quantité",
+    "removeSuccess": "Supprimé du panier",
+    "removeError": "Impossible de supprimer du panier",
+    "clearError": "Impossible de vider le panier",
+    "unknownItem": "Article inconnu",
+    "unknownShop": "Boutique inconnue"
+  },
+  "notifications": {
+    "markError": "Erreur lors du marquage des notifications",
+    "markSuccess": "Toutes les notifications ont été marquées comme lues"
+  },
+  "stock": {
+    "checkError": "Erreur lors de la vérification du stock"
+  },
+  "createProduct": {
+    "needShop": "Veuillez créer votre boutique d'abord",
+    "success": "Produit créé avec succès !",
+    "error": "Échec de la création du produit"
+  },
+  "editProduct": {
+    "needShop": "Veuillez créer votre boutique d'abord",
+    "notFound": "Produit non trouvé",
+    "unauthorized": "Accès non autorisé",
+    "loadError": "Erreur lors du chargement du produit",
+    "success": "Produit mis à jour avec succès !",
+    "error": "Échec de la mise à jour du produit"
+  },
+  "productDetail": {
+    "notFound": "Produit non trouvé",
+    "addSuccess": "Produit ajouté au panier !",
+    "addError": "Échec de l'ajout au panier"
+  },
+  "notificationPreferences": {
+    "saveSuccess": "Préférences sauvegardées avec succès",
+    "saveError": "Erreur lors de la sauvegarde des préférences"
+  },
+  "imageUpload": {
+    "limit": "Vous ne pouvez ajouter que {{count}} image supplémentaire",
+    "limit_plural": "Vous ne pouvez ajouter que {{count}} images supplémentaires",
+    "invalidType": "{{file}} n'est pas une image valide",
+    "tooLarge": "{{file}} est trop volumineux (max 5MB)",
+    "uploadSuccess": "{{count}} image ajoutée",
+    "uploadSuccess_plural": "{{count}} images ajoutées",
+    "uploadError": "Erreur lors de l'upload des images"
+  },
+  "stockInfoCard": {
+    "title": "Comment fonctionne la gestion du stock ?",
+    "totalTitle": "Stock Total en Inventaire",
+    "totalDesc": "C'est le nombre total d'articles que vous avez en stock. Vous pouvez le modifier dans l'édition du produit.",
+    "inCartsTitle": "Articles en Paniers",
+    "inCartsDesc": "Nombre d'articles actuellement dans les paniers des clients (mais pas encore achetés).",
+    "calcTitle": "📊 Calcul du Stock Disponible",
+    "total": "Stock total :",
+    "inCarts": "En paniers :",
+    "available": "Disponible :",
+    "items": "{{count}} article",
+    "items_plural": "{{count}} articles",
+    "tip": "💡 Conseil : Le stock disponible est affiché en temps réel aux clients. Si un client ajoute un article à son panier, le stock disponible diminue immédiatement pour les autres clients."
+  },
+  "shippingManager": {
+    "title": "Frais de Livraison",
+    "newProfile": "Nouveau profil",
+    "newProfileTitle": "Nouveau profil de livraison",
+    "nameLabel": "Nom du profil *",
+    "namePlaceholder": "ex: Livraison Standard",
+    "baseCostLabel": "Coût de base (€)",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Description optionnelle",
+    "freeShippingLabel": "Livraison gratuite à partir de (€)",
+    "freeShippingPlaceholder": "Optionnel",
+    "defaultLabel": "Définir comme profil par défaut",
+    "cancel": "Annuler",
+    "create": "Créer le profil",
+    "noProfiles": "Aucun profil de livraison configuré",
+    "createFirst": "Créez votre premier profil pour définir vos frais de livraison",
+    "defaultTag": "Par défaut",
+    "baseCost": "Coût de base :",
+    "freeFrom": "Gratuit à partir de :",
+    "setDefault": "Définir par défaut",
+    "errors": {
+      "load": "Impossible de charger les paramètres de livraison",
+      "nameRequired": "Le nom du profil est requis",
+      "create": "Impossible de créer le profil",
+      "delete": "Impossible de supprimer le profil",
+      "update": "Impossible de mettre à jour le profil"
+    },
+    "success": {
+      "create": "Profil de livraison créé",
+      "delete": "Profil supprimé",
+      "updateDefault": "Profil par défaut mis à jour"
+    },
+    "confirmDelete": "Supprimer le profil \"{{name}}\" ?",
+    "howItWorks": {
+      "title": "Comment ça marche ?",
+      "default": "• Le profil par défaut sera appliqué à toutes les nouvelles commandes",
+      "calc": "• Les frais de livraison sont calculés automatiquement lors du checkout",
+      "free": "• La livraison gratuite s'applique si le montant dépasse le seuil défini",
+      "multiple": "• Vous pouvez créer plusieurs profils pour différents types de produits"
+    }
+  },
+  "notificationPanel": {
+    "title": "Notifications",
+    "loading": "Chargement...",
+    "markAllTitle": "Tout marquer comme lu",
+    "markAll": "Tout lire",
+    "settings": "Paramètres de notifications",
+    "empty": "Aucune notification pour le moment",
+    "viewAll": "Voir toutes les notifications"
+  },
+  "creatorProfile": {
+    "notFound": "Boutique introuvable",
+    "bannerAlt": "Bannière de {{shopName}}",
+    "verified": "Vérifié",
+    "new": "Nouveau",
+    "memberSince": "Membre depuis {{year}}",
+    "tabs": {
+      "products": "Produits ({{count}})",
+      "services": "Services ({{count}})"
+    },
+    "productsEmptyTitle": "Aucun produit disponible",
+    "productsEmptySubtitle": "Cette boutique n'a pas encore de produits",
+    "servicesEmptyTitle": "Aucun service disponible",
+    "servicesEmptySubtitle": "Cette boutique n'a pas encore de services"
+  },
   "notificationPreferences": {
     "title": "Préférences de notifications",
     "subtitle": "Gérez comment vous souhaitez recevoir les notifications pour chaque type d'événement.",

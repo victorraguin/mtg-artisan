@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardHeader, CardContent } from "../UI/Card";
 
 interface CheckoutSummaryProps {
@@ -14,6 +15,7 @@ export function CheckoutSummary({
   shippingRequired,
   isShippingComplete,
 }: CheckoutSummaryProps) {
+  const { t } = useTranslation();
   // Group items by shop
   const itemsByShop = items.reduce((acc, item) => {
     if (!acc[item.shop_id]) {
@@ -30,7 +32,7 @@ export function CheckoutSummary({
     <Card className="sticky top-24">
       <CardHeader>
         <h2 className="text-2xl font-light text-foreground tracking-tight">
-          Résumé de la commande
+          {t("checkoutSummary.title")}
         </h2>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -56,7 +58,7 @@ export function CheckoutSummary({
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs text-center">
-                          No Image
+                          {t("checkoutSummary.noImage")}
                         </div>
                       )}
                     </div>
@@ -92,7 +94,7 @@ export function CheckoutSummary({
 
         {shippingRequired && !isShippingComplete && (
           <p className="text-sm text-destructive">
-            Veuillez compléter l'adresse de livraison pour continuer.
+            {t("checkoutSummary.completeShipping")}
           </p>
         )}
       </CardContent>

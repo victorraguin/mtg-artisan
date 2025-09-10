@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Sparkles, Github, Twitter, MessageCircle, Heart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="glass border-t border-border/30 mt-auto">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
@@ -19,9 +22,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-muted-foreground/80 max-w-md leading-relaxed text-sm">
-              Les boutiques d'art de référence pour l'art personnalisé Magic: The
-              Gathering, les alters, tokens et créations uniques.
-              Découvrez des artistes talentueux du monde entier.
+              {t("footer.description")}
             </p>
             <div className="flex space-x-4 mt-8">
               <a
@@ -48,7 +49,7 @@ export function Footer() {
           {/* Boutiques */}
           <div>
             <h3 className="text-foreground font-light text-lg mb-6 tracking-wide">
-              Boutiques
+              {t("footer.sections.shops.title")}
             </h3>
             <ul className="space-y-3">
               <li>
@@ -56,7 +57,7 @@ export function Footer() {
                   to="/search?category=Card+Alters"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Card Alters
+                  {t("footer.sections.shops.cardAlters")}
                 </Link>
               </li>
               <li>
@@ -64,7 +65,7 @@ export function Footer() {
                   to="/search?category=Custom+Tokens"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Custom Tokens
+                  {t("footer.sections.shops.customTokens")}
                 </Link>
               </li>
               <li>
@@ -72,7 +73,7 @@ export function Footer() {
                   to="/search?category=Playmats"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Playmats
+                  {t("footer.sections.shops.playmats")}
                 </Link>
               </li>
               <li>
@@ -80,7 +81,7 @@ export function Footer() {
                   to="/search?type=service&category=Deckbuilding"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Artisans de Deckbuilding
+                  {t("footer.sections.shops.deckbuilding")}
                 </Link>
               </li>
             </ul>
@@ -89,7 +90,7 @@ export function Footer() {
           {/* Support */}
           <div>
             <h3 className="text-foreground font-light text-lg mb-6 tracking-wide">
-              Support
+              {t("footer.sections.support.title")}
             </h3>
             <ul className="space-y-3">
               <li>
@@ -97,7 +98,7 @@ export function Footer() {
                   to="/help"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Centre d'aide
+                  {t("footer.sections.support.helpCenter")}
                 </Link>
               </li>
               <li>
@@ -105,7 +106,7 @@ export function Footer() {
                   to="/seller-guide"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Guide du vendeur
+                  {t("footer.sections.support.sellerGuide")}
                 </Link>
               </li>
               <li>
@@ -113,7 +114,7 @@ export function Footer() {
                   to="/terms"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Conditions d'utilisation
+                  {t("footer.sections.support.terms")}
                 </Link>
               </li>
               <li>
@@ -121,7 +122,7 @@ export function Footer() {
                   to="/privacy"
                   className="text-muted-foreground/70 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  Politique de confidentialité
+                  {t("footer.sections.support.privacy")}
                 </Link>
               </li>
             </ul>
@@ -130,12 +131,11 @@ export function Footer() {
 
         <div className="border-t border-border/30 mt-12 pt-8 text-center">
           <p className="text-muted-foreground/60 text-sm">
-            &copy; 2025 ManaShop. Tous droits réservés.
+            &copy; 2025 ManaShop. {t("footer.rights")}
             <span className="mx-2">•</span>
-            Magic: The Gathering est une marque déposée de Wizards of the Coast.
+            {t("footer.trademark")}
             <span className="mx-2">•</span>
-            Fait avec <Heart className="inline h-4 w-4 text-primary/60" /> par
-            des passionnés
+            {t("footer.madeWith")} <Heart className="inline h-4 w-4 text-primary/60" /> {t("footer.byFans")}
           </p>
         </div>
       </div>
