@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { Eye, EyeOff, Sparkles, Palette, Package } from "lucide-react";
+import { Eye, EyeOff, Sparkles, Palette, Package, Users } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "../../components/UI/Button";
 import { Input } from "../../components/UI/Input";
+import supabase from "../../lib/supabase";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
@@ -13,18 +14,70 @@ export function SignUp() {
   const [role, setRole] = useState<"buyer" | "creator">("buyer");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [referralCode, setReferralCode] = useState("");
+  const [ambassadorInfo, setAmbassadorInfo] = useState<any>(null);
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Vérifier le code de parrainage depuis l'URL
+  useEffect(() => {
+    const refCode = searchParams.get("ref");
+    if (refCode) {
+      setReferralCode(refCode);
+      fetchAmbassadorInfo(refCode);
+    }
+  }, [searchParams]);
+
+  const fetchAmbassadorInfo = async (code: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("ambassadors")
+        .select(
+          `
+          *,
+          profile:profiles!ambassadors_user_id_fkey(display_name)
+        `
+        )
+        .eq("referral_code", code)
+        .eq("is_active", true)
+        .single();
+
+      if (error) {
+        console.error("Code de parrainage invalide:", error);
+        return;
+      }
+
+      setAmbassadorInfo(data);
+    } catch (error) {
+      console.error(
+        "Erreur lors de la vérification du code de parrainage:",
+        error
+      );
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password, displayName);
+      const { error } = await signUp(
+        email,
+        password,
+        displayName,
+        referralCode
+      );
       if (error) throw error;
 
       toast.success("Compte créé avec succès !");
+      if (ambassadorInfo) {
+        toast.success(
+          `Lien de parrainage validé ! ${
+            ambassadorInfo.profile?.display_name || "Votre parrain"
+          } sera récompensé pour vos futures ventes.`
+        );
+      }
       navigate("/");
     } catch (error: any) {
       toast.error(error.message || "Échec de la création du compte");
@@ -68,6 +121,26 @@ export function SignUp() {
         </div>
 
         <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit}>
+          {/* Affichage des informations de parrainage */}
+          {ambassadorInfo && (
+            <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-foreground">
+                    Invité par{" "}
+                    {ambassadorInfo.profile?.display_name || "un ambassadeur"}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Votre parrain gagnera des commissions sur vos futures ventes
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <Input
             label="Adresse email"
             type="email"
@@ -86,6 +159,29 @@ export function SignUp() {
             placeholder="Votre nom"
             id="displayName"
           />
+
+          {/* Champ code de parrainage */}
+          <div>
+            <Input
+              label="Code de parrainage (optionnel)"
+              type="text"
+              value={referralCode}
+              onChange={(e) => {
+                setReferralCode(e.target.value);
+                if (e.target.value) {
+                  fetchAmbassadorInfo(e.target.value);
+                } else {
+                  setAmbassadorInfo(null);
+                }
+              }}
+              placeholder="Entrez un code de parrainage"
+              id="referralCode"
+            />
+            <p className="text-xs text-muted-foreground/70 mt-1">
+              Code de parrainage reçu d'un membre de la communauté ? Il gagnera
+              des commissions sur vos ventes.
+            </p>
+          </div>
 
           <div>
             <label

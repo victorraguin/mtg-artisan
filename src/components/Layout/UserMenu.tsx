@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
@@ -10,6 +10,9 @@ import {
   Store,
   LogIn,
   UserPlus,
+  Users,
+  Brush,
+  Receipt,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCart } from "../../contexts/CartContext";
@@ -22,8 +25,10 @@ export function UserMenu() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Gestion d'erreur pour useAuth
-  let user, profile, signOut;
-  let getItemCount;
+  let user: any = null;
+  let profile: any = null;
+  let signOut: any = () => Promise.resolve();
+  let getItemCount: () => number = () => 0;
 
   try {
     const auth = useAuth();
@@ -203,39 +208,49 @@ export function UserMenu() {
                 </Link>
               )}
 
-              {/* Creator specific links */}
+              {/* Creator Studio for creators */}
               {(profile?.role === "creator" || profile?.role === "admin") && (
-                <>
-                  <Link
-                    to={getDashboardRoute()}
-                    className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    <DashboardIcon className="w-4 h-4 mr-3 text-primary" />
-                    {getDashboardLabel()}
-                  </Link>
-                  {hasShop && (
-                    <Link
-                      to="/creator/shop"
-                      className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <Package className="w-4 h-4 mr-3 text-primary" />
-                      Gérer la Boutique
-                    </Link>
-                  )}
-                </>
+                <Link
+                  to="/dashboard/creator"
+                  className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  <Brush className="w-4 h-4 mr-3 text-primary" />
+                  Studio Créateur
+                </Link>
               )}
 
-              {/* Orders link for all authenticated users */}
+              {/* My Purchases for all authenticated users */}
               <Link
-                to="/dashboard/buyer"
+                to="/orders"
                 className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Package className="w-4 h-4 mr-3 text-primary" />
-                Mes Commandes
+                <Receipt className="w-4 h-4 mr-3 text-primary" />
+                Mes Achats
               </Link>
+
+              {/* Ambassador Dashboard link for all authenticated users */}
+              <Link
+                to="/ambassador"
+                className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                <Users className="w-4 h-4 mr-3 text-primary" />
+                Programme Ambassadeur
+              </Link>
+
+              {/* Creator Program link for buyers */}
+              {profile?.role === "buyer" && (
+                <Link
+                  to="/creator-program"
+                  className="flex items-center px-4 py-3 text-sm text-popover-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  <Palette className="w-4 h-4 mr-3 text-primary" />
+                  Devenir Artisan
+                </Link>
+              )}
 
               <hr className="border-border/30 my-2" />
               <Link

@@ -17,9 +17,24 @@ export function calculatePayout(
     rules.find(r => r.scope === 'global' && r.is_active);
   if (!rule) throw new Error('Aucune règle de commission active trouvée');
 
-  const commissionPlatform = gross * rule.rate + rule.fixedFee;
+  // NOUVEAU SYSTÈME : Commission prélevée sur la plateforme
+  // Le créateur garde toujours le même montant, peu importe le parrainage
+  
+  const totalPlatformCommission = gross * rule.rate + rule.fixedFee;
   const commissionAmbassador = ambassadorRate ? gross * ambassadorRate : 0;
-  const net = gross - commissionPlatform - commissionAmbassador;
+  
+  // La commission ambassadeur est prélevée sur la commission plateforme
+  const commissionPlatform = Math.max(0, totalPlatformCommission - commissionAmbassador);
+  
+  // Le créateur garde toujours le même montant (pas d'incitation à l'auto-parrainage)
+  const net = gross - totalPlatformCommission;
 
-  return { commissionPlatform, commissionAmbassador, net };
+  return { 
+    commissionPlatform, 
+    commissionAmbassador, 
+    net,
+    // Informations supplémentaires pour debug/transparence
+    totalPlatformCommission,
+    creatorAlwaysGets: net // Le créateur gagne toujours ce montant
+  };
 }

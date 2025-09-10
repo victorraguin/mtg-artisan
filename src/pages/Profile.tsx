@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { Save, User, MapPin, Edit3 } from "lucide-react";
+import {
+  Save,
+  User,
+  MapPin,
+  Edit3,
+  Users,
+  Calendar,
+  DollarSign,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "../components/UI/Button";
 import { Input } from "../components/UI/Input";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import supabase from "../lib/supabase";
+
+interface ReferralInfo {
+  ambassador: {
+    display_name: string;
+    referral_code: string;
+  };
+  referral_date: string;
+  total_earned: number;
+}
 
 export function Profile() {
-  const { profile, updateProfile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
   const [saving, setSaving] = useState(false);
+  const [referralInfo, setReferralInfo] = useState<ReferralInfo | null>(null);
+  const [loadingReferral, setLoadingReferral] = useState(true);
   const [formData, setFormData] = useState({
     display_name: profile?.display_name || "",
     bio: profile?.bio || "",
@@ -19,6 +39,56 @@ export function Profile() {
     shipping_postal_code: profile?.shipping_postal_code || "",
     shipping_country: profile?.shipping_country || "",
   });
+
+  useEffect(() => {
+    if (user) {
+      fetchReferralInfo();
+    }
+  }, [user]);
+
+  const fetchReferralInfo = async () => {
+    try {
+      setLoadingReferral(true);
+
+      const { data, error } = await supabase
+        .from("referrals")
+        .select(
+          `
+          referral_date,
+          total_earned,
+          ambassador:ambassadors!referrals_ambassador_id_fkey(
+            referral_code,
+            profile:profiles!ambassadors_user_id_fkey(display_name)
+          )
+        `
+        )
+        .eq("referred_user_id", user?.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        throw error;
+      }
+
+      if (data) {
+        setReferralInfo({
+          ambassador: {
+            display_name:
+              data.ambassador.profile?.display_name || "Ambassadeur",
+            referral_code: data.ambassador.referral_code,
+          },
+          referral_date: data.referral_date,
+          total_earned: data.total_earned || 0,
+        });
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors du chargement des informations de parrainage:",
+        error
+      );
+    } finally {
+      setLoadingReferral(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -249,6 +319,104 @@ export function Profile() {
           </form>
         </CardContent>
       </Card>
+
+      {/* Informations de Parrainage */}
+      {!loadingReferral && referralInfo && (
+        <Card className="mt-8">
+          <CardHeader>
+            <h3 className="text-2xl font-light text-foreground tracking-tight flex items-center">
+              <Users className="h-6 w-6 mr-3 text-primary" />
+              Informations de Parrainage
+            </h3>
+            <p className="text-muted-foreground/70">
+              Vous avez rejoint ManaShop grâce à un ambassadeur
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Ambassadeur */}
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-foreground">
+                    Parrainé par
+                  </div>
+                  <div className="text-lg text-primary font-medium">
+                    {referralInfo.ambassador.display_name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Code: {referralInfo.ambassador.referral_code}
+                  </div>
+                </div>
+              </div>
+
+              {/* Date de parrainage */}
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center border border-green-500/20">
+                  <Calendar className="h-6 w-6 text-green-500" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-foreground">
+                    Membre depuis
+                  </div>
+                  <div className="text-lg text-foreground">
+                    {new Date(referralInfo.referral_date).toLocaleDateString(
+                      "fr-FR",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Date de parrainage
+                  </div>
+                </div>
+              </div>
+
+              {/* Commissions générées */}
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-2xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20">
+                  <DollarSign className="h-6 w-6 text-yellow-500" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-foreground">
+                    Commissions générées
+                  </div>
+                  <div className="text-lg text-foreground">
+                    {referralInfo.total_earned.toFixed(2)} €
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Pour votre ambassadeur
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {referralInfo.total_earned > 0 && (
+              <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
+                    <DollarSign className="h-4 w-4 text-green-500" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-foreground">
+                      Merci pour votre contribution !
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Vos ventes ont permis à votre ambassadeur de gagner{" "}
+                      {referralInfo.total_earned.toFixed(2)} €
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

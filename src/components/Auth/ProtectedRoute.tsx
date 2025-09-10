@@ -12,9 +12,10 @@ export function ProtectedRoute({
   children,
   requiredRole,
 }: ProtectedRouteProps) {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, authStable } = useAuth();
 
-  if (loading) {
+  // Attendre que l'authentification soit stable avant de faire des vérifications
+  if (loading || !authStable) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <LoadingSpinner size="lg" />

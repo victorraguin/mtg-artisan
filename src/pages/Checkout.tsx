@@ -1,19 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
-import supabase from "../lib/supabase";
+import { useWallet } from "../contexts/WalletContext";
+import { OrderService } from "../services/orderService";
 import { CheckoutSummary } from "../components/Checkout/CheckoutSummary";
 import { PayPalButtons } from "../components/Checkout/PayPalButtons";
-import { MapPin, User, Phone, Save, ArrowLeft, CreditCard } from "lucide-react";
+import { PaymentBreakdown } from "../components/Checkout/PaymentBreakdown";
+import {
+  MapPin,
+  User,
+  Phone,
+  Save,
+  ArrowLeft,
+  CreditCard,
+  Wallet as WalletIcon,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "../components/UI/Button";
 import { Input } from "../components/UI/Input";
 import { Card, CardHeader, CardContent } from "../components/UI/Card";
+import supabase from "../lib/supabase";
 
 export function Checkout() {
   const { items, getTotal, clearCart } = useCart();
   const { profile, updateProfile } = useAuth();
+  const {
+    balance: walletBalance,
+    loading: loadingWallet,
+    refreshBalance,
+  } = useWallet();
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
@@ -34,6 +50,19 @@ export function Checkout() {
       shippingAddress.postal_code &&
       shippingAddress.country
     : true;
+
+  const getPaymentBreakdown = () => {
+    const total = getTotal();
+    const walletAmount = Math.min(walletBalance, total);
+    const paypalAmount = total - walletAmount;
+
+    return {
+      total,
+      walletAmount,
+      paypalAmount,
+      canPayWithWallet: walletBalance >= total,
+    };
+  };
 
   const isAddressDifferentFromProfile =
     shippingAddress.name !== (profile?.shipping_address || "") ||
@@ -66,49 +95,116 @@ export function Checkout() {
     }
   };
 
-  const handlePaymentSuccess = async (paymentDetails: any) => {
+  const handlePaymentSuccess = async (paymentDetails?: any) => {
+    if (!profile?.id) {
+      toast.error("Utilisateur non connecté");
+      return;
+    }
+
     setProcessing(true);
     try {
-      // Create order in database
-      const { data: order, error: orderError } = await supabase
-        .from("orders")
-        .insert({
-          user_id: profile?.id,
-          total: getTotal(),
-          status: "paid",
-          payment_method: "paypal",
-          payment_id: paymentDetails.id,
-          shipping_address: hasPhysicalItems ? shippingAddress : null,
-        })
-        .select()
-        .single();
+      console.log("💳 Traitement du paiement...", paymentDetails);
 
-      if (orderError) throw orderError;
+      const breakdown = getPaymentBreakdown();
 
-      // Create order items
-      const orderItems = items.map((item) => ({
-        order_id: order.id,
-        item_type: item.item_type,
-        item_id: item.item_id,
-        qty: item.qty,
-        unit_price: item.unit_price,
-        total: item.qty * item.unit_price,
-        shop_id: item.shop_id,
-      }));
+      // 1. Débiter le wallet si nécessaire
+      if (breakdown.walletAmount > 0) {
+        // Récupérer l'ID du wallet
+        const { data: walletData } = await supabase
+          .from("wallets")
+          .select("id")
+          .eq("user_id", profile.id)
+          .single();
 
-      const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(orderItems);
+        if (!walletData) {
+          throw new Error("Wallet introuvable");
+        }
 
-      if (itemsError) throw itemsError;
+        // Débiter le wallet
+        const { error: walletError } = await supabase
+          .from("wallets")
+          .update({
+            balance: walletBalance - breakdown.walletAmount,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", profile.id);
+
+        if (walletError) throw walletError;
+
+        // Créer une transaction wallet
+        await supabase.from("wallet_transactions").insert({
+          wallet_id: walletData.id,
+          type: "debit",
+          amount: breakdown.walletAmount,
+          description: `Paiement commande (${breakdown.walletAmount.toFixed(
+            2
+          )}€ du wallet)`,
+          reference_type: "order",
+          status: "completed",
+        });
+
+        console.log(`💰 Wallet débité: ${breakdown.walletAmount.toFixed(2)}€`);
+      }
+
+      const paymentData = {
+        id: paymentDetails?.id || `DEMO_${Date.now()}`,
+        capture_id: paymentDetails?.capture_id || `CAPTURE_${Date.now()}`,
+        status: paymentDetails?.status || "COMPLETED",
+        amount: getTotal(),
+        wallet_amount: breakdown.walletAmount,
+        paypal_amount: breakdown.paypalAmount,
+      };
+
+      // 2. Utiliser le service pour créer la commande complète
+      const result = await OrderService.createCompleteOrder(
+        items,
+        profile.id,
+        paymentData,
+        hasPhysicalItems ? shippingAddress : undefined
+      );
+
+      if (!result.success) {
+        throw new Error(
+          result.error || "Erreur lors de la création de la commande"
+        );
+      }
+
+      console.log("✅ Commande créée avec succès:", {
+        orderId: result.order.id,
+        escrowsCount: result.escrows.length,
+        notificationsCount: result.notifications.length,
+        paymentBreakdown: breakdown,
+      });
+
+      // Rafraîchir le solde du wallet dans le contexte
+      await refreshBalance();
 
       // Clear cart and redirect
       clearCart();
-      toast.success("Commande passée avec succès !");
+
+      const paymentMessage =
+        breakdown.walletAmount > 0
+          ? `(Wallet: ${breakdown.walletAmount.toFixed(2)}€${
+              breakdown.paypalAmount > 0
+                ? `, PayPal: ${breakdown.paypalAmount.toFixed(2)}€`
+                : ""
+            })`
+          : "";
+
+      toast.success(
+        `🎉 Commande passée avec succès ! Total: ${getTotal().toFixed(
+          2
+        )}€ ${paymentMessage}`
+      );
+
       navigate(`/dashboard/buyer`);
     } catch (error) {
-      console.error("Error creating order:", error);
-      toast.error("Erreur lors de la création de la commande");
+      console.error("❌ Error creating order:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de la création de la commande"
+      );
     } finally {
       setProcessing(false);
     }
@@ -264,6 +360,15 @@ export function Checkout() {
             </Card>
           )}
 
+          {/* Répartition du paiement */}
+          <PaymentBreakdown
+            total={getTotal()}
+            walletAmount={getPaymentBreakdown().walletAmount}
+            paypalAmount={getPaymentBreakdown().paypalAmount}
+            walletBalance={walletBalance}
+            loading={loadingWallet}
+          />
+
           {/* Payment Method */}
           <Card>
             <CardHeader>
@@ -273,20 +378,38 @@ export function Checkout() {
                 </div>
                 <div>
                   <h2 className="text-xl font-light text-foreground">
-                    Méthode de paiement
+                    {getPaymentBreakdown().paypalAmount > 0
+                      ? "Complément PayPal"
+                      : "Paiement wallet"}
                   </h2>
                   <p className="text-muted-foreground/70">
-                    Sécurisé par PayPal
+                    {getPaymentBreakdown().canPayWithWallet
+                      ? "Paiement intégral par wallet"
+                      : `${getPaymentBreakdown().paypalAmount.toFixed(
+                          2
+                        )}€ via PayPal`}
                   </p>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <PayPalButtons
-                amount={getTotal()}
-                onSuccess={handlePaymentSuccess}
-                disabled={!isShippingComplete || processing}
-              />
+              {getPaymentBreakdown().paypalAmount > 0 ? (
+                <PayPalButtons
+                  amount={getPaymentBreakdown().paypalAmount}
+                  onSuccess={handlePaymentSuccess}
+                  disabled={!isShippingComplete || processing}
+                />
+              ) : (
+                <Button
+                  onClick={() => handlePaymentSuccess()}
+                  disabled={!isShippingComplete || processing}
+                  loading={processing}
+                  className="w-full"
+                >
+                  <WalletIcon className="h-4 w-4 mr-2" />
+                  Payer avec mon wallet ({getTotal().toFixed(2)}€)
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>

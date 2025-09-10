@@ -153,6 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         console.log("🔍 Initialisation de l'authentification...");
 
+        // Récupérer la session persistée
         const {
           data: { session },
           error,
@@ -173,12 +174,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log("📋 Session récupérée:", {
           hasSession: !!session,
           userId: session?.user?.id,
+          expiresAt: session?.expires_at,
         });
 
-        setUser(session?.user ?? null);
-
+        // Si on a une session valide, mettre à jour l'état
         if (session?.user) {
+          setUser(session.user);
           await fetchProfile(session.user.id);
+        } else {
+          setUser(null);
+          setProfile(null);
         }
 
         setAuthStable(true);
@@ -299,7 +304,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (
     email: string,
     password: string,
-    displayName?: string
+    displayName?: string,
+    referralCode?: string
   ) => {
     try {
       console.log("📝 Tentative d'inscription pour:", email);
@@ -322,6 +328,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error("❌ Erreur création profil:", profileError);
         } else {
           console.log("✅ Profil créé");
+
+          // Traitement du code de parrainage si fourni
+          if (referralCode) {
+            try {
+              console.log("🔗 Traitement du code de parrainage:", referralCode);
+              
+              // Vérifier si l'ambassadeur existe et est actif
+              const { data: ambassador, error: ambassadorError } = await supabase
+                .from('ambassadors')
+                .select('id, user_id, commission_rate')
+                .eq('referral_code', referralCode)
+                .eq('is_active', true)
+                .single();
+
+              if (!ambassadorError && ambassador) {
+                // Créer l'enregistrement de parrainage
+                const { error: referralError } = await supabase
+                  .from('referrals')
+                  .insert({
+                    ambassador_id: ambassador.id,
+                    referred_user_id: data.user.id,
+                    referral_date: new Date().toISOString(),
+                    is_active: true,
+                    total_earned: 0
+                  });
+
+                if (referralError) {
+                  console.error("❌ Erreur création parrainage:", referralError);
+                } else {
+                  console.log("✅ Parrainage créé avec succès");
+                }
+              } else {
+                console.error("❌ Code de parrainage invalide:", ambassadorError);
+              }
+            } catch (referralProcessError) {
+              console.error("❌ Erreur traitement parrainage:", referralProcessError);
+              // On ne fait pas échouer l'inscription pour autant
+            }
+          }
         }
       }
 
@@ -375,6 +420,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const refreshProfile = async () => {
+    if (!user) return;
+    
+    try {
+      console.log("🔄 Rafraîchissement du profil...");
+      await fetchProfile(user.id);
+    } catch (error) {
+      console.error("❌ Erreur rafraîchissement profil:", error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -386,6 +442,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signUp,
         signOut,
         updateProfile,
+        refreshProfile,
       }}
     >
       {children}

@@ -1,265 +1,165 @@
--- Script pour corriger les relations de base de données manquantes
+-- Correction des relations manquantes dans la base de données
+-- Ce script ajoute les clés étrangères manquantes et améliore les relations
 
--- 1. Créer la vue product_statistics si elle n'existe pas
-CREATE OR REPLACE VIEW product_statistics AS
-SELECT 
-    p.id as product_id,
-    p.shop_id,
-    p.title,
-    p.price,
-    p.stock,
-    p.status,
-    p.type,
-    p.created_at,
-    p.updated_at,
-    
-    -- Statistiques de vues
-    COALESCE(pv.total_views, 0) as total_views,
-    COALESCE(pv.unique_users_viewed, 0) as unique_users_viewed,
-    COALESCE(pv.views_last_30_days, 0) as views_last_30_days,
-    
-    -- Statistiques de panier
-    COALESCE(ca.times_added_to_cart, 0) as times_added_to_cart,
-    COALESCE(ca.currently_in_carts, 0) as currently_in_carts,
-    
-    -- Statistiques de ventes
-    COALESCE(oi.total_sales, 0) as total_sales,
-    COALESCE(oi.total_quantity_sold, 0) as total_quantity_sold,
-    COALESCE(oi.total_revenue, 0) as total_revenue,
-    COALESCE(oi.revenue_last_30_days, 0) as revenue_last_30_days,
-    
-    -- Taux de conversion
-    CASE 
-        WHEN COALESCE(pv.total_views, 0) > 0 
-        THEN ROUND((COALESCE(oi.total_sales, 0)::float / pv.total_views * 100)::numeric, 2)
-        ELSE 0 
-    END as conversion_rate_percent
+-- 1. Vérifier et ajouter les contraintes de clés étrangères manquantes
 
-FROM products p
+-- Pour order_items -> products (via item_id quand item_type = 'product')
+-- Note: On ne peut pas créer une FK directe car item_id peut pointer vers products OU services
+-- Mais on peut créer des index pour améliorer les performances
 
--- Jointure avec les vues
-LEFT JOIN (
-    SELECT 
-        product_id,
-        COUNT(*) as total_views,
-        COUNT(DISTINCT COALESCE(user_id::text, session_id)) as unique_users_viewed,
-        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '30 days' THEN 1 END) as views_last_30_days
-    FROM product_views 
-    GROUP BY product_id
-) pv ON p.id = pv.product_id
-
--- Jointure avec les paniers
-LEFT JOIN (
-    SELECT 
-        product_id,
-        COUNT(*) as times_added_to_cart,
-        SUM(CASE WHEN removed_at IS NULL AND converted_to_order = false THEN quantity ELSE 0 END) as currently_in_carts
-    FROM cart_analytics 
-    GROUP BY product_id
-) ca ON p.id = ca.product_id
-
--- Jointure avec les ventes
-LEFT JOIN (
-    SELECT 
-        item_id as product_id,
-        COUNT(*) as total_sales,
-        SUM(qty) as total_quantity_sold,
-        SUM(unit_price * qty) as total_revenue,
-        SUM(CASE WHEN created_at >= NOW() - INTERVAL '30 days' THEN unit_price * qty ELSE 0 END) as revenue_last_30_days
-    FROM order_items 
-    WHERE item_type = 'product'
-    GROUP BY item_id
-) oi ON p.id = oi.product_id;
-
--- 2. Créer la table product_views si elle n'existe pas
-CREATE TABLE IF NOT EXISTS product_views (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-    session_id TEXT,
-    ip_address INET,
-    user_agent TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- 3. Créer la table cart_analytics si elle n'existe pas
-CREATE TABLE IF NOT EXISTS cart_analytics (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-    session_id TEXT,
-    quantity INTEGER NOT NULL DEFAULT 1,
-    added_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    removed_at TIMESTAMP WITH TIME ZONE,
-    converted_to_order BOOLEAN DEFAULT false,
-    order_id UUID REFERENCES orders(id) ON DELETE SET NULL
-);
-
--- 4. La table order_items existe déjà, ajouter les colonnes manquantes si nécessaire
-DO $$ 
-BEGIN
-    -- Ajouter product_id si elle n'existe pas (pour les produits)
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                   WHERE table_name = 'order_items' AND column_name = 'product_id') THEN
-        ALTER TABLE order_items ADD COLUMN product_id UUID REFERENCES products(id);
-    END IF;
-    
-    -- Ajouter title si elle n'existe pas
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                   WHERE table_name = 'order_items' AND column_name = 'title') THEN
-        ALTER TABLE order_items ADD COLUMN title TEXT;
-    END IF;
-END $$;
-
--- 5. Ajouter les colonnes manquantes à la table orders si elles n'existent pas
-DO $$ 
-BEGIN
-    -- Ajouter shipping_cost si elle n'existe pas
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                   WHERE table_name = 'orders' AND column_name = 'shipping_cost') THEN
-        ALTER TABLE orders ADD COLUMN shipping_cost DECIMAL(10,2) DEFAULT 0;
-    END IF;
-    
-    -- Ajouter shipping_profile_id si elle n'existe pas
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                   WHERE table_name = 'orders' AND column_name = 'shipping_profile_id') THEN
-        ALTER TABLE orders ADD COLUMN shipping_profile_id UUID REFERENCES shipping_profiles(id);
-    END IF;
-    
-    -- Ajouter shipping_zone_id si elle n'existe pas
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                   WHERE table_name = 'orders' AND column_name = 'shipping_zone_id') THEN
-        ALTER TABLE orders ADD COLUMN shipping_zone_id UUID REFERENCES shipping_zones(id);
-    END IF;
-END $$;
-
--- 6. Créer la table shipping_profiles si elle n'existe pas
-CREATE TABLE IF NOT EXISTS shipping_profiles (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    shop_id UUID NOT NULL REFERENCES shops(id) ON DELETE CASCADE,
-    name TEXT NOT NULL,
-    base_cost DECIMAL(10,2) NOT NULL DEFAULT 0,
-    free_shipping_threshold DECIMAL(10,2),
-    is_default BOOLEAN DEFAULT false,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- 7. La table shipping_zones existe déjà, pas besoin de la recréer
-
--- 8. Créer les index pour améliorer les performances
-CREATE INDEX IF NOT EXISTS idx_product_views_product_id ON product_views(product_id);
-CREATE INDEX IF NOT EXISTS idx_product_views_created_at ON product_views(created_at);
-CREATE INDEX IF NOT EXISTS idx_cart_analytics_product_id ON cart_analytics(product_id);
-CREATE INDEX IF NOT EXISTS idx_cart_analytics_user_id ON cart_analytics(user_id);
-CREATE INDEX IF NOT EXISTS idx_cart_analytics_session_id ON cart_analytics(session_id);
-CREATE INDEX IF NOT EXISTS idx_order_items_product_id ON order_items(product_id);
+-- Créer des index pour améliorer les performances des jointures
+CREATE INDEX IF NOT EXISTS idx_order_items_item_id_product ON order_items(item_id) WHERE item_type = 'product';
+CREATE INDEX IF NOT EXISTS idx_order_items_item_id_service ON order_items(item_id) WHERE item_type = 'service';
 CREATE INDEX IF NOT EXISTS idx_order_items_shop_id ON order_items(shop_id);
+CREATE INDEX IF NOT EXISTS idx_order_items_status ON order_items(status);
 CREATE INDEX IF NOT EXISTS idx_order_items_created_at ON order_items(created_at);
 
--- 9. Activer RLS sur les nouvelles tables
-ALTER TABLE product_views ENABLE ROW LEVEL SECURITY;
-ALTER TABLE cart_analytics ENABLE ROW LEVEL SECURITY;
-ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
-ALTER TABLE shipping_profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE shipping_zones ENABLE ROW LEVEL SECURITY;
+-- Index pour les produits
+CREATE INDEX IF NOT EXISTS idx_products_shop_id ON products(shop_id);
+CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
 
--- 10. Créer les politiques RLS
--- Product views - lecture publique, écriture authentifiée
-CREATE POLICY "Product views are publicly readable" ON product_views FOR SELECT USING (true);
-CREATE POLICY "Authenticated users can insert product views" ON product_views FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+-- Index pour les services  
+CREATE INDEX IF NOT EXISTS idx_services_shop_id ON services(shop_id);
+CREATE INDEX IF NOT EXISTS idx_services_status ON services(status);
 
--- Cart analytics - lecture/écriture pour le propriétaire
-CREATE POLICY "Users can manage their own cart analytics" ON cart_analytics 
-    FOR ALL USING (auth.uid() = user_id OR user_id IS NULL);
+-- Index pour cart_analytics
+CREATE INDEX IF NOT EXISTS idx_cart_analytics_product_id ON cart_analytics(product_id);
+CREATE INDEX IF NOT EXISTS idx_cart_analytics_removed_at ON cart_analytics(removed_at);
 
--- Order items - lecture pour le propriétaire de la boutique
-CREATE POLICY "Shop owners can view their order items" ON order_items 
-    FOR SELECT USING (
-        EXISTS (
-            SELECT 1 FROM shops 
-            WHERE shops.id = order_items.shop_id 
-            AND shops.owner_id = auth.uid()
-        )
-    );
+-- Index pour les commandes
+CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at);
 
--- Shipping profiles - gestion par le propriétaire de la boutique
-CREATE POLICY "Shop owners can manage their shipping profiles" ON shipping_profiles 
-    FOR ALL USING (
-        EXISTS (
-            SELECT 1 FROM shops 
-            WHERE shops.id = shipping_profiles.shop_id 
-            AND shops.owner_id = auth.uid()
-        )
-    );
+-- 2. Créer des vues pour simplifier les requêtes complexes
 
--- Shipping zones - gestion par le propriétaire de la boutique
-CREATE POLICY "Shop owners can manage their shipping zones" ON shipping_zones 
-    FOR ALL USING (
-        EXISTS (
-            SELECT 1 FROM shops 
-            JOIN shipping_profiles ON shipping_profiles.id = shipping_zones.profile_id
-            WHERE shops.id = shipping_profiles.shop_id 
-            AND shops.owner_id = auth.uid()
-        )
-    );
+-- Vue pour les détails des order_items avec produits
+CREATE OR REPLACE VIEW order_items_with_products AS
+SELECT 
+  oi.*,
+  p.title as product_title,
+  p.price as product_price,
+  p.images as product_images,
+  p.type as product_type
+FROM order_items oi
+LEFT JOIN products p ON oi.item_id = p.id AND oi.item_type = 'product';
 
--- 11. Créer les fonctions RPC si elles n'existent pas
-CREATE OR REPLACE FUNCTION increment_product_view(
-    p_product_id UUID,
-    p_user_id UUID DEFAULT NULL,
-    p_session_id TEXT DEFAULT NULL,
-    p_ip_address INET DEFAULT NULL,
-    p_user_agent TEXT DEFAULT NULL
+-- Vue pour les détails des order_items avec services
+CREATE OR REPLACE VIEW order_items_with_services AS
+SELECT 
+  oi.*,
+  s.title as service_title,
+  s.base_price as service_price,
+  s.delivery_days as service_delivery_days
+FROM order_items oi
+LEFT JOIN services s ON oi.item_id = s.id AND oi.item_type = 'service';
+
+-- Vue complète des order_items avec tous les détails
+CREATE OR REPLACE VIEW order_items_detailed AS
+SELECT 
+  oi.*,
+  o.user_id,
+  o.total as order_total,
+  o.status as order_status,
+  o.created_at as order_created_at,
+  p.display_name as customer_name,
+  p.shipping_address,
+  p.shipping_city,
+  p.shipping_postal_code,
+  p.shipping_country,
+  CASE 
+    WHEN oi.item_type = 'product' THEN prod.title
+    WHEN oi.item_type = 'service' THEN serv.title
+  END as item_title,
+  CASE 
+    WHEN oi.item_type = 'product' THEN prod.images
+    ELSE NULL
+  END as item_images
+FROM order_items oi
+JOIN orders o ON oi.order_id = o.id
+JOIN profiles p ON o.user_id = p.id
+LEFT JOIN products prod ON oi.item_id = prod.id AND oi.item_type = 'product'
+LEFT JOIN services serv ON oi.item_id = serv.id AND oi.item_type = 'service';
+
+-- 3. Créer des fonctions utilitaires
+
+-- Fonction pour obtenir les statistiques d'un shop
+CREATE OR REPLACE FUNCTION get_shop_stats(shop_uuid uuid)
+RETURNS TABLE (
+  products_count bigint,
+  services_count bigint,
+  orders_count bigint,
+  revenue numeric,
+  products_in_carts bigint
+) 
+LANGUAGE sql
+SECURITY DEFINER
+AS $$
+  SELECT 
+    (SELECT count(*) FROM products WHERE shop_id = shop_uuid),
+    (SELECT count(*) FROM services WHERE shop_id = shop_uuid),
+    (SELECT count(*) FROM order_items WHERE shop_id = shop_uuid),
+    (SELECT COALESCE(sum(unit_price * qty), 0) FROM order_items WHERE shop_id = shop_uuid AND status IN ('completed', 'delivered')),
+    (SELECT COALESCE(sum(ca.quantity), 0) 
+     FROM cart_analytics ca 
+     JOIN products p ON ca.product_id = p.id 
+     WHERE p.shop_id = shop_uuid AND ca.removed_at IS NULL)
+$$;
+
+-- Fonction pour obtenir les top produits d'un shop
+CREATE OR REPLACE FUNCTION get_top_products(shop_uuid uuid, limit_count int DEFAULT 3)
+RETURNS TABLE (
+  product_id uuid,
+  product_title text,
+  product_price numeric,
+  product_images text[],
+  sales_count bigint
 )
-RETURNS VOID AS $$
+LANGUAGE sql
+SECURITY DEFINER
+AS $$
+  SELECT 
+    p.id,
+    p.title,
+    p.price,
+    p.images,
+    COALESCE(sales.total_qty, 0) as sales_count
+  FROM products p
+  LEFT JOIN (
+    SELECT 
+      item_id,
+      sum(qty) as total_qty
+    FROM order_items 
+    WHERE shop_id = shop_uuid 
+      AND item_type = 'product' 
+      AND status IN ('completed', 'delivered')
+    GROUP BY item_id
+  ) sales ON p.id = sales.item_id
+  WHERE p.shop_id = shop_uuid
+  ORDER BY sales_count DESC NULLS LAST
+  LIMIT limit_count
+$$;
+
+-- 4. Permissions pour les vues et fonctions
+
+-- Permissions pour les vues
+GRANT SELECT ON order_items_with_products TO authenticated;
+GRANT SELECT ON order_items_with_services TO authenticated;
+GRANT SELECT ON order_items_detailed TO authenticated;
+
+-- Permissions pour les fonctions
+GRANT EXECUTE ON FUNCTION get_shop_stats(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION get_top_products(uuid, int) TO authenticated;
+
+-- 5. Politiques RLS pour les vues
+
+-- RLS pour order_items_detailed
+ALTER VIEW order_items_detailed SET (security_invoker = true);
+
+-- Notification de succès
+DO $$ 
 BEGIN
-    INSERT INTO product_views (product_id, user_id, session_id, ip_address, user_agent)
-    VALUES (p_product_id, p_user_id, p_session_id, p_ip_address, p_user_agent);
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE OR REPLACE FUNCTION track_cart_addition(
-    p_product_id UUID,
-    p_user_id UUID DEFAULT NULL,
-    p_session_id TEXT DEFAULT NULL,
-    p_quantity INTEGER DEFAULT 1
-)
-RETURNS VOID AS $$
-BEGIN
-    INSERT INTO cart_analytics (product_id, user_id, session_id, quantity)
-    VALUES (p_product_id, p_user_id, p_session_id, p_quantity);
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE OR REPLACE FUNCTION track_cart_removal(
-    p_product_id UUID,
-    p_user_id UUID DEFAULT NULL,
-    p_session_id TEXT DEFAULT NULL
-)
-RETURNS VOID AS $$
-BEGIN
-    UPDATE cart_analytics 
-    SET removed_at = NOW()
-    WHERE product_id = p_product_id 
-    AND (user_id = p_user_id OR (user_id IS NULL AND session_id = p_session_id))
-    AND removed_at IS NULL
-    AND converted_to_order = false;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- 12. Créer un trigger pour mettre à jour updated_at
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_shipping_profiles_updated_at 
-    BEFORE UPDATE ON shipping_profiles 
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
--- Message de confirmation
-SELECT 'Base de données mise à jour avec succès !' as message;
+  RAISE NOTICE 'Relations et index créés avec succès !';
+  RAISE NOTICE 'Vues disponibles: order_items_detailed, order_items_with_products, order_items_with_services';
+  RAISE NOTICE 'Fonctions disponibles: get_shop_stats(shop_id), get_top_products(shop_id, limit)';
+END $$;

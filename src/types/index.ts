@@ -95,6 +95,34 @@ export interface OrderItem {
   created_at: string;
 }
 
+// Interface étendue avec les relations
+export interface OrderItemWithDetails extends OrderItem {
+  order?: {
+    id: string;
+    user_id: string;
+    total: number;
+    status: string;
+    created_at: string;
+    profiles?: {
+      display_name: string;
+      avatar_url?: string;
+      shipping_address?: string;
+      shipping_city?: string;
+      shipping_postal_code?: string;
+      shipping_country?: string;
+    };
+  };
+  product?: {
+    title: string;
+    images?: string[];
+    price?: number;
+  };
+  service?: {
+    title: string;
+    base_price?: number;
+  };
+}
+
 // Types pour les profils de livraison
 export interface ShippingProfile {
   id: string;
