@@ -1,11 +1,12 @@
 import { NotificationCategory } from "../types/notifications";
+import i18n from "../lib/i18n";
 
 // Templates de notifications spécifiques à MTG Artisan
 export interface NotificationTemplate {
   key: string;
   category: NotificationCategory;
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
   icon?: string;
   actionUrl?: string;
 }
@@ -80,14 +81,14 @@ export const MTG_EVENT_MAP: Record<
   },
 };
 
-// Templates de notifications en français
+// Templates de notifications
 export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   // Templates de commandes
   orderCreated: {
     key: "orderCreated",
     category: "orders",
-    title: "Nouvelle commande reçue",
-    body: "Vous avez reçu une nouvelle commande #{orderId} de {buyerName}",
+    titleKey: "notifications.templates.orderCreated.title",
+    bodyKey: "notifications.templates.orderCreated.body",
     icon: "📦",
     actionUrl: "/dashboard/creator?tab=orders",
   },
@@ -95,8 +96,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   orderPaid: {
     key: "orderPaid",
     category: "orders",
-    title: "Commande payée",
-    body: "Votre commande #{orderId} a été payée avec succès. Montant: {total} {currency}",
+    titleKey: "notifications.templates.orderPaid.title",
+    bodyKey: "notifications.templates.orderPaid.body",
     icon: "💳",
     actionUrl: "/dashboard/buyer",
   },
@@ -104,8 +105,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   orderProcessing: {
     key: "orderProcessing",
     category: "orders",
-    title: "Commande en cours de traitement",
-    body: "Votre commande #{orderId} est maintenant en cours de traitement par {shopName}",
+    titleKey: "notifications.templates.orderProcessing.title",
+    bodyKey: "notifications.templates.orderProcessing.body",
     icon: "⚙️",
     actionUrl: "/dashboard/buyer",
   },
@@ -113,8 +114,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   orderShipped: {
     key: "orderShipped",
     category: "orders",
-    title: "Commande expédiée",
-    body: "Votre commande #{orderId} a été expédiée. Numéro de suivi: {trackingNumber}",
+    titleKey: "notifications.templates.orderShipped.title",
+    bodyKey: "notifications.templates.orderShipped.body",
     icon: "🚚",
     actionUrl: "/dashboard/buyer",
   },
@@ -122,8 +123,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   orderDelivered: {
     key: "orderDelivered",
     category: "orders",
-    title: "Commande livrée",
-    body: "Votre commande #{orderId} a été livrée avec succès !",
+    titleKey: "notifications.templates.orderDelivered.title",
+    bodyKey: "notifications.templates.orderDelivered.body",
     icon: "✅",
     actionUrl: "/dashboard/buyer",
   },
@@ -131,8 +132,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   orderCompleted: {
     key: "orderCompleted",
     category: "orders",
-    title: "Commande terminée",
-    body: "Votre commande #{orderId} est maintenant terminée. N'hésitez pas à laisser un avis !",
+    titleKey: "notifications.templates.orderCompleted.title",
+    bodyKey: "notifications.templates.orderCompleted.body",
     icon: "🎉",
     actionUrl: "/dashboard/buyer",
   },
@@ -140,8 +141,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   orderCancelled: {
     key: "orderCancelled",
     category: "orders",
-    title: "Commande annulée",
-    body: "Votre commande #{orderId} a été annulée. Vous serez remboursé sous 3-5 jours ouvrés.",
+    titleKey: "notifications.templates.orderCancelled.title",
+    bodyKey: "notifications.templates.orderCancelled.body",
     icon: "❌",
     actionUrl: "/dashboard/buyer",
   },
@@ -150,8 +151,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   alterCommissioned: {
     key: "alterCommissioned",
     category: "orders",
-    title: "Alter commandé",
-    body: 'Votre alter de "{cardName}" a été commandé avec succès ! L\'artiste {artistName} va commencer le travail.',
+    titleKey: "notifications.templates.alterCommissioned.title",
+    bodyKey: "notifications.templates.alterCommissioned.body",
     icon: "🎨",
     actionUrl: "/dashboard/buyer",
   },
@@ -159,8 +160,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   alterProgressUpdate: {
     key: "alterProgressUpdate",
     category: "orders",
-    title: "Mise à jour de votre alter",
-    body: 'L\'artiste {artistName} a mis à jour le statut de votre alter "{cardName}": {status}',
+    titleKey: "notifications.templates.alterProgressUpdate.title",
+    bodyKey: "notifications.templates.alterProgressUpdate.body",
     icon: "🖌️",
     actionUrl: "/dashboard/buyer",
   },
@@ -168,8 +169,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   alterCompleted: {
     key: "alterCompleted",
     category: "orders",
-    title: "Votre alter est terminé !",
-    body: 'L\'alter de "{cardName}" par {artistName} est maintenant terminé et prêt à être expédié !',
+    titleKey: "notifications.templates.alterCompleted.title",
+    bodyKey: "notifications.templates.alterCompleted.body",
     icon: "🎨",
     actionUrl: "/dashboard/buyer",
   },
@@ -177,8 +178,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   tokenReady: {
     key: "tokenReady",
     category: "orders",
-    title: "Vos tokens sont prêts",
-    body: 'Vos tokens personnalisés "{tokenName}" sont prêts à télécharger !',
+    titleKey: "notifications.templates.tokenReady.title",
+    bodyKey: "notifications.templates.tokenReady.body",
     icon: "🪙",
     actionUrl: "/dashboard/buyer",
   },
@@ -186,8 +187,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   playmatShipped: {
     key: "playmatShipped",
     category: "orders",
-    title: "Playmat expédié",
-    body: 'Votre playmat personnalisé "{playmatName}" a été expédié ! Suivi: {trackingNumber}',
+    titleKey: "notifications.templates.playmatShipped.title",
+    bodyKey: "notifications.templates.playmatShipped.body",
     icon: "🎯",
     actionUrl: "/dashboard/buyer",
   },
@@ -196,8 +197,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   coachingScheduled: {
     key: "coachingScheduled",
     category: "orders",
-    title: "Session de coaching programmée",
-    body: "Votre session de coaching avec {coachName} est programmée pour le {date} à {time}",
+    titleKey: "notifications.templates.coachingScheduled.title",
+    bodyKey: "notifications.templates.coachingScheduled.body",
     icon: "📚",
     actionUrl: "/dashboard/buyer",
   },
@@ -205,8 +206,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   coachingReminder: {
     key: "coachingReminder",
     category: "orders",
-    title: "Rappel: Session de coaching",
-    body: "Votre session de coaching avec {coachName} commence dans 1 heure",
+    titleKey: "notifications.templates.coachingReminder.title",
+    bodyKey: "notifications.templates.coachingReminder.body",
     icon: "⏰",
     actionUrl: "/dashboard/buyer",
   },
@@ -214,8 +215,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   deckbuildingStarted: {
     key: "deckbuildingStarted",
     category: "orders",
-    title: "Construction de deck commencée",
-    body: "{builderName} a commencé à travailler sur votre deck {format}",
+    titleKey: "notifications.templates.deckbuildingStarted.title",
+    bodyKey: "notifications.templates.deckbuildingStarted.body",
     icon: "🃏",
     actionUrl: "/dashboard/buyer",
   },
@@ -223,8 +224,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   deckbuildingCompleted: {
     key: "deckbuildingCompleted",
     category: "orders",
-    title: "Votre deck est prêt !",
-    body: "Votre deck {format} par {builderName} est maintenant terminé et disponible !",
+    titleKey: "notifications.templates.deckbuildingCompleted.title",
+    bodyKey: "notifications.templates.deckbuildingCompleted.body",
     icon: "🎴",
     actionUrl: "/dashboard/buyer",
   },
@@ -233,8 +234,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   messageNew: {
     key: "messageNew",
     category: "messages",
-    title: "Nouveau message",
-    body: "{senderName} vous a envoyé un nouveau message",
+    titleKey: "notifications.templates.messageNew.title",
+    bodyKey: "notifications.templates.messageNew.body",
     icon: "💬",
     actionUrl: "/messages",
   },
@@ -242,8 +243,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   commissionRequest: {
     key: "commissionRequest",
     category: "messages",
-    title: "Demande de commission",
-    body: "{buyerName} souhaite vous commander une œuvre personnalisée",
+    titleKey: "notifications.templates.commissionRequest.title",
+    bodyKey: "notifications.templates.commissionRequest.body",
     icon: "🎨",
     actionUrl: "/messages",
   },
@@ -251,8 +252,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   quoteRequest: {
     key: "quoteRequest",
     category: "messages",
-    title: "Demande de devis",
-    body: '{buyerName} demande un devis pour "{serviceName}"',
+    titleKey: "notifications.templates.quoteRequest.title",
+    bodyKey: "notifications.templates.quoteRequest.body",
     icon: "📄",
     actionUrl: "/messages",
   },
@@ -261,8 +262,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   reviewPosted: {
     key: "reviewPosted",
     category: "reviews",
-    title: "Nouvel avis reçu",
-    body: '{reviewerName} a laissé un avis {rating}/5 sur "{productName}"',
+    titleKey: "notifications.templates.reviewPosted.title",
+    bodyKey: "notifications.templates.reviewPosted.body",
     icon: "⭐",
     actionUrl: "/dashboard/creator?tab=reviews",
   },
@@ -270,8 +271,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   reviewReply: {
     key: "reviewReply",
     category: "reviews",
-    title: "Réponse à votre avis",
-    body: '{shopName} a répondu à votre avis sur "{productName}"',
+    titleKey: "notifications.templates.reviewReply.title",
+    bodyKey: "notifications.templates.reviewReply.body",
     icon: "💬",
     actionUrl: "/dashboard/buyer",
   },
@@ -280,8 +281,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   shopVerified: {
     key: "shopVerified",
     category: "shop",
-    title: "Boutique vérifiée !",
-    body: 'Félicitations ! Votre boutique "{shopName}" a été vérifiée et dispose maintenant du badge officiel.',
+    titleKey: "notifications.templates.shopVerified.title",
+    bodyKey: "notifications.templates.shopVerified.body",
     icon: "✅",
     actionUrl: "/dashboard/creator",
   },
@@ -289,8 +290,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   shopSuspended: {
     key: "shopSuspended",
     category: "shop",
-    title: "Boutique suspendue",
-    body: "Votre boutique a été temporairement suspendue. Contactez le support pour plus d'informations.",
+    titleKey: "notifications.templates.shopSuspended.title",
+    bodyKey: "notifications.templates.shopSuspended.body",
     icon: "⚠️",
     actionUrl: "/dashboard/creator",
   },
@@ -298,8 +299,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   productLowStock: {
     key: "productLowStock",
     category: "shop",
-    title: "Stock faible",
-    body: 'Attention ! Il ne reste que {stock} exemplaires de "{productName}" en stock.',
+    titleKey: "notifications.templates.productLowStock.title",
+    bodyKey: "notifications.templates.productLowStock.body",
     icon: "⚠️",
     actionUrl: "/dashboard/creator?tab=products",
   },
@@ -307,8 +308,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   productOutOfStock: {
     key: "productOutOfStock",
     category: "shop",
-    title: "Rupture de stock",
-    body: '"{productName}" est maintenant en rupture de stock. Pensez à réapprovisionner !',
+    titleKey: "notifications.templates.productOutOfStock.title",
+    bodyKey: "notifications.templates.productOutOfStock.body",
     icon: "🚫",
     actionUrl: "/dashboard/creator?tab=products",
   },
@@ -316,8 +317,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   quoteSent: {
     key: "quoteSent",
     category: "shop",
-    title: "Devis envoyé",
-    body: 'Votre devis pour "{serviceName}" a été envoyé à {buyerName}',
+    titleKey: "notifications.templates.quoteSent.title",
+    bodyKey: "notifications.templates.quoteSent.body",
     icon: "📄",
     actionUrl: "/dashboard/creator?tab=quotes",
   },
@@ -325,8 +326,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   quoteAccepted: {
     key: "quoteAccepted",
     category: "shop",
-    title: "Devis accepté !",
-    body: '{buyerName} a accepté votre devis pour "{serviceName}". Montant: {amount} {currency}',
+    titleKey: "notifications.templates.quoteAccepted.title",
+    bodyKey: "notifications.templates.quoteAccepted.body",
     icon: "✅",
     actionUrl: "/dashboard/creator?tab=orders",
   },
@@ -334,8 +335,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   quoteDeclined: {
     key: "quoteDeclined",
     category: "shop",
-    title: "Devis décliné",
-    body: '{buyerName} a décliné votre devis pour "{serviceName}"',
+    titleKey: "notifications.templates.quoteDeclined.title",
+    bodyKey: "notifications.templates.quoteDeclined.body",
     icon: "❌",
     actionUrl: "/dashboard/creator?tab=quotes",
   },
@@ -343,8 +344,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   payoutScheduled: {
     key: "payoutScheduled",
     category: "shop",
-    title: "Paiement programmé",
-    body: "Votre paiement de {amount} {currency} sera traité le {date}",
+    titleKey: "notifications.templates.payoutScheduled.title",
+    bodyKey: "notifications.templates.payoutScheduled.body",
     icon: "💰",
     actionUrl: "/dashboard/creator?tab=payouts",
   },
@@ -352,8 +353,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   payoutCompleted: {
     key: "payoutCompleted",
     category: "shop",
-    title: "Paiement effectué",
-    body: "Vous avez reçu un paiement de {amount} {currency} sur votre compte",
+    titleKey: "notifications.templates.payoutCompleted.title",
+    bodyKey: "notifications.templates.payoutCompleted.body",
     icon: "💳",
     actionUrl: "/dashboard/creator?tab=payouts",
   },
@@ -362,8 +363,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   systemMaintenance: {
     key: "systemMaintenance",
     category: "system",
-    title: "Maintenance programmée",
-    body: "MTG Artisan sera en maintenance le {date} de {startTime} à {endTime}",
+    titleKey: "notifications.templates.systemMaintenance.title",
+    bodyKey: "notifications.templates.systemMaintenance.body",
     icon: "🔧",
     actionUrl: "/",
   },
@@ -371,8 +372,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   systemUpdate: {
     key: "systemUpdate",
     category: "system",
-    title: "Nouvelle mise à jour",
-    body: "MTG Artisan a été mis à jour avec de nouvelles fonctionnalités ! Découvrez les nouveautés.",
+    titleKey: "notifications.templates.systemUpdate.title",
+    bodyKey: "notifications.templates.systemUpdate.body",
     icon: "🚀",
     actionUrl: "/",
   },
@@ -380,8 +381,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   securityAlert: {
     key: "securityAlert",
     category: "system",
-    title: "Alerte de sécurité",
-    body: "Activité suspecte détectée sur votre compte. Vérifiez vos paramètres de sécurité.",
+    titleKey: "notifications.templates.securityAlert.title",
+    bodyKey: "notifications.templates.securityAlert.body",
     icon: "🔒",
     actionUrl: "/profile/security",
   },
@@ -389,8 +390,8 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   loginNewDevice: {
     key: "loginNewDevice",
     category: "system",
-    title: "Connexion depuis un nouvel appareil",
-    body: "Connexion détectée depuis un nouvel appareil: {device} à {location}",
+    titleKey: "notifications.templates.loginNewDevice.title",
+    bodyKey: "notifications.templates.loginNewDevice.body",
     icon: "📱",
     actionUrl: "/profile/security",
   },
@@ -703,24 +704,20 @@ export function getTemplate(
 // Fonction pour formater un message avec des variables
 export function formatNotificationMessage(
   template: NotificationTemplate,
-  variables: Record<string, any>
+  variables: Record<string, any>,
+  language?: string
 ): { title: string; body: string; icon?: string; actionUrl?: string } {
-  let title = template.title;
-  let body = template.body;
+  const t = i18n.getFixedT(language, "notifications");
+  const title = t(template.titleKey, variables);
+  const body = t(template.bodyKey, variables);
   let actionUrl = template.actionUrl;
 
-  // Remplacer les variables dans le titre et le corps
-  Object.entries(variables).forEach(([key, value]) => {
-    const placeholder = `{${key}}`;
-    title = title.replace(new RegExp(placeholder, "g"), String(value));
-    body = body.replace(new RegExp(placeholder, "g"), String(value));
-    if (actionUrl) {
-      actionUrl = actionUrl.replace(
-        new RegExp(placeholder, "g"),
-        String(value)
-      );
-    }
-  });
+  if (actionUrl) {
+    Object.entries(variables).forEach(([key, value]) => {
+      const placeholder = `{${key}}`;
+      actionUrl = actionUrl!.replace(new RegExp(placeholder, "g"), String(value));
+    });
+  }
 
   return {
     title,
