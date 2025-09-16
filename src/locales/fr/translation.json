@@ -93,29 +93,29 @@
       }
     },
     "hero": {
-      "tagline": "L'Artisanat Magique de Référence",
-      "title": { "part1": "Boutiques", "part2": "d'Art", "part3": "Magique" },
-      "description": "Découvrez des alters de cartes uniques, des jetons et des créations magiques d'artistes talentueux du monde entier",
-      "explore": "Explorer les Boutiques",
-      "becomeCreator": "Devenir Créateur",
+      "tagline": "La place de marché dédiée aux créations Magic personnalisées",
+      "title": { "part1": "Collaborez avec", "part2": "des artistes Magic", "part3": "de confiance" },
+      "description": "Commandez des alters, jetons et accessoires sur mesure auprès de créateurs indépendants du monde entier.",
+      "explore": "Découvrir les boutiques",
+      "becomeCreator": "Ouvrir ma boutique",
       "stats": {
-        "artists": "Artistes Actifs",
+        "artists": "Artistes actifs",
         "countries": "Pays",
         "satisfaction": "Satisfaction"
       }
     },
     "categories": {
-      "title": "Catégories Populaires",
-      "subtitle": "Découvrez les créations les plus demandées par nos clients",
+      "title": "Catégories populaires",
+      "subtitle": "Parcourez les créations les plus demandées par la communauté",
       "popular": "Populaire"
     },
     "artists": {
-      "title": "Artistes Populaires",
-      "subtitle": "Découvrez nos artistes les plus talentueux et leurs créations uniques"
+      "title": "Artistes mis en avant",
+      "subtitle": "Rencontrez nos créateurs indépendants et explorez leur style signature"
     },
     "features": {
-      "title": "Pourquoi Choisir ManaShop ?",
-      "subtitle": "Les boutiques d'art de confiance pour vos créations magiques de qualité",
+      "title": "Pourquoi choisir ManaShop ?",
+      "subtitle": "Commandez vos créations Magic personnalisées auprès d'artistes vérifiés, avec des paiements sécurisés et un accompagnement mondial",
       "verified": {
         "title": "Artistes Vérifiés",
         "description": "Tous les artistes sont des professionnels vérifiés garantissant un travail de qualité pour vos cartes."
@@ -130,9 +130,9 @@
       }
     },
     "cta": {
-      "title": "Prêt à Trouver Votre Artiste Parfait ?",
-      "subtitle": "Rejoignez des milliers de joueurs qui ont découvert des œuvres d'art magiques incroyables",
-      "explore": "Découvrir les Boutiques"
+      "title": "Prêt à commander votre prochaine création ?",
+      "subtitle": "Rejoignez des milliers de joueurs qui collaborent avec des artistes pour des œuvres Magic uniques",
+      "explore": "Commencer à explorer"
     }
   },
   "search": {
@@ -225,11 +225,11 @@
       "paths": {
         "buyer": {
           "title": "Collectionneur",
-          "description": "Commandez de l'art légendaire"
+          "description": "Découvrez des cartes, jetons et accessoires personnalisés auprès de la communauté"
         },
         "creator": {
           "title": "Artisan",
-          "description": "Créez des services magiques"
+          "description": "Proposez vos créations et services Magic aux passionnés"
         }
       },
       "submit": "Créer le compte",
@@ -240,8 +240,8 @@
       "success": "Bienvenue !",
       "invalidCredentials": "Email ou mot de passe invalide. Veuillez vérifier vos identifiants.",
       "error": "Échec de la connexion",
-      "heroTitle": "Bon retour, Planeswalker",
-      "heroSubtitle": "Entrez vos identifiants de guilde pour accéder au multivers",
+      "heroTitle": "Ravi de vous revoir",
+      "heroSubtitle": "Connectez-vous pour accéder à votre compte",
       "emailLabel": "Adresse email",
       "emailPlaceholder": "vous@exemple.com",
       "passwordLabel": "Mot de passe",
@@ -301,7 +301,7 @@
     "signIn": "Se connecter",
     "signUp": "S'inscrire",
     "dashboard": "Tableau de bord",
-    "adminPanel": "Admin Panel",
+    "adminPanel": "Panneau d’administration",
     "creatorStudio": "Studio Créateur",
     "manageShop": "Gérer la Boutique",
     "orders": "Mes Commandes",
