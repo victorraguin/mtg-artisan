@@ -91,29 +91,29 @@
       }
     },
     "hero": {
-      "tagline": "The Premier Magic Crafting Hub",
-      "title": { "part1": "Magic", "part2": "Art", "part3": "Shops" },
-      "description": "Discover unique card alters, tokens, and creations from talented artists worldwide",
-      "explore": "Explore Shops",
-      "becomeCreator": "Become a Creator",
+      "tagline": "Custom Magic art, all in one place",
+      "title": { "part1": "Work with", "part2": "Magic artists", "part3": "you trust" },
+      "description": "Commission card alters, tokens, and accessories from independent creators across the community.",
+      "explore": "Browse creators",
+      "becomeCreator": "Open your shop",
       "stats": {
-        "artists": "Active Artists",
+        "artists": "Active artists",
         "countries": "Countries",
         "satisfaction": "Satisfaction"
       }
     },
     "categories": {
-      "title": "Popular Categories",
-      "subtitle": "Discover the most requested creations by our customers",
+      "title": "Popular categories",
+      "subtitle": "See what players are requesting most right now",
       "popular": "Popular"
     },
     "artists": {
-      "title": "Popular Artists",
-      "subtitle": "Discover our most talented artists and their unique creations"
+      "title": "Featured artists",
+      "subtitle": "Meet independent creators and explore their signature work"
     },
     "features": {
-      "title": "Why Choose ManaShop?",
-      "subtitle": "The trusted art shops for your magical creations",
+      "title": "Why choose ManaShop?",
+      "subtitle": "Commission custom Magic art with verified creators, secure payments, and worldwide support",
       "verified": {
         "title": "Verified Artists",
         "description": "All artists are verified professionals ensuring quality work for your cards."
@@ -128,9 +128,9 @@
       }
     },
     "cta": {
-      "title": "Ready to Find Your Perfect Artist?",
-      "subtitle": "Join thousands of players who have discovered incredible magical artworks",
-      "explore": "Discover Shops"
+      "title": "Ready to commission your next piece?",
+      "subtitle": "Join thousands of players collaborating with artists on bespoke Magic creations",
+      "explore": "Start exploring"
     }
   },
   "search": {
@@ -223,11 +223,11 @@
       "paths": {
         "buyer": {
           "title": "Collector",
-          "description": "Order legendary art"
+          "description": "Discover custom cards, tokens, and accessories from the community"
         },
         "creator": {
           "title": "Artist",
-          "description": "Create magical services"
+          "description": "Offer your custom art and services to Magic fans"
         }
       },
       "submit": "Create account",
@@ -238,8 +238,8 @@
       "success": "Welcome!",
       "invalidCredentials": "Invalid email or password. Please check your credentials.",
       "error": "Failed to sign in",
-      "heroTitle": "Welcome back, Planeswalker",
-      "heroSubtitle": "Enter your guild credentials to access the multiverse",
+      "heroTitle": "Welcome back",
+      "heroSubtitle": "Sign in to access your account",
       "emailLabel": "Email address",
       "emailPlaceholder": "you@example.com",
       "passwordLabel": "Password",
